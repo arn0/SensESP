@@ -55,9 +55,6 @@ Networking::Networking(String config_path, String ssid, String password,
     // there is no saved config and preset config is available
     ap_password = preset_password;
   }
-
-  server = new AsyncWebServer(80);
-  dns = new DNSServer();
 }
 
 void Networking::start() {
@@ -123,7 +120,7 @@ void Networking::setup_saved_ssid() {
  * start the WiFi Manager.
  */
 void Networking::setup_wifi_manager() {
-  wifi_manager = new AsyncWiFiManager(server, dns);
+  wifi_manager = new WiFiManager();
 
   String hostname = SensESPBaseApp::get_hostname();
 
@@ -135,19 +132,17 @@ void Networking::setup_wifi_manager() {
 #ifdef SERIAL_DEBUG_DISABLED
   wifi_manager->setDebugOutput(false);
 #endif
-  AsyncWiFiManagerParameter custom_hostname("hostname", "Device hostname",
+  WiFiManagerParameter custom_hostname("hostname", "Device hostname",
                                             hostname.c_str(), 64);
   wifi_manager->addParameter(&custom_hostname);
 
-  AsyncWiFiManagerParameter custom_ap_ssid(
+  WiFiManagerParameter custom_ap_ssid(
       "ap_ssid", "Custom Access Point SSID", ap_ssid.c_str(), 33);
   wifi_manager->addParameter(&custom_ap_ssid);
 
-  AsyncWiFiManagerParameter custom_ap_password(
+  WiFiManagerParameter custom_ap_password(
       "ap_password", "Custom Access Point Password", ap_password.c_str(), 64);
   wifi_manager->addParameter(&custom_ap_password);
-
-  wifi_manager->setTryConnectDuringConfigPortal(false);
 
   // Create a unique SSID for configuring each SensESP Device
   String config_ssid;
@@ -182,8 +177,8 @@ void Networking::setup_wifi_manager() {
     // WiFiManager attempts to connect to the new SSID, but that doesn't seem to
     // work reliably. Instead, we'll just attempt to connect manually.
 
-    this->ap_ssid = wifi_manager->getConfiguredSTASSID();
-    this->ap_password = wifi_manager->getConfiguredSTAPassword();
+    this->ap_ssid = wifi_manager->getWiFiSSID();
+    this->ap_password = wifi_manager->getWiFiPass();
 
     // attempt to connect with the new SSID and password
     if (this->ap_ssid != "" && this->ap_password != "") {

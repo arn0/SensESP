@@ -4,8 +4,7 @@
 #include "Arduino.h"
 
 // Local WebServer used to serve the configuration portal
-#include <ESPAsyncWebServer.h>
-#include <ESPAsyncWiFiManager.h>
+#include <WiFiManager.h>
 
 #include "sensesp/net/wifi_state.h"
 #include "sensesp/system/configurable.h"
@@ -132,11 +131,9 @@ class Networking : public Configurable,
   void wifi_disconnected();
 
  private:
-  AsyncWebServer* server;
   // FIXME: DNSServer and AsyncWiFiManager could be instantiated in
   // respective methods to save some runtime memory
-  DNSServer* dns;
-  AsyncWiFiManager* wifi_manager = nullptr;
+  WiFiManager* wifi_manager = nullptr;
 
   bool wifi_manager_enabled_ = true;
 
