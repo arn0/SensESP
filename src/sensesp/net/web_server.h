@@ -1,7 +1,8 @@
-#ifndef _http_H_
-#define _http_H_
+#ifndef _SENSESP_SRC_SENSESP_NET_WEB_SERVER_H_
+#define _SENSESP_SRC_SENSESP_NET_WEB_SERVER_H_
 
 #include <ESPAsyncWebServer.h>
+#include <esp_http_server.h>
 
 #include <functional>
 
@@ -14,10 +15,10 @@ namespace sensesp {
 /**
  * @brief Handles external interactions with the device via the web interface.
  */
-class HTTPServer : public Startable {
+class WebServer : public Startable {
  public:
-  HTTPServer();
-  ~HTTPServer() { delete server; }
+  WebServer();
+  ~WebServer() { delete async_server; }
   virtual void start() override;
   void handle_not_found(AsyncWebServerRequest* request);
   void handle_config(AsyncWebServerRequest* request);
@@ -33,7 +34,7 @@ class HTTPServer : public Startable {
   void add_sorted_configurables(JsonArray& config);
 
  private:
-  AsyncWebServer* server;
+  AsyncWebServer* async_server;
   void handle_config_list(AsyncWebServerRequest* request);
 };
 

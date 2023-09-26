@@ -121,7 +121,7 @@ class SensESPApp : public SensESPBaseApp {
   Filesystem* filesystem_;
   DebugOutput* debug_output_;
   MDNSDiscovery* mdns_discovery_;
-  HTTPServer* http_server_;
+  WebServer* http_server_;
   SystemStatusLed* system_status_led_ = NULL;
   SystemStatusController system_status_controller_;
   int button_gpio_pin_ = SENSESP_BUTTON_PIN;
@@ -160,7 +160,7 @@ class SensESPApp : public SensESPBaseApp {
           [this]() { return ws_client_->get_connection_status(); }, "Network",
           1600);
 
-  friend class HTTPServer;
+  friend class WebServer;
   friend class SensESPAppBuilder;
 };
 

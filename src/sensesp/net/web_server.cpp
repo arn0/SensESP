@@ -26,11 +26,11 @@ namespace sensesp {
 #define HTTP_SERVER_PORT 80
 #endif
 
-HTTPServer::HTTPServer() : Startable(50) {
-  server = new AsyncWebServer(HTTP_SERVER_PORT);
+WebServer::WebServer() : Startable(50) {
+  async_server = new AsyncWebServer(HTTP_SERVER_PORT);
   using std::placeholders::_1;
 
-  server->onNotFound(std::bind(&HTTPServer::handle_not_found, this, _1));
+  async_server->onNotFound(std::bind(&WebServer::handle_not_found, this, _1));
 
   // Handle setting configuration values of a Configurable via a Json PUT to
   // /config
@@ -69,11 +69,11 @@ HTTPServer::HTTPServer() : Startable(50) {
           },
           4096);
   config_put_handler->setMethod(HTTP_PUT);
-  server->addHandler(config_put_handler);
+  async_server->addHandler(config_put_handler);
 
   // Handle requests to retrieve the current Json configuration of a
   // Configurable via HTTP GET on /config
-  server->on("/config", HTTP_GET, [this](AsyncWebServerRequest* request) {
+  async_server->on("/config", HTTP_GET, [this](AsyncWebServerRequest* request) {
     // omit the "/config" part of the url
     String url_tail = request->url().substring(7);
 
@@ -100,7 +100,7 @@ HTTPServer::HTTPServer() : Startable(50) {
     request->send(response);
   });
 
-  server->on("/", HTTP_GET, [](AsyncWebServerRequest* request) {
+  async_server->on("/", HTTP_GET, [](AsyncWebServerRequest* request) {
     debugD("Serving gziped index.html");
     AsyncWebServerResponse* response = request->beginResponse_P(
         200, "text/html", PAGE_index, PAGE_index_size, NULL);
@@ -108,7 +108,7 @@ HTTPServer::HTTPServer() : Startable(50) {
     request->send(response);
   });
 
-  server->on(
+  async_server->on(
       "/css/bootstrap.min.css", HTTP_GET, [](AsyncWebServerRequest* request) {
         debugD("Serving gziped bootstrap.min.css");
         AsyncWebServerResponse* response = request->beginResponse_P(
@@ -117,7 +117,7 @@ HTTPServer::HTTPServer() : Startable(50) {
         request->send(response);
       });
 
-  server->on(
+  async_server->on(
       "/js/jsoneditor.min.js", HTTP_GET, [](AsyncWebServerRequest* request) {
         debugD("Serving gziped jsoneditor.min.js");
         AsyncWebServerResponse* response = request->beginResponse_P(
@@ -126,7 +126,7 @@ HTTPServer::HTTPServer() : Startable(50) {
         request->send(response);
       });
 
-  server->on("/js/sensesp.js", HTTP_GET, [](AsyncWebServerRequest* request) {
+  async_server->on("/js/sensesp.js", HTTP_GET, [](AsyncWebServerRequest* request) {
     debugD("Serving gziped sensesp.js");
     AsyncWebServerResponse* response = request->beginResponse_P(
         200, "text/javascript", PAGE_js_sensesp, PAGE_js_jsoneditor_size);
@@ -134,20 +134,20 @@ HTTPServer::HTTPServer() : Startable(50) {
     request->send(response);
   });
 
-  server->on("/device/reset", HTTP_GET,
-             std::bind(&HTTPServer::handle_device_reset, this, _1));
-  server->on("/device/restart", HTTP_GET,
-             std::bind(&HTTPServer::handle_device_restart, this, _1));
-  server->on("/info", HTTP_GET, std::bind(&HTTPServer::handle_info, this, _1));
+  async_server->on("/device/reset", HTTP_GET,
+             std::bind(&WebServer::handle_device_reset, this, _1));
+  async_server->on("/device/restart", HTTP_GET,
+             std::bind(&WebServer::handle_device_restart, this, _1));
+  async_server->on("/info", HTTP_GET, std::bind(&WebServer::handle_info, this, _1));
 
-  server->on("/command", HTTP_GET,
-             std::bind(&HTTPServer::handle_command, this, _1));
+  async_server->on("/command", HTTP_GET,
+             std::bind(&WebServer::handle_command, this, _1));
 }
 
-void HTTPServer::start() {
+void WebServer::start() {
   // only start the server if WiFi is connected
   if (WiFi.status() == WL_CONNECTED || WiFi.getMode() == WIFI_MODE_AP) {
-    server->begin();
+    async_server->begin();
     debugI("HTTP server started");
   } else {
     debugW("HTTP server not started, WiFi not connected");
@@ -155,7 +155,7 @@ void HTTPServer::start() {
   WiFi.onEvent([this](WiFiEvent_t event, WiFiEventInfo_t info) {
     if (event == ARDUINO_EVENT_WIFI_STA_GOT_IP ||
         event == ARDUINO_EVENT_WIFI_AP_START) {
-      server->begin();
+      async_server->begin();
       debugI("HTTP server started");
     }
   });
@@ -164,7 +164,7 @@ void HTTPServer::start() {
   MDNS.addService("http", "tcp", 80);
 }
 
-void HTTPServer::handle_not_found(AsyncWebServerRequest* request) {
+void WebServer::handle_not_found(AsyncWebServerRequest* request) {
   debugD("NOT_FOUND: ");
   if (request->method() == HTTP_GET) {
     debugD("GET");
@@ -212,7 +212,7 @@ void HTTPServer::handle_not_found(AsyncWebServerRequest* request) {
   request->send(404);
 }
 
-void HTTPServer::handle_config_list(AsyncWebServerRequest* request) {
+void WebServer::handle_config_list(AsyncWebServerRequest* request) {
   // to save memory, guesstimate the required output buffer size based
   // on the number of elements
   auto output_buffer_size = 200 * configurables.size();
@@ -227,24 +227,24 @@ void HTTPServer::handle_config_list(AsyncWebServerRequest* request) {
   request->send(response);
 }
 
-void HTTPServer::handle_config(AsyncWebServerRequest* request) {
+void WebServer::handle_config(AsyncWebServerRequest* request) {
   debugD("%s", request->url().c_str());
   request->send(200, "text/plain", "/config");
 }
 
-void HTTPServer::handle_device_reset(AsyncWebServerRequest* request) {
+void WebServer::handle_device_reset(AsyncWebServerRequest* request) {
   request->send(
       200, "text/plain",
       "OK, resetting the device settings back to factory defaults.\n");
   ReactESP::app->onDelay(500, [this]() { SensESPBaseApp::get()->reset(); });
 }
 
-void HTTPServer::handle_device_restart(AsyncWebServerRequest* request) {
+void WebServer::handle_device_restart(AsyncWebServerRequest* request) {
   request->send(200, "text/plain", "OK, restarting\n");
   ReactESP::app->onDelay(50, []() { ESP.restart(); });
 }
 
-void HTTPServer::add_sorted_configurables(JsonArray& config) {
+void WebServer::add_sorted_configurables(JsonArray& config) {
   // sort the configurables by their sort_order
   std::vector<std::pair<int, String>> pairs;
   for (auto it = configurables.begin(); it != configurables.end(); ++it) {
@@ -259,7 +259,7 @@ void HTTPServer::add_sorted_configurables(JsonArray& config) {
   }
 }
 
-void HTTPServer::handle_info(AsyncWebServerRequest* request) {
+void WebServer::handle_info(AsyncWebServerRequest* request) {
   auto* response = request->beginResponseStream("application/json");
   response->setCode(200);
 
@@ -297,7 +297,7 @@ void HTTPServer::handle_info(AsyncWebServerRequest* request) {
   request->send(response);
 }
 
-void HTTPServer::handle_command(AsyncWebServerRequest* request) {
+void WebServer::handle_command(AsyncWebServerRequest* request) {
   auto ui_buttons = UIButton::get_ui_buttons();
 
   if (request->hasParam("id")) {

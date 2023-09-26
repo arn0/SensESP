@@ -38,7 +38,7 @@ void SensESPApp::setup() {
   }
 
   // create the HTTP server
-  this->http_server_ = new HTTPServer();
+  this->http_server_ = new WebServer();
 
   // create the SK delta object
   sk_delta_queue_ = new SKDeltaQueue();
