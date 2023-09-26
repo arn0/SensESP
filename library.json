@@ -39,10 +39,6 @@
       "name": "ESP Async WebServer"
     },
     {
-      "name": "WiFiManager",
-      "version": "https://github.com/tzapu/WiFiManager.git#297123b5d7670e6c734836c13bf5ffd09b094889"
-    },
-    {
       "owner": "bblanchon",
       "name": "ArduinoJson"
     },
