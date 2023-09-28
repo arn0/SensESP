@@ -26,7 +26,7 @@ body {
 header {
   display: flex;
   justify-content: flex-end;
-  background-color: #673ab8;
+  background-color: #0a58ca;
 }
 
 header nav {
