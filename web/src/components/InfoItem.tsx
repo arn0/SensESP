@@ -1,3 +1,4 @@
+import TextField from 'preact-material-components/TextField';
 import { Component } from "preact";
 
 export class InfoItemData {
@@ -18,10 +19,14 @@ export class InfoItem extends Component<InfoItemData, {}> {
   render() {
     return (
       <div className="InfoItem">
-        <strong>
-          <span className="InfoItemName">{this.props.name} </span>
-        </strong>
-        <span className="InfoItemValue">{this.props.value}</span>
+        <TextField
+          id="outlined-read-only-input"
+          label={this.props.name}
+          defaultValue={this.props.value}
+          InputProps={{
+            readOnly: true,
+          }}
+        />
       </div>
     );
   }
