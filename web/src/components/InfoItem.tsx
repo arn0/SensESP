@@ -1,5 +1,6 @@
-import TextField from 'preact-material-components/TextField';
-import { Component } from "preact";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import { memo } from "preact/compat";
 
 export class InfoItemData {
   constructor(name: string, value: string) {
@@ -11,23 +12,13 @@ export class InfoItemData {
   value: string;
 }
 
-export class InfoItem extends Component<InfoItemData, {}> {
-  constructor(props: InfoItemData) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div className="InfoItem">
-        <TextField
-          id="outlined-read-only-input"
-          label={this.props.name}
-          defaultValue={this.props.value}
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-      </div>
-    );
-  }
-}
+export const InfoItem = memo((props: InfoItemData) => {
+  console.log("InfoItem:", props);
+  return (
+    <div className="InfoItem">
+      <ListItem>
+        <ListItemText primary={props.name} secondary={props.value} />
+      </ListItem>
+    </div>
+  );
+});

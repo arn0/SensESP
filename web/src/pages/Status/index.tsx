@@ -1,19 +1,17 @@
-import { Component } from "preact";
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
 import { InfoGroups } from "../../components/InfoGroups";
 
-export class StatusPage extends Component<{}, {}> {
-  constructor(props: {}) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div className="Status">
-        <h1>Status</h1>
-        <p>Here is the status of the project</p>
-
-        <InfoGroups />
-      </div>
-    );
-  }
+export function StatusPage() {
+  return (
+    <div className="StatusPage">
+      <Typography variant="h3">Device Status</Typography>
+      <Box>
+      <Paper elevation={3}>
+      <InfoGroups />
+      </Paper>
+      </Box>
+    </div>
+  );
 }

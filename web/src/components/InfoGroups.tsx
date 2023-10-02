@@ -1,59 +1,86 @@
-import { Component } from "preact";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
+import Grid from "@mui/material/Grid";
+import { useEffect, useState } from "preact/hooks";
 import { InfoGroup, InfoItemData } from "./InfoGroup";
 
-// Types for state
-interface InfoGroupsState {
-  data: { groups: { [key: string]: [InfoItemData] } };
+class InfoGroupsState {
+  groups: { [key: string]: [InfoItemData] };
 }
 
-export class InfoGroups extends Component<{}, InfoGroupsState> {
-  constructor(props: {}) {
-    super(props);
-    this.state = { data: null };
-  }
-
-  state: InfoGroupsState;
-
-  async componentWillMount() {
-    console.log("StatusPage: componentWillMount");
-
-    // Make a HTTP GET request to the server to get the status data
-    // and store it in the state.
-
-    try {
-      const raw = await fetch("/info");
-      const data = await raw.json();
-      console.log("StatusPage: got data from server", data);
-
-      const items = data["items"];
-      const sortedItems = items.sort((a, b) => {
-        return a["name"].localeCompare(b["name"]);
-      });
-      const groupedItems = sortedItems.reduce((groups, item) => {
-        const group = item["group"];
-        console.log("item group", group)
-        if (!groups[group]) {
-          groups[group] = [];
-        }
-        groups[group].push(new InfoItemData(item["name"], item["value"]));
-        return groups;
-      }, {});
-      this.state.data = {groups: groupedItems};
-    } catch (e) {
-      console.log("StatusPage: error getting data from server", e);
+const updateGroups = async () => {
+  console.log("updateGroups");
+  try {
+    const response = await fetch("/info");
+    if (!response.ok) {
+      throw new Error(`HTTP Error ${response.status} ${response.statusText}`);
     }
-  }
+    const data = await response.json();
 
-  render() {
-    // loop over the groups and render each group
-    if (this.state.data === null || !("groups" in this.state.data)) {
-      return <p>Loading...</p>;
-    }
-    const groups = this.state.data["groups"];
-    const groupNames = Object.keys(groups);
-    const groupElements = groupNames.map((groupName) => {
-      return <InfoGroup name={groupName} items={groups[groupName]} />;
+    const items = data["items"];
+    const sortedItems = items.sort((a, b) => {
+      return a["name"].localeCompare(b["name"]);
     });
-    return <div>{groupElements}</div>;
+    const groupedItems = sortedItems.reduce((groups, item) => {
+      const group = item["group"];
+      if (!groups[group]) {
+        groups[group] = [];
+      }
+      groups[group].push(new InfoItemData(item["name"], item["value"]));
+      return groups;
+    }, {});
+    return groupedItems;
+  } catch (e) {
+    console.log("Error getting data from server", e);
   }
+};
+
+export function InfoGroups() {
+  console.log("InfoGroups");
+  const [groups, setGroups] = useState(new InfoGroupsState());
+
+  const timerFunc = async () => {
+    // fetch updated group items from server
+    const groupedItems = await updateGroups();
+    setGroups(groupedItems);
+  };
+
+  if (Object.keys(groups).length === 0) {
+    timerFunc();
+  }
+
+  useEffect(() => {
+    const interval = setInterval(timerFunc, 5000);
+    return () => clearInterval(interval);
+  });
+
+  if (Object.keys(groups).length === 0) {
+    // Display a spinner while waiting for data. Center the spinner
+    // in the page.
+    return (<Spinner/>);
+  }
+
+  const groupNames = Object.keys(groups);
+  const groupElements = groupNames.map((groupName) => (
+    <InfoGroup name={groupName} items={groups[groupName]} />
+  ));
+  return <div>{groupElements}</div>;
+}
+
+
+function Spinner() {
+  return (
+    <Grid
+  container
+  spacing={0}
+  direction="column"
+  alignItems="center"
+  justifyContent="center"
+  sx={{ minHeight: '100vh' }}
+>
+  <Grid item xs={3}>
+    <CircularProgress />
+  </Grid>
+</Grid>
+  )
 }
