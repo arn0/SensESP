@@ -16,7 +16,7 @@ export const InfoItem = memo((props: InfoItemData) => {
   console.log("InfoItem:", props);
   return (
     <div className="InfoItem">
-      <ListItem>
+      <ListItem divider>
         <ListItemText primary={props.name} secondary={props.value} />
       </ListItem>
     </div>

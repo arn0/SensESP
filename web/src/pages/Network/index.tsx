@@ -1,8 +1,17 @@
+import FormControl from "@mui/material/FormControl";
+import { PageContents } from "../../components/PageContents";
+import { PageHeading } from "../../components/PageHeading";
+import { WiFiSettings } from "../../components/WiFiSettings";
+
 export function Network() {
   return (
     <div className="Network">
-      <h1>Network</h1>
-      <p>Here is the network settings page of the project</p>
+      <PageHeading title="Network Configuration" />
+      <PageContents>
+        <FormControl fullWidth>
+          <WiFiSettings />
+        </FormControl>
+      </PageContents>
     </div>
   );
 }
