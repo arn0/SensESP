@@ -1,9 +1,5 @@
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
-import List from "@mui/material/List";
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 import { InfoItem, InfoItemData } from "./InfoItem";
 
@@ -18,10 +14,10 @@ export function InfoGroup(props: InfoGroupProps) {
   console.log("InfoGroup:", props.items);
   return (
     <div className="InfoGroup">
-      <Accordion defaultExpanded>
-        <AccordionSummary expandIcon={<ExpandMoreIcon/>}><strong>{props.name}</strong></AccordionSummary>
-        <AccordionDetails>
-          <List dense disablePadding>
+      <Card>
+        <Card.Body>
+          <Card.Title className="pb-2">{props.name}</Card.Title>
+          <ListGroup>
             {props.items.map((item) => {
               return (
                 <InfoItem
@@ -31,9 +27,9 @@ export function InfoGroup(props: InfoGroupProps) {
                 />
               );
             })}
-          </List>
-        </AccordionDetails>
-      </Accordion>
+          </ListGroup>
+        </Card.Body>
+      </Card>
     </div>
   );
 }

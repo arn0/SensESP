@@ -1,5 +1,3 @@
-import Container from '@mui/material/Container';
-
 import { LocationProvider, Route, Router } from "preact-iso";
 import { Header } from "./Header.jsx";
 import { Configuration } from "../pages/Configuration/index.js";
@@ -13,7 +11,6 @@ export function App() {
     return (
       <LocationProvider>
         <Header />
-        <Container maxWidth="sm">
           <Router>
             <StatusPage path="/ui/status" />
             <Network path="/ui/network" />
@@ -21,7 +18,6 @@ export function App() {
             <Control path="/ui/control" />
             <Route default component={NotFound} />
           </Router>
-        </Container>
       </LocationProvider>
     );
   }

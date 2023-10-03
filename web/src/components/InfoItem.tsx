@@ -1,5 +1,4 @@
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
+import ListGroup from 'react-bootstrap/ListGroup';
 import { memo } from "preact/compat";
 
 export class InfoItemData {
@@ -16,9 +15,12 @@ export const InfoItem = memo((props: InfoItemData) => {
   console.log("InfoItem:", props);
   return (
     <div className="InfoItem">
-      <ListItem divider>
-        <ListItemText primary={props.name} secondary={props.value} />
-      </ListItem>
+      <ListGroup.Item className="d-flex justify-content-between align-items-start">
+        <div className="fw-bold">
+          {props.name}
+        </div>
+          {props.value}
+      </ListGroup.Item>
     </div>
   );
 });

@@ -1,5 +1,3 @@
-import Typography from "@mui/material/Typography";
-
 interface PageHeadingProps {
   title: string;
   subtitle?: string;
@@ -7,8 +5,6 @@ interface PageHeadingProps {
 
 export function PageHeading(props: PageHeadingProps) {
   return (
-    <Typography variant="h4" mt={2} mb={2}>
-      {props.title}
-    </Typography>
+    <h1 class="display-6">{props.title}</h1>
   );
 }

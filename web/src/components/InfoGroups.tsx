@@ -1,7 +1,6 @@
-import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
-import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "preact/hooks";
+import Spinner from "react-bootstrap/Spinner";
+import Stack from "react-bootstrap/Stack";
 import { InfoGroup, InfoItemData } from "./InfoGroup";
 
 class InfoGroupsState {
@@ -57,30 +56,25 @@ export function InfoGroups() {
   if (Object.keys(groups).length === 0) {
     // Display a spinner while waiting for data. Center the spinner
     // in the page.
-    return (<Spinner/>);
+    return (
+      <div
+        class="d-flex align-items-center justify-content-center min"
+        style="height: 100vh"
+      >
+        <Spinner animation="border" />
+      </div>
+    );
   }
 
   const groupNames = Object.keys(groups);
-  const groupElements = groupNames.map((groupName) => (
-    <InfoGroup name={groupName} items={groups[groupName]} />
-  ));
-  return <div>{groupElements}</div>;
-}
 
-
-function Spinner() {
   return (
-    <Grid
-  container
-  spacing={0}
-  direction="column"
-  alignItems="center"
-  justifyContent="center"
-  sx={{ minHeight: '100vh' }}
->
-  <Grid item xs={3}>
-    <CircularProgress />
-  </Grid>
-</Grid>
-  )
+    <div>
+      <Stack gap={3}>
+      {groupNames.map((groupName) => (
+        <InfoGroup name={groupName} items={groups[groupName]} />
+      ))}
+      </Stack>
+    </div>
+  );
 }
