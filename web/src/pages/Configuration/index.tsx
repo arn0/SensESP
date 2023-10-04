@@ -1,8 +1,14 @@
+import { ConfigCards } from "../../components/ConfigCards";
+import { PageContents } from "../../components/PageContents";
+import { PageHeading } from "../../components/PageHeading";
+
 export function Configuration() {
-  return (
-    <div className="Configuration">
-      <h1>Configuration</h1>
-      <p>Here is the configuration page of the project</p>
-    </div>
-  );
-}
+    return (
+      <div className="ConfigurationPage">
+        <PageHeading title="Configuration" />
+        <PageContents>
+          <ConfigCards />
+        </PageContents>
+      </div>
+    );
+  }
