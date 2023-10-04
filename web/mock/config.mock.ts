@@ -4,16 +4,19 @@ export default defineMock(
   [
     {
       url: '/config',
+      method: 'GET',
       body: {
         key: [
           "/System/WiFi Settings",
           "/System/Signal K Settings",
           "/Transforms/Linear"
         ]
-      }
+      },
+      delay: 800,
     },
     {
       url: '/config/System/Signal K Settings',
+      method: 'GET',
       body: {
         "config": {
           "sk_address": "",
@@ -53,10 +56,12 @@ export default defineMock(
           }
         },
         "description": ""
-      }
+      },
+      delay: 600,
     },
     {
       url: '/config/System/WiFi Settings',
+      method: 'GET',
       body: {
         "config": {
           "hostname": "asyncnew",
@@ -83,10 +88,12 @@ export default defineMock(
           }
         },
         "description": ""
-      }
+      },
+      delay: 1200,
     },
     {
       url: '/config/Transforms/Linear',
+      method: 'GET',
       body: {
         "config": {
           "offset": 0,
@@ -114,7 +121,8 @@ export default defineMock(
           }
         },
         "description": "Linear transform custom description"
-      }
+      },
+      delay: 400,
     },
   ]
 )
