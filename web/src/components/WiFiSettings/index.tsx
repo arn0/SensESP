@@ -188,7 +188,7 @@ function SingleClientConfig() {
         <div>
           <Form.Check
             id={id + '-dhcp'}
-            name="ip_config"
+            name={id}
             type="radio"
             label="DHCP"
             value="DHCP"
@@ -197,7 +197,7 @@ function SingleClientConfig() {
           />
           <Form.Check
             id={id + '-static'}
-            name="ip_config"
+            name={id}
             type="radio"
             label="Static"
             value="Static"
