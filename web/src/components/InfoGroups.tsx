@@ -35,7 +35,6 @@ const updateGroups = async () => {
 };
 
 export function InfoGroups() {
-  console.log("InfoGroups");
   const [groups, setGroups] = useState(new InfoGroupsState());
 
   const timerFunc = async () => {
