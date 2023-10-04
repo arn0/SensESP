@@ -2,10 +2,10 @@ import { PageContents } from "../../components/PageContents";
 import { PageHeading } from "../../components/PageHeading";
 import { WiFiSettings } from "../../components/WiFiSettings";
 
-export function Network() {
+export function WiFiConfigPage() {
   return (
-    <div className="Network">
-      <PageHeading title="Network Configuration" />
+    <div className="WiFiConfigPage">
+      <PageHeading title="WiFi Configuration" />
       <PageContents>
           <WiFiSettings />
       </PageContents>

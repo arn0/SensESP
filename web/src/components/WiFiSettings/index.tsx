@@ -26,7 +26,7 @@ export function CheckboxAccordion(props: any) {
     setExpanded(!expanded);
   };
 
-  function CheckToggle({eventKey}) {
+  function CheckToggle({ eventKey }) {
     const decoratedOnClick = useAccordionButton(eventKey, handleExpandedChange);
 
     const id = useId();
@@ -73,7 +73,13 @@ function APSettings() {
   const id = useId();
 
   const handleApSettingsChange = (field) => (event) => {
-    setApSettings({ ...apSettings, [field]: event.target.value });
+    setApSettings({
+      ...apSettings,
+      [field]:
+        event.target.type === "checkbox"
+          ? event.target.checked
+          : event.target.value,
+    });
   };
 
   return (
@@ -86,7 +92,7 @@ function APSettings() {
           <Form.Group>
             <Form.Label>Name</Form.Label>
             <Form.Control
-              id={ id + "-name" }
+              id={id + "-name"}
               type="text"
               placeholder="Network Name"
               value={apSettings.name}
@@ -96,7 +102,7 @@ function APSettings() {
           <Form.Group>
             <Form.Label>Password</Form.Label>
             <Form.Control
-              id={ id + "-password" }
+              id={id + "-password"}
               type="password"
               placeholder="Network Password"
               value={apSettings.password}
@@ -106,7 +112,7 @@ function APSettings() {
           <Form.Group>
             <Form.Label>Channel</Form.Label>
             <Form.Select
-              id={ id + "-channel" }
+              id={id + "-channel"}
               aria-label="Select WiFi channel"
               value={apSettings.channel}
               onChange={handleApSettingsChange("channel")}
@@ -120,10 +126,10 @@ function APSettings() {
           <Form.Group>
             <Form.Label>Hidden</Form.Label>
             <Form.Check
-              id={ id + "-hidden" }
+              id={id + "-hidden"}
               type="switch"
               label="Hidden"
-              value={apSettings.hidden}
+              checked={apSettings.hidden}
               onChange={handleApSettingsChange("hidden")}
             />
           </Form.Group>
@@ -140,23 +146,35 @@ function StaticIPConfig() {
       <Form>
         <Form.Group>
           <Form.Label>IP Address</Form.Label>
-          <Form.Control id={id + "-ipAddress"}
-           type="text" placeholder="IP Address" />
+          <Form.Control
+            id={id + "-ipAddress"}
+            type="text"
+            placeholder="IP Address"
+          />
         </Form.Group>
         <Form.Group>
           <Form.Label>Netmask</Form.Label>
-          <Form.Control id={id + "-netmask"}
-           type="text" placeholder="Netmask" />
+          <Form.Control
+            id={id + "-netmask"}
+            type="text"
+            placeholder="Netmask"
+          />
         </Form.Group>
         <Form.Group>
           <Form.Label>Gateway</Form.Label>
-          <Form.Control id={id + "-gateway"}
-          type="text" placeholder="Gateway" />
+          <Form.Control
+            id={id + "-gateway"}
+            type="text"
+            placeholder="Gateway"
+          />
         </Form.Group>
         <Form.Group>
           <Form.Label>DNS Server</Form.Label>
-          <Form.Control id={id + "-dnsServer"}
-           type="text" placeholder="DNS Server" />
+          <Form.Control
+            id={id + "-dnsServer"}
+            type="text"
+            placeholder="DNS Server"
+          />
         </Form.Group>
       </Form>
     </div>
@@ -179,15 +197,23 @@ function SingleClientConfig() {
       <Stack gap={2}>
         <Form.Group>
           <Form.Label>Name</Form.Label>
-          <Form.Control id={id + '-name'} type="text" placeholder="Network Name" />
+          <Form.Control
+            id={id + "-name"}
+            type="text"
+            placeholder="Network Name"
+          />
         </Form.Group>
         <Form.Group>
           <Form.Label>Password</Form.Label>
-          <Form.Control id={id + '-password'} type="password" placeholder="Network Password" />
+          <Form.Control
+            id={id + "-password"}
+            type="password"
+            placeholder="Network Password"
+          />
         </Form.Group>
         <div>
           <Form.Check
-            id={id + '-dhcp'}
+            id={id + "-dhcp"}
             name={id}
             type="radio"
             label="DHCP"
@@ -196,7 +222,7 @@ function SingleClientConfig() {
             onInput={handleIPConfigChange}
           />
           <Form.Check
-            id={id + '-static'}
+            id={id + "-static"}
             name={id}
             type="radio"
             label="Static"
@@ -207,7 +233,7 @@ function SingleClientConfig() {
         </div>
         <Collapse in={staticIPConfig === "Static"}>
           <div>
-          <StaticIPConfig />
+            <StaticIPConfig />
           </div>
         </Collapse>
       </Stack>
@@ -245,7 +271,7 @@ function ClientSettings() {
     <CheckboxAccordion title="Client" description="Connect to existing WiFi">
       <Row>
         <Col xs={6}>
-          <ListGroup id={id+'-networks'} className="overflow-auto">
+          <ListGroup id={id + "-networks"} className="overflow-auto">
             {availableNetworks.map((network) => (
               <ListGroup.Item value={network}>{network}</ListGroup.Item>
             ))}
@@ -278,23 +304,4 @@ export function WiFiSettings() {
       </Stack>
     </div>
   );
-  //  <div>
-
-  //    {mode === "Client" && (
-  //      <div style={{ display: "flex", justifyContent: "space-between" }}>
-  //        <div>
-  //          <h4>Available Networks</h4>
-  //          {/* List available networks here, perhaps using Material UI List components */}
-  //        </div>
-  //        <div>
-  //          <h4>Configuration</h4>
-  //          {clientSettings.map((setting, index) => (
-  //            <div key={index}>{/* Configuration items go here */}</div>
-  //          ))}
-  //        </div>
-  //      </div>
-  //    )}
-  //  </div>
-  //</>
-  //);
 }

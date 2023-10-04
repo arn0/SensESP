@@ -1,8 +1,8 @@
 import { LocationProvider, Route, Router } from "preact-iso";
 import { Header } from "./Header.jsx";
-import { Configuration } from "../pages/Configuration/index.js";
-import { Control } from "../pages/Control/index.js";
-import { Network } from "../pages/Network/index.js";
+import { ConfigurationPage } from "../pages/Configuration/index.js";
+import { SystemPage } from "../pages/System/index.js";
+import { WiFiConfigPage } from "../pages/WiFi/index.js";
 import { StatusPage } from "../pages/Status/index.js";
 import { NotFound } from "../pages/_404.jsx";
 
@@ -13,9 +13,9 @@ export function App() {
         <Header />
           <Router>
             <StatusPage path="/ui/status" />
-            <Network path="/ui/network" />
-            <Configuration path="/ui/configuration" />
-            <Control path="/ui/control" />
+            <SystemPage path="/ui/system" />
+            <WiFiConfigPage path="/ui/wifi" />
+            <ConfigurationPage path="/ui/configuration" />
             <Route default component={NotFound} />
           </Router>
       </LocationProvider>

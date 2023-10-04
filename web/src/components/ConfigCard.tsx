@@ -2,8 +2,8 @@ import { useState } from "preact/hooks";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
-import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
+import { ModalError } from "./ModalError";
 
 const updateCard = async (path: string) => {
   try {
@@ -136,25 +136,17 @@ export function ConfigCard(props: { path: string }) {
 
   return (
     <div className="ConfigCard">
-      <Modal show={httpErrorText !== ""} onHide={() => setHttpErrorText("")}>
-        <Modal.Header closeButton>
-          <Modal.Title>Error</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+      {httpErrorText !== "" && (
+        <ModalError title="Error" onHide={setHttpErrorText("")}>
           <p>There was an error saving the configuration:</p>
           <p>{httpErrorText}</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setHttpErrorText("")}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </ModalError>
+      )}
 
       <Card>
         <Card.Body>
           <Card.Title className="pb-2">{title}</Card.Title>
-          <div onInput={(e) => setIsDirty(true)}>
+          <div onInput={(e) => setIsDirty(true)} class="mb-2">
             <CardContents
               config={config}
               schema={schema}
@@ -162,7 +154,7 @@ export function ConfigCard(props: { path: string }) {
               setConfig={setConfig}
             />
           </div>
-          <div class="d-flex justify-content-end">
+          <div class="d-flex justify-content-begin">
             <Spinner animation="border" hidden={!saving} className="me-2" />
             <Button onClick={handleSave} disabled={saving || !isDirty}>
               Save
