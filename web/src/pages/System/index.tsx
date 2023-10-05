@@ -6,6 +6,7 @@ import Stack from "react-bootstrap/Stack";
 import { ModalError } from "../ModalError";
 import { PageContents } from "../PageContents";
 import { PageHeading } from "../PageHeading";
+import { AppPage } from "pages/AppPage";
 
 const SystemCard = ({ children }) => {
   return (
@@ -224,11 +225,11 @@ function AuthCard() {
 
 export const SystemPage = () => {
   return (
-    <div className="SystemPage">
+    <AppPage>
       <PageHeading title="System Settings" />
       <PageContents>
         <SystemCards />
       </PageContents>
-    </div>
+    </AppPage>
   );
 };

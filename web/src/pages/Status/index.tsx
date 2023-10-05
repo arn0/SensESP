@@ -1,14 +1,15 @@
+import { AppPage } from "pages/AppPage";
 import { PageContents } from "../PageContents";
 import { PageHeading } from "../PageHeading";
 import { InfoGroups } from "./InfoGroups";
 
 export function StatusPage() {
   return (
-    <div className="StatusPage">
+    <AppPage>
       <PageHeading title="Device Status" />
       <PageContents>
         <InfoGroups />
       </PageContents>
-    </div>
+    </AppPage>
   );
 }

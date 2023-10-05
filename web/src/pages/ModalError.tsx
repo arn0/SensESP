@@ -1,7 +1,7 @@
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
-export const ModalError = ({ title, children, onHide }) => {
+export function ModalError({ title, children, onHide }) {
   return (
     <Modal show={true} onHide={onHide}>
       <Modal.Header closeButton>
@@ -15,4 +15,4 @@ export const ModalError = ({ title, children, onHide }) => {
       </Modal.Footer>
     </Modal>
   );
-};
+}

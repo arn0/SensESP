@@ -1,17 +1,15 @@
 import Accordion from "react-bootstrap/Accordion";
 import { useAccordionButton } from "react-bootstrap/AccordionButton";
 import Card from "react-bootstrap/Card";
-import Col from "react-bootstrap/Col";
 import Collapse from "react-bootstrap/Collapse";
 import Form from "react-bootstrap/Form";
 import FormCheckInput from "react-bootstrap/FormCheckInput";
-import ListGroup from "react-bootstrap/ListGroup";
-import Row from "react-bootstrap/Row";
 import Stack from "react-bootstrap/Stack";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 
 import { useId, useState } from "react";
+import { Button } from "react-bootstrap";
 
 /**
  * This component is a collapsible accordion with a title in the summary and
@@ -251,6 +249,7 @@ function ClientSettings() {
       dnsServer: "",
     },
   ]);
+
   const id = useId();
 
   // Replace this part with real data from scanning WiFi
@@ -263,43 +262,63 @@ function ClientSettings() {
     "Network12",
     "Network13",
     "Network14",
+    "Network1",
+    "Network2",
+    "Network3",
+    "Network4",
+    "Network11",
+    "Network12",
+    "Network13",
+    "Network14",
   ];
 
   return (
     <CheckboxAccordion title="Client" description="Connect to existing WiFi">
-      <Row>
-        <Col xs={6}>
-          <ListGroup id={id + "-networks"} className="overflow-auto">
-            {availableNetworks.map((network) => (
-              <ListGroup.Item value={network}>{network}</ListGroup.Item>
-            ))}
-          </ListGroup>
-        </Col>
-        <Col xs={6}>
-          <Tabs defaultActiveKey="first" id="client-tabs" className="mb-3">
-            <Tab eventKey="first" title="First">
-              <SingleClientConfig />
-            </Tab>
-            <Tab eventKey="second" title="Second">
-              <SingleClientConfig />
-            </Tab>
-            <Tab eventKey="third" title="Third">
-              <SingleClientConfig />
-            </Tab>
-          </Tabs>
-        </Col>
-      </Row>
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-sm overflow-auto">
+            <h4>Available Networks</h4>
+            <ul
+              className="list-group"
+              id={id + "-networks"}
+              style={{ maxHeight: "400px" }}
+            >
+              {availableNetworks.map((network) => (
+                <li className="list-group-item" value={network}>
+                  {network}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="col-sm">
+            <Tabs defaultActiveKey="first" id="client-tabs" className="mb-3">
+              <Tab eventKey="first" title="First">
+                <SingleClientConfig />
+              </Tab>
+              <Tab eventKey="second" title="Second">
+                <SingleClientConfig />
+              </Tab>
+              <Tab eventKey="third" title="Third">
+                <SingleClientConfig />
+              </Tab>
+            </Tabs>
+          </div>
+        </div>
+      </div>
     </CheckboxAccordion>
   );
 }
 
 export function WiFiSettings() {
   return (
-    <div>
-      <Stack gap={4}>
-        <APSettings />
-        <ClientSettings />
-      </Stack>
-    </div>
+    <>
+      <div className="mb-3">
+        <Stack gap={4}>
+          <APSettings />
+          <ClientSettings />
+        </Stack>
+      </div>
+      <Button>Save</Button>
+    </>
   );
 }
