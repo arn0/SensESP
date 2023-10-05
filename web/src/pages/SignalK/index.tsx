@@ -1,14 +1,17 @@
-import { SignalKSettings } from "src/components/SignalKSettings";
-import { PageContents } from "../../components/PageContents";
-import { PageHeading } from "../../components/PageHeading";
+import { SignalKSettings } from "components/SignalKSettings";
+import { PageContents } from "components/PageContents";
+import { PageHeading } from "components/PageHeading";
+import { SKStatusProvider } from "components/SKStatusContext";
 
-export function SignalKConfigPage() {
+export const SignalKPage = () => {
   return (
     <div className="SignalKConfigPage">
-      <PageHeading title="Signal K Configuration" />
-      <PageContents>
-        <SignalKSettings />
-      </PageContents>
+      <SKStatusProvider>
+        <PageHeading title="Signal K Configuration" />
+        <PageContents>
+          <SignalKSettings />
+        </PageContents>
+      </SKStatusProvider>
     </div>
   );
-}
+};
