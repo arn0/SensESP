@@ -1,6 +1,6 @@
-import { PageContents } from "../../components/PageContents";
-import { PageHeading } from "../../components/PageHeading";
-import { WiFiSettings } from "../../components/WiFiSettings";
+import { PageContents } from "components/PageContents";
+import { PageHeading } from "components/PageHeading";
+import { WiFiSettings } from "components/WiFiSettings";
 
 export function WiFiConfigPage() {
   return (

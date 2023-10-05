@@ -3,13 +3,11 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Stack from "react-bootstrap/Stack";
-import { ModalError } from "../../components/ModalError";
-import { PageContents } from "../../components/PageContents";
-import { PageHeading } from "../../components/PageHeading";
+import { ModalError } from "components/ModalError";
+import { PageContents } from "components/PageContents";
+import { PageHeading } from "components/PageHeading";
 
 const SystemCard = ({ children }) => {
-  const id = useId();
-
   return (
     <Card>
       <Card.Body>{children}</Card.Body>

@@ -1,11 +1,11 @@
+import { ConfigurationPage } from "pages/Configuration";
+import { SignalKPage } from "pages/SignalK";
+import { StatusPage } from "pages/Status";
+import { SystemPage } from "pages/System";
+import { WiFiConfigPage } from "pages/WiFi";
+import { NotFound } from "pages/_404.jsx";
 import { LocationProvider, Route, Router } from "preact-iso";
 import { Header } from "./Header.jsx";
-import { ConfigurationPage } from "../pages/Configuration/index.js";
-import { SystemPage } from "../pages/System/index.js";
-import { WiFiConfigPage } from "../pages/WiFi/index.js";
-import { StatusPage } from "../pages/Status/index.js";
-import { NotFound } from "../pages/_404.jsx";
-
 
 export function App() {
     return (
