@@ -1,8 +1,8 @@
+import { app_config } from "app_config";
 import { useEffect, useState } from "preact/hooks";
 import Spinner from "react-bootstrap/Spinner";
 import Stack from "react-bootstrap/Stack";
 import { InfoGroup, InfoItemData } from "./InfoGroup";
-import {app_config} from "../app_config";
 
 class InfoGroupsState {
   groups: { [key: string]: [InfoItemData] };
@@ -71,9 +71,9 @@ export function InfoGroups() {
   return (
     <div>
       <Stack gap={3}>
-      {groupNames.map((groupName) => (
-        <InfoGroup name={groupName} items={groups[groupName]} />
-      ))}
+        {groupNames.map((groupName) => (
+          <InfoGroup name={groupName} items={groups[groupName]} />
+        ))}
       </Stack>
     </div>
   );

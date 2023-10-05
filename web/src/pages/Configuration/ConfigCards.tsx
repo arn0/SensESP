@@ -1,8 +1,8 @@
+import { app_config } from "app_config";
 import { useState } from "preact/hooks";
 import Spinner from "react-bootstrap/Spinner";
 import Stack from "react-bootstrap/Stack";
 import { ConfigCard } from "./ConfigCard";
-import { app_config } from "app_config";
 
 const updateCards = async () => {
   try {

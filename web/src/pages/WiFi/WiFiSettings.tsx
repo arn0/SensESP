@@ -13,8 +13,6 @@ import Tabs from "react-bootstrap/Tabs";
 
 import { useId, useState } from "react";
 
-import "./style.css";
-
 /**
  * This component is a collapsible accordion with a title in the summary and
  * a radio box at the right end of the summary.

@@ -1,6 +1,6 @@
-import { InfoGroups } from "components/InfoGroups";
-import { PageHeading } from "components/PageHeading";
-import { PageContents } from "components/PageContents";
+import { PageContents } from "../PageContents";
+import { PageHeading } from "../PageHeading";
+import { InfoGroups } from "./InfoGroups";
 
 export function StatusPage() {
   return (

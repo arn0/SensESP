@@ -1,13 +1,13 @@
-import { PageContents } from "components/PageContents";
-import { PageHeading } from "components/PageHeading";
-import { WiFiSettings } from "components/WiFiSettings";
+import { PageContents } from "../PageContents";
+import { PageHeading } from "../PageHeading";
+import { WiFiSettings } from "./WiFiSettings";
 
 export function WiFiConfigPage() {
   return (
     <div className="WiFiConfigPage">
       <PageHeading title="WiFi Configuration" />
       <PageContents>
-          <WiFiSettings />
+        <WiFiSettings />
       </PageContents>
     </div>
   );

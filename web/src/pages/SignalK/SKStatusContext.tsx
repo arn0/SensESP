@@ -1,10 +1,10 @@
+import { app_config } from "app_config";
 import { createContext } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { app_config } from "app_config";
 
 export const SKStatusContext = createContext({});
 
-export const SKStatusProvider = ({children}) => {
+export const SKStatusProvider = ({ children }) => {
   const [skStatus, setSKStatus] = useState({});
 
   const fetchStatus = async () => {
@@ -29,9 +29,9 @@ export const SKStatusProvider = ({children}) => {
 
   return (
     <>
-    <SKStatusContext.Provider value={skStatus}>
-      {children}
-    </SKStatusContext.Provider>
+      <SKStatusContext.Provider value={skStatus}>
+        {children}
+      </SKStatusContext.Provider>
     </>
   );
-}
+};

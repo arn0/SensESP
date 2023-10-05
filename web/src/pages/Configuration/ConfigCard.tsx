@@ -3,10 +3,10 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
-import { ModalError } from "./ModalError";
+import { ModalError } from "../ModalError";
 import { app_config } from "app_config";
 
-const updateCard = async (path: string) => {
+const fetchConfigData = async (path: string) => {
   try {
     const response = await fetch(app_config.config_path + path);
     if (!response.ok) {
@@ -14,7 +14,7 @@ const updateCard = async (path: string) => {
     }
     return await response.json();
   } catch (e) {
-    console.log("Error getting config data from server", e);
+    throw new Error("Error getting config data from server");
   }
 };
 
@@ -106,7 +106,7 @@ export function ConfigCard(props: { path: string }) {
   const [isDirty, setIsDirty] = useState(false);
 
   const updateFunc = async (path: string) => {
-    const data = await updateCard(path);
+    const data = await fetchConfigData(path);
     setConfig(data["config"]);
     setSchema(data["schema"]);
     setDescription(data["description"]);

@@ -5,7 +5,7 @@ import { SystemPage } from "pages/System";
 import { WiFiConfigPage } from "pages/WiFi";
 import { NotFound } from "pages/_404.jsx";
 import { LocationProvider, Route, Router } from "preact-iso";
-import { Header } from "./Header.jsx";
+import { Header } from "./pages/Header.js";
 
 export function App() {
   return (

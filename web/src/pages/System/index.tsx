@@ -3,9 +3,9 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Stack from "react-bootstrap/Stack";
-import { ModalError } from "components/ModalError";
-import { PageContents } from "components/PageContents";
-import { PageHeading } from "components/PageHeading";
+import { ModalError } from "../ModalError";
+import { PageContents } from "../PageContents";
+import { PageHeading } from "../PageHeading";
 
 const SystemCard = ({ children }) => {
   return (
@@ -134,7 +134,9 @@ const ResetCard = () => {
           defaults, erasing all configuration and data. You will need to
           reconfigure the device after resetting.
         </Card.Text>
-        <Button variant="danger" onClick={handleReset}>Reset</Button>
+        <Button variant="danger" onClick={handleReset}>
+          Reset
+        </Button>
       </SystemCard>
     </>
   );
