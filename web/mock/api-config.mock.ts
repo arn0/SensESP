@@ -3,7 +3,7 @@ import { defineMock } from 'vite-plugin-mock-dev-server'
 export default defineMock(
   [
     {
-      url: '/config',
+      url: '/api/config',
       method: 'GET',
       body: {
         key: [
@@ -15,7 +15,7 @@ export default defineMock(
       delay: 800,
     },
     {
-      url: '/config/System/Signal K Settings',
+      url: '/api/config/System/Signal K Settings',
       method: 'GET',
       body: {
         "config": {
@@ -60,7 +60,7 @@ export default defineMock(
       delay: 600,
     },
     {
-      url: '/config/System/WiFi Settings',
+      url: '/api/config/System/WiFi Settings',
       method: 'GET',
       body: {
         "config": {
@@ -92,7 +92,7 @@ export default defineMock(
       delay: 1200,
     },
     {
-      url: '/config/Transforms/Linear',
+      url: '/api/config/Transforms/Linear',
       method: 'GET',
       body: {
         "config": {

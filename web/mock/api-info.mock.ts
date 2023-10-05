@@ -3,7 +3,7 @@ import { defineMock } from 'vite-plugin-mock-dev-server'
 export default defineMock(
   [
     {
-      url: '/info',
+      url: '/api/info',
       delay: 800,
       body: () => {
 
