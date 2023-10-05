@@ -2,6 +2,7 @@ import { useEffect, useState } from "preact/hooks";
 import Spinner from "react-bootstrap/Spinner";
 import Stack from "react-bootstrap/Stack";
 import { InfoGroup, InfoItemData } from "./InfoGroup";
+import {app_config} from "../app_config";
 
 class InfoGroupsState {
   groups: { [key: string]: [InfoItemData] };
@@ -10,7 +11,7 @@ class InfoGroupsState {
 const updateGroups = async () => {
   console.log("updateGroups");
   try {
-    const response = await fetch("/info");
+    const response = await fetch(app_config.info_path);
     if (!response.ok) {
       throw new Error(`HTTP Error ${response.status} ${response.statusText}`);
     }

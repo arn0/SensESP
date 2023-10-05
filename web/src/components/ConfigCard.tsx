@@ -4,10 +4,11 @@ import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
 import { ModalError } from "./ModalError";
+import { app_config } from "app_config";
 
 const updateCard = async (path: string) => {
   try {
-    const response = await fetch("/config" + path);
+    const response = await fetch(app_config.config_path + path);
     if (!response.ok) {
       throw new Error(`HTTP Error ${response.status} ${response.statusText}`);
     }
@@ -117,7 +118,7 @@ export function ConfigCard(props: { path: string }) {
 
   const handleSave = async () => {
     setSaving(true);
-    const response = await fetch("/config" + props.path, {
+    const response = await fetch(app_config.config_path + props.path, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

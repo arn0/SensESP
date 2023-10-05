@@ -2,10 +2,11 @@ import { useState } from "preact/hooks";
 import Spinner from "react-bootstrap/Spinner";
 import Stack from "react-bootstrap/Stack";
 import { ConfigCard } from "./ConfigCard";
+import { app_config } from "app_config";
 
 const updateCards = async () => {
   try {
-    const response = await fetch("/config");
+    const response = await fetch(app_config.config_path);
     if (!response.ok) {
       throw new Error(`HTTP Error ${response.status} ${response.statusText}`);
     }
