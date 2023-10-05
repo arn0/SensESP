@@ -4,24 +4,31 @@ import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
 import { ModalError } from "../ModalError";
-import { app_config } from "app_config";
+import { fetchConfigData, saveConfigData } from "../configAPIClient";
 
-const fetchConfigData = async (path: string) => {
-  try {
-    const response = await fetch(app_config.config_path + path);
-    if (!response.ok) {
-      throw new Error(`HTTP Error ${response.status} ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (e) {
-    throw new Error("Error getting config data from server");
-  }
-};
+import { ChangeEvent } from "react";
+import { ConfigData } from "pages/configAPIClient";
 
-const EditControl = ({ id, schema, value, onChange }) => {
-  let type = schema["type"];
-  let step = undefined;
-  let as = undefined;
+interface EditControlProps {
+  id: string;
+  schema: {
+    type: string;
+    title: string;
+    readOnly?: boolean;
+  };
+  value: string | number;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+}
+
+const EditControl = ({
+  id,
+  schema,
+  value,
+  onChange,
+}: EditControlProps): JSX.Element => {
+  let type: string = schema.type;
+  let step: number | undefined = undefined;
+  let as: string | undefined = undefined;
 
   switch (type) {
     case "string":
@@ -51,13 +58,13 @@ const EditControl = ({ id, schema, value, onChange }) => {
   return (
     <div>
       <Form.Group className="mb-3">
-        <Form.Label htmlFor={id}>{schema["title"]}</Form.Label>
+        <Form.Label htmlFor={id}>{schema.title}</Form.Label>
         <Form.Control
           type={type}
           as={as}
           id={id}
           value={value}
-          readOnly={"readOnly" in schema ? schema["readOnly"] : false}
+          readOnly={schema.readOnly ?? false}
           step={step}
           onChange={onChange}
         />
@@ -65,6 +72,8 @@ const EditControl = ({ id, schema, value, onChange }) => {
     </div>
   );
 };
+
+export default EditControl;
 
 const CardContents = ({ config, schema, description, setConfig }) => {
   if (Object.keys(config).length === 0) {
@@ -97,48 +106,42 @@ const CardContents = ({ config, schema, description, setConfig }) => {
   );
 };
 
-export function ConfigCard(props: { path: string }) {
-  const [config, setConfig] = useState({});
-  const [schema, setSchema] = useState({});
-  const [description, setDescription] = useState("");
-  const [saving, setSaving] = useState(false);
-  const [httpErrorText, setHttpErrorText] = useState("");
-  const [isDirty, setIsDirty] = useState(false);
+interface ConfigCardProps {
+  path: string;
+}
 
-  const updateFunc = async (path: string) => {
-    const data = await fetchConfigData(path);
-    setConfig(data["config"]);
-    setSchema(data["schema"]);
-    setDescription(data["description"]);
+export function ConfigCard({ path }: ConfigCardProps): JSX.Element {
+  const [config, setConfig] = useState<Record<string, any>>({});
+  const [schema, setSchema] = useState<Record<string, any>>({});
+  const [description, setDescription] = useState<string>("");
+  const [saving, setSaving] = useState<boolean>(false);
+  const [httpErrorText, setHttpErrorText] = useState<string>("");
+  const [isDirty, setIsDirty] = useState<boolean>(false);
+
+  const updateFunc = async (path: string): Promise<void> => {
+    const data: ConfigData = await fetchConfigData(path);
+    setConfig(data.config);
+    setSchema(data.schema);
+    setDescription(data.description);
   };
 
   if (Object.keys(config).length === 0) {
-    updateFunc(props.path);
+    updateFunc(path);
   }
 
-  const handleSave = async () => {
+  const handleSave = async (): Promise<void> => {
     setSaving(true);
-    const response = await fetch(app_config.config_path + props.path, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(config),
-    });
-    if (!response.ok) {
-      setHttpErrorText(`${response.status} ${response.statusText}`);
-    } else {
-      setIsDirty(false);
-    }
+    await saveConfigData(path, config, (e) => {setHttpErrorText(e)});
+    setIsDirty(false);
     setSaving(false);
   };
 
-  const title = props.path.slice(1).replace(/\//g, " ▸ ");
+  const title = path.slice(1).replace(/\//g, " ▸ ");
 
   return (
     <div className="ConfigCard">
       {httpErrorText !== "" && (
-        <ModalError title="Error" onHide={setHttpErrorText("")}>
+        <ModalError title="Error" onHide={() => setHttpErrorText("")}>
           <p>There was an error saving the configuration:</p>
           <p>{httpErrorText}</p>
         </ModalError>
@@ -147,7 +150,7 @@ export function ConfigCard(props: { path: string }) {
       <Card>
         <Card.Body>
           <Card.Title className="pb-2">{title}</Card.Title>
-          <div onInput={(e) => setIsDirty(true)} class="mb-2">
+          <div onInput={() => setIsDirty(true)} className="mb-2">
             <CardContents
               config={config}
               schema={schema}
@@ -155,7 +158,7 @@ export function ConfigCard(props: { path: string }) {
               setConfig={setConfig}
             />
           </div>
-          <div class="d-flex justify-content-begin">
+          <div className="d-flex justify-content-begin">
             <Spinner animation="border" hidden={!saving} className="me-2" />
             <Button onClick={handleSave} disabled={saving || !isDirty}>
               Save

@@ -1,17 +1,62 @@
-import Collapse from "bootstrap/js/dist/collapse";
-import { useContext, useEffect, useId, useState } from "preact/hooks";
+import { ModalError } from "pages/ModalError";
+import { useContext, useId, useState } from "preact/hooks";
 import Card from "react-bootstrap/Card";
 import Stack from "react-bootstrap/Stack";
+import { fetchConfigData, saveConfigData } from "../configAPIClient";
+import { ReCollapse } from "./ReCollapse";
 import { SKStatusContext } from "./SKStatusContext";
 
 export const SignalKSettings = () => {
+  const [config, setConfig] = useState({});
+  const [requestSave, setRequestSave] = useState(false);
+  const [errorText, setErrorText] = useState("");
+
+  function handleError(e) {
+    console.log("handleError", e);
+    setErrorText(e);
+  }
+
+  if (requestSave) {
+    // save config data to server
+    saveConfigData("/System/Signal K Settings", config, handleError);
+    setRequestSave(false);
+  }
+
+  async function updateConfig() {
+    try {
+      const data = await fetchConfigData("/System/Signal K Settings");
+      setConfig(data.config);
+    } catch (e) {
+      setErrorText(e);
+    }
+  }
+
+  if (Object.keys(config).length === 0) {
+    updateConfig();
+  }
+
   return (
-    <Stack gap={4}>
-      <SKConnectionStatus />
-      <SKCounters />
-      <SKConnectionSettings />
-      <SKAuthToken />
-    </Stack>
+    <>
+      {errorText !== "" && (
+        <ModalError title="Error" onHide={() => setErrorText("")}>
+          <p>{errorText}</p>
+        </ModalError>
+      )}
+      <Stack gap={4}>
+        <SKConnectionStatus />
+        <SKCounters />
+        <SKConnectionSettings
+          config={config}
+          setConfig={setConfig}
+          setRequestSave={setRequestSave}
+        />
+        <SKAuthToken
+          config={config}
+          setConfig={setConfig}
+          setRequestSave={setRequestSave}
+        />
+      </Stack>
+    </>
   );
 };
 
@@ -115,19 +160,14 @@ const SKCounters = () => {
   );
 };
 
-const SKConnectionSettings = () => {
+function SKConnectionSettings({ config, setConfig, setRequestSave }) {
   const [mdns, setMdns] = useState(false);
   const id = useId();
 
-  const handleChange = (event) => {
+  const handleMDNSChange = (event) => {
     setMdns(event.target.checked);
+    setConfig({ ...config, mdns: event.target.checked });
   };
-
-  useEffect(() => {
-    const collapsetestEl = document.getElementById(id + "-collapse");
-    const bsCollapse = new Collapse(collapsetestEl, { mdns: false });
-    mdns ? bsCollapse.show() : bsCollapse.hide();
-  });
 
   return (
     <>
@@ -142,23 +182,28 @@ const SKConnectionSettings = () => {
                 data-target={`#${id}-collapse`}
               >
                 Use mDNS
-                <input
-                  type="checkbox"
-                  class="form-check-input switch"
-                  id={id + "-mdns"}
-                  onChange={handleChange}
-                />
               </label>
+              <input
+                type="checkbox"
+                class="form-check-input switch"
+                id={id + "-mdns"}
+                checked={config.mdns}
+                onChange={handleMDNSChange}
+              />
             </div>
 
-            <div class="collapse" id={id + "-collapse"}>
+            <ReCollapse id={id + "-collapse"} isCollapsed={mdns}>
               <div class="mb-3">
                 <label for={id + "-hostname"} class="form-label">
                   Hostname
                 </label>
-                <input type="text" class="form-control" id={id + "-hostname"} />
+                <input
+                  type="text"
+                  class="form-control"
+                  id={id + "-hostname"}
+                  value={config.sk_address}
+                />
               </div>
-
               <div class="mb-3">
                 <label for={id + "-port"} class="form-label">
                   Port
@@ -167,39 +212,44 @@ const SKConnectionSettings = () => {
                   type="number"
                   step={1}
                   class="form-control"
+                  value={config.sk_port}
                   id={id + "-port"}
                 />
               </div>
-
               <div class="mb-3 form-check">
                 <input
                   type="checkbox"
                   class="form-check-input"
                   id={id + "-tls"}
+                  disabled
                 />
                 <label class="form-check-label" for={id + "-tls"}>
                   Use TLS
                 </label>
               </div>
-            </div>
+            </ReCollapse>
 
             <button
               type="submit"
               class="btn btn-primary"
-              onClick={(e) => e.preventDefault()}
+              onClick={(e) => {
+                e.preventDefault();
+                setRequestSave(true);
+              }}
             >
-              Submit
+              Save
             </button>
           </form>
         </Stack>
       </SKCard>
     </>
   );
-};
+}
 
-const SKAuthToken = () => {
+const SKAuthToken = ({ config, setConfig, setRequestSave }) => {
   const handleClearToken = () => {
-    console.log("Clearing token");
+    setConfig({ ...config, token: "" });
+    setRequestSave(true);
   };
 
   return (
