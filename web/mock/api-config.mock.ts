@@ -19,8 +19,8 @@ export default defineMock(
       method: 'GET',
       body: {
         "config": {
-          "sk_address": "",
-          "sk_port": 0,
+          "sk_address": "oppi4.local",
+          "sk_port": 3000,
           "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2UiOiI0NTMxODliOC04NzNkLTkxMzUtNDFjYy1jYzFjMzg4ZWU1YzUiLCJpYXQiOjE2NTA4OTg3MjB9.5ENWogKknEbHf9Ppc-xl5zgJvBrzy0WcIH0tyymcfVg",
           "client_id": "453189b8-873d-9135-41cc-cc1c388ee5c5",
           "polling_href": ""
