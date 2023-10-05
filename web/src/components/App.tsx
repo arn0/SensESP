@@ -8,16 +8,17 @@ import { LocationProvider, Route, Router } from "preact-iso";
 import { Header } from "./Header.jsx";
 
 export function App() {
-    return (
-      <LocationProvider>
-        <Header />
-          <Router>
-            <StatusPage path="/ui/status" />
-            <SystemPage path="/ui/system" />
-            <WiFiConfigPage path="/ui/wifi" />
-            <ConfigurationPage path="/ui/configuration" />
-            <Route default component={NotFound} />
-          </Router>
-      </LocationProvider>
-    );
-  }
+  return (
+    <LocationProvider>
+      <Header />
+      <Router>
+        <StatusPage path="/ui/status" />
+        <SystemPage path="/ui/system" />
+        <WiFiConfigPage path="/ui/wifi" />
+        <SignalKPage path="/ui/signalk" />
+        <ConfigurationPage path="/ui/configuration" />
+        <Route default component={NotFound} />
+      </Router>
+    </LocationProvider>
+  );
+}
