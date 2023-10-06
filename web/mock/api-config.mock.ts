@@ -25,36 +25,6 @@ export default defineMock(
           "client_id": "453189b8-873d-9135-41cc-cc1c388ee5c5",
           "polling_href": ""
         },
-        "schema": {
-          "type": "object",
-          "properties": {
-            "sk_address": {
-              "title": "Signal K server address (readonly)",
-              "type": "string",
-              "readOnly": true
-            },
-            "sk_port": {
-              "title": "Signal K server port (readonly)",
-              "type": "integer",
-              "readOnly": true
-            },
-            "client_id": {
-              "title": "Client ID  (readonly)",
-              "type": "string",
-              "readOnly": true
-            },
-            "token": {
-              "title": "Server authorization token (readonly)",
-              "type": "string",
-              "readOnly": true
-            },
-            "polling_href": {
-              "title": "Server authorization polling href (readonly)",
-              "type": "string",
-              "readOnly": true
-            }
-          }
-        },
         "description": ""
       },
       delay: 600,
@@ -64,28 +34,46 @@ export default defineMock(
       method: 'GET',
       body: {
         "config": {
-          "hostname": "asyncnew",
-          "default_hostname": "asyncnew",
-          "ssid": "Hat Labs Sensors",
-          "password": "kanneluuri2406"
-        },
-        "schema": {
-          "type": "object",
-          "properties": {
-            "ssid": {
-              "title": "WiFi SSID",
-              "type": "string"
-            },
-            "password": {
-              "title": "WiFi password",
-              "type": "string",
-              "format": "password"
-            },
-            "hostname": {
-              "title": "Device hostname",
-              "type": "string"
-            }
+          "apSettings": {
+            "enabled": false,
+            "name": "My New Network",
+            "password": "mypassword",
+            "channel": "Auto",
+            "hidden": false
+          },
+          "clientSettings": {
+            "enabled": true,
+            "singleClientConfigs": [
+              {
+                name: "Hat Labs Sensors",
+                password: "mypassword",
+                useDHCP: true,
+                ipAddress: "",
+                netmask: "",
+                gateway: "",
+                dnsServer: "",
+              },
+              {
+                name: "Network 11",
+                password: "mypassword2",
+                useDHCP: false,
+                ipAddress: "10.34.21.2",
+                netmask: "255.255.255.0",
+                gateway: "10.34.21.1",
+                dnsServer: "10.34.21.1",
+              },
+              {
+                name: "My Phone Hotspot",
+                password: "mypassword3",
+                useDHCP: true,
+                ipAddress: "",
+                netmask: "",
+                gateway: "",
+                dnsServer: "",
+              },
+            ]
           }
+
         },
         "description": ""
       },
