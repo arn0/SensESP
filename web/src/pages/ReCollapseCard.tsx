@@ -20,8 +20,6 @@ export function ReCollapse({
   expanded,
 }: ReCollapseProps): JSX.Element {
 
-  console.log("ReCollapse: id=" + id + ", expanded=" + expanded)
-
   useEffect(() => {
     const collapseEl = document.getElementById(id);
     const bsCollapse = new Collapse(collapseEl, { toggle: false });
@@ -64,8 +62,6 @@ export function CollapseCard({
   expanded,
   setExpanded,
 }) {
-
-  console.log("CollapseCard: id=" + id + ", expanded=" + expanded)
 
   return (
     <div className="card">

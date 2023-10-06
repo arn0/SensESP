@@ -1,13 +1,10 @@
-import { useState } from "preact/hooks";
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
-import Spinner from "react-bootstrap/Spinner";
-import { ModalError } from "../ModalError";
+import { useId, useState } from "preact/hooks";
 import { fetchConfigData, saveConfigData } from "../configAPIClient";
 
-import { ChangeEvent } from "react";
+import { ReFormInput } from "pages/ReForm";
 import { ConfigData } from "pages/configAPIClient";
+import { ChangeEvent } from "preact/compat";
+import { ModalError } from "pages/ModalError";
 
 interface EditControlProps {
   id: string;
@@ -57,18 +54,16 @@ const EditControl = ({
 
   return (
     <div>
-      <Form.Group className="mb-3">
-        <Form.Label htmlFor={id}>{schema.title}</Form.Label>
-        <Form.Control
-          type={type}
-          as={as}
-          id={id}
-          value={value}
-          readOnly={schema.readOnly ?? false}
-          step={step}
-          onChange={onChange}
-        />
-      </Form.Group>
+      <ReFormInput
+        type={type}
+        as={as}
+        id={id}
+        label={schema.title}
+        value={value}
+        readOnly={schema.readOnly || false}
+        step={step}
+        onChange={onChange}
+      />
     </div>
   );
 };
@@ -76,14 +71,6 @@ const EditControl = ({
 export default EditControl;
 
 const CardContents = ({ config, schema, description, setConfig }) => {
-  if (Object.keys(config).length === 0) {
-    return (
-      <div class="d-flex align-items-center justify-content-center min">
-        <Spinner animation="border" />
-      </div>
-    );
-  }
-
   const updateConfig = (key: string, value: any) => {
     setConfig({ ...config, [key]: value });
   };
@@ -118,6 +105,8 @@ export function ConfigCard({ path }: ConfigCardProps): JSX.Element {
   const [httpErrorText, setHttpErrorText] = useState<string>("");
   const [isDirty, setIsDirty] = useState<boolean>(false);
 
+  const id = useId();
+
   const updateFunc = async (path: string): Promise<void> => {
     const data: ConfigData = await fetchConfigData(path);
     setConfig(data.config);
@@ -129,43 +118,75 @@ export function ConfigCard({ path }: ConfigCardProps): JSX.Element {
     updateFunc(path);
   }
 
-  const handleSave = async (): Promise<void> => {
+  async function handleSave(e): Promise<void> {
+    e.preventDefault();
     setSaving(true);
-    await saveConfigData(path, config, (e) => {setHttpErrorText(e)});
+    await saveConfigData(path, config, (e) => {
+      console.log("Error saving config data", e);
+      setIsDirty(true);
+      setHttpErrorText(e);
+    });
     setIsDirty(false);
     setSaving(false);
-  };
+  }
+
+  console.log("httpErrorText", httpErrorText);
 
   const title = path.slice(1).replace(/\//g, " ▸ ");
 
+  if (!schema) {
+    return null;
+  }
+
+  if (Object.keys(config).length === 0) {
+    return (
+      <div class="d-flex align-items-center justify-content-center min">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="ConfigCard">
-      {httpErrorText !== "" && (
-        <ModalError title="Error" onHide={() => setHttpErrorText("")}>
+      <ModalError id={id+"-modal"} title="Error" show={httpErrorText!==""} onHide={() => setHttpErrorText("")}>
           <p>There was an error saving the configuration:</p>
           <p>{httpErrorText}</p>
         </ModalError>
-      )}
 
-      <Card>
-        <Card.Body>
-          <Card.Title className="pb-2">{title}</Card.Title>
-          <div onInput={() => setIsDirty(true)} className="mb-2">
-            <CardContents
-              config={config}
-              schema={schema}
-              description={description}
-              setConfig={setConfig}
-            />
-          </div>
-          <div className="d-flex justify-content-begin">
-            <Spinner animation="border" hidden={!saving} className="me-2" />
-            <Button onClick={handleSave} disabled={saving || !isDirty}>
-              Save
-            </Button>
-          </div>
-        </Card.Body>
-      </Card>
+      <div className="card">
+        <div className="card-body">
+          <h2 className="card-title pb-2">{title}</h2>
+          <form>
+            <div onInput={() => setIsDirty(true)} className="mb-2">
+              <CardContents
+                config={config}
+                schema={schema}
+                description={description}
+                setConfig={setConfig}
+              />
+            </div>
+            <div className="d-flex justify-content-begin">
+              <div
+                class={"spinner-border me-2" + saving ? "" : " visually-hidden"}
+                role="status"
+              >
+                <span class="visually-hidden">Loading...</span>
+              </div>
+
+              <button
+                className="btn btn-primary"
+                type="submit"
+                onClick={handleSave}
+                disabled={saving || !isDirty}
+              >
+                Save
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

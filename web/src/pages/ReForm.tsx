@@ -34,7 +34,7 @@ export function ReFormSelect(props) {
 
 export function ReFormCheck(props) {
   return (
-    <div className="form-check mb-3">
+    <div className="form-check">
       <input className="form-check-input" {...props} />
       <label className="form-check-label" htmlFor={props.id}>
         {props.label}

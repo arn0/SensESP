@@ -1,7 +1,5 @@
 import { app_config } from "app_config";
 import { useState } from "preact/hooks";
-import Spinner from "react-bootstrap/Spinner";
-import Stack from "react-bootstrap/Stack";
 import { ConfigCard } from "./ConfigCard";
 
 const updateCards = async () => {
@@ -37,18 +35,18 @@ export function ConfigCards() {
         class="d-flex align-items-center justify-content-center min"
         style="height: 100vh"
       >
-        <Spinner animation="border" />
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
       </div>
     );
   }
 
   return (
-    <div>
-      <Stack gap={3}>
-        {cards.map((card) => (
-          <ConfigCard path={card} />
-        ))}
-      </Stack>
+    <div className="vstack gap-4">
+      {cards.map((card) => (
+        <ConfigCard path={card} />
+      ))}
     </div>
   );
 }

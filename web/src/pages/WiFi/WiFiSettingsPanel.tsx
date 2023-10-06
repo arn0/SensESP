@@ -1,10 +1,10 @@
 import { produce } from "immer";
 import { ModalError } from "pages/ModalError";
 import { CollapseCard } from "pages/ReCollapseCard";
-import { ReFormInput } from "pages/ReForm";
+import { ReFormInput, ReFormSwitch } from "pages/ReForm";
 import { ReTab, ReTabs } from "pages/ReTab";
 import { fetchConfigData, saveConfigData } from "pages/configAPIClient";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useState } from "preact/hooks";
 import { NetworkList } from "./NetworkList";
 import { SingleClientConfigPanel } from "./SingleClientConfigPanel";
 import { SingleClientConfig, WiFiSettingsConfig } from "./WiFiSettingsConfig";
@@ -146,10 +146,10 @@ function APSettingsPanel({ config, setConfig }) {
             onChange={handleApSettingsChange("channel")}
           />
 
-          <ReFormInput
+          <ReFormSwitch
             id={id + "-hidden"}
             label="Hidden"
-            type="switch"
+            type="checkbox"
             checked={config.hidden}
             onChange={handleApSettingsChange("hidden")}
           />
@@ -185,8 +185,6 @@ function ClientSettingsPanel({ config, setConfig }) {
   function handleActiveTab(tabNum) {
     setActiveTab(tabNum);
   }
-
-  console.log("ClientSettingsPanel:", config.enabled)
 
   function setExpanded(expanded) {
     setConfig(
