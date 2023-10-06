@@ -1,14 +1,14 @@
 import { AppPage } from "pages/AppPage";
 import { PageContents } from "../PageContents";
 import { PageHeading } from "../PageHeading";
-import { WiFiSettings } from "./WiFiSettings";
+import { WiFiSettingsPanel } from "./WiFiSettingsPanel";
 
 export function WiFiConfigPage() {
   return (
     <AppPage>
       <PageHeading title="WiFi Configuration" />
       <PageContents>
-        <WiFiSettings />
+        <WiFiSettingsPanel />
       </PageContents>
     </AppPage>
   );
