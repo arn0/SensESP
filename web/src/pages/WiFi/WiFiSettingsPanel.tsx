@@ -1,9 +1,9 @@
 import { produce } from "immer";
-import { ModalError } from "pages/ModalError";
-import { CollapseCard } from "pages/ReCollapseCard";
-import { ReFormInput, ReFormSwitch } from "pages/ReForm";
-import { ReTab, ReTabs } from "pages/ReTab";
-import { fetchConfigData, saveConfigData } from "pages/configAPIClient";
+import { ModalError } from "components/ModalError";
+import { CollapseCard } from "components/ReCollapseCard";
+import { ReFormInput, ReFormSwitch } from "components/ReForm";
+import { ReTab, ReTabs } from "components/ReTab";
+import { fetchConfigData, saveConfigData } from "common/configAPIClient";
 import { useEffect, useId, useState } from "preact/hooks";
 import { NetworkList } from "./NetworkList";
 import { SingleClientConfigPanel } from "./SingleClientConfigPanel";

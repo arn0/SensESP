@@ -1,9 +1,9 @@
 import { useId, useState } from "preact/hooks";
-import { fetchConfigData, saveConfigData } from "../configAPIClient";
+import { fetchConfigData, saveConfigData } from "../../common/configAPIClient";
 
-import { ModalError } from "pages/ModalError";
-import { ReFormInput } from "pages/ReForm";
-import { ConfigData } from "pages/configAPIClient";
+import { ModalError } from "components/ModalError";
+import { ReFormInput } from "components/ReForm";
+import { ConfigData } from "common/configAPIClient";
 import { ChangeEvent, JSX } from "preact/compat";
 
 interface EditControlProps {
@@ -161,8 +161,10 @@ export function ConfigCard({ path }: ConfigCardProps): JSX.Element {
       </ModalError>
 
       <div className="card">
+          <div className="card-header">
+            <h2 className="card-title pb-2">{title}</h2>
+          </div>
         <div className="card-body">
-          <h2 className="card-title pb-2">{title}</h2>
           <form>
             <div onInput={() => setIsDirty(true)} className="mb-2">
               <CardContents

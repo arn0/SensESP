@@ -1,7 +1,7 @@
 import { AppPage } from "pages/AppPage";
-import { ReFormInput, ReFormSwitch } from "pages/ReForm";
+import { ReFormInput, ReFormSwitch } from "components/ReForm";
 import { useId, useState } from "preact/hooks";
-import { ModalError } from "../ModalError";
+import { ModalError } from "../../components/ModalError";
 import { PageContents } from "../PageContents";
 import { PageHeading } from "../PageHeading";
 
@@ -30,12 +30,11 @@ const SystemCards = () => {
 
   function DeviceNameCard() {
     return (
-      <SystemSettingsCard>
-        <h5 className="card-title">Device Name</h5>
+      <SystemSettingsCard title={<h5 className="card-title">Device Name</h5>}>
         <p className="card-text">
-          The device name is used to identify this device on the network. It is
-          used both as a hostname (e.g. "my-device.local") and as an identifying
-          name in the Signal K network.
+          The device name is used to identify this device on the network. It
+          is used both as a hostname (e.g. "my-device.local") and as an
+          identifying name in the Signal K network.
         </p>
         <ReFormInput
           label="Hostname"
@@ -56,8 +55,7 @@ function AuthCard() {
   const id = useId();
 
   return (
-    <SystemSettingsCard>
-      <h5 className="card-title">Authentication</h5>
+    <SystemSettingsCard title={<h5 className="card-title">Authentication</h5>}>
       <p className="card-text">
         Authentication is used to restrict access to the configuration
         interface. If you are using this device on a trusted private network,
@@ -97,14 +95,10 @@ function AuthCard() {
 }
 
 const SystemCard = ({ children }) => {
-  return (
-    <div className="card">
-      <div className="card-body">{children}</div>
-    </div>
-  );
+  return <div className="card">{children}</div>;
 };
 
-const SystemSettingsCard = ({ children }) => {
+const SystemSettingsCard = ({ title, children }) => {
   const id = useId();
   const [isDirty, setIsDirty] = useState(false);
 
@@ -118,17 +112,20 @@ const SystemSettingsCard = ({ children }) => {
 
   return (
     <SystemCard>
-      <div class="mb-3" onInput={handleInput}>
-        {children}
+      <div className="card-header">
+        {title}
       </div>
-      <button
-        type="button"
-        class="btn btn-primary"
-        disabled={!isDirty}
-        onClick={handleSave}
-      >
-        Save
-      </button>
+      <div className="card-body">
+        {children}
+        <button
+          type="button"
+          className="btn btn-primary mt-3"
+          disabled={!isDirty}
+          onClick={handleSave}
+        >
+          Save
+        </button>
+      </div>
     </SystemCard>
   );
 };
@@ -174,14 +171,19 @@ const RestartCard = () => {
         <p>{httpErrorText}</p>
       </ModalError>
       <SystemCard>
-        <h5 className="card-title">Restart the device</h5>
-        <p className="card-text">
-          Restarting the device will take a few seconds. If you are connected to
-          the device's WiFi access point, you may have to manually reconnect.
-        </p>
-        <button type="button" class="btn btn-primary" onClick={handleRestart}>
-          Restart
-        </button>
+        <div className="card-header">
+          <h5 className="card-title">Restart the device</h5>
+        </div>
+        <div className="card-body">
+          <p className="card-text">
+            Restarting the device will take a few seconds. If you are connected
+            to the device's WiFi access point, you may have to manually
+            reconnect.
+          </p>
+          <button type="button" class="btn btn-primary" onClick={handleRestart}>
+            Restart
+          </button>
+        </div>
       </SystemCard>
     </>
   );
@@ -228,15 +230,19 @@ const ResetCard = () => {
         <p>{httpErrorText}</p>
       </ModalError>
       <SystemCard>
-        <h5 className="card-title">Reset the device to factory defaults</h5>
-        <p className="card-text">
-          <strong>Warning:</strong> This will reset the device to factory
-          defaults, erasing all configuration and data. You will need to
-          reconfigure the device after resetting.
-        </p>
-        <button type="button" class="btn btn-danger" onClick={handleReset}>
-          Reset
-        </button>
+        <div className="card-header">
+          <h5 className="card-title">Reset the device to factory defaults</h5>
+        </div>
+        <div className="card-body">
+          <p className="card-text">
+            <strong>Warning:</strong> This will reset the device to factory
+            defaults, erasing all configuration and data. You will need to
+            reconfigure the device after resetting.
+          </p>
+          <button type="button" class="btn btn-danger" onClick={handleReset}>
+            Reset
+          </button>
+        </div>
       </SystemCard>
     </>
   );

@@ -1,6 +1,6 @@
 import { produce } from "immer";
-import { ReCollapse } from "pages/ReCollapseCard";
-import { ReFormCheck, ReFormInput } from "pages/ReForm";
+import { ReCollapse } from "components/ReCollapseCard";
+import { ReFormCheck, ReFormInput } from "components/ReForm";
 import { useId } from "preact/hooks";
 
 export function SingleClientConfigPanel({ config, setConfig }) {

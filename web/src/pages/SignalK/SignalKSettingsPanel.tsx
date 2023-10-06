@@ -1,7 +1,7 @@
-import { ModalError } from "pages/ModalError";
+import { ModalError } from "components/ModalError";
 import { useContext, useId, useState } from "preact/hooks";
-import { ReCollapse } from "../ReCollapseCard";
-import { fetchConfigData, saveConfigData } from "../configAPIClient";
+import { ReCollapse } from "../../components/ReCollapseCard";
+import { fetchConfigData, saveConfigData } from "../../common/configAPIClient";
 import { SKStatusContext } from "./SKStatusContext";
 
 export const SignalKSettingsPanel = () => {
@@ -66,10 +66,10 @@ export const SignalKSettingsPanel = () => {
 const SKCard = ({ title, children }) => {
   return (
     <div className="card">
-      <div className="card-body">
+      <div className="card-header">
         <div className="card-title">{title}</div>
-        {children}
       </div>
+      <div className="card-body">{children}</div>
     </div>
   );
 };

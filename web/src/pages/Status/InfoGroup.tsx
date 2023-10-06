@@ -11,10 +11,10 @@ export function InfoGroup(props: InfoGroupProps) {
   return (
     <div className="InfoGroup">
       <div className="card">
+        <div className="card-header">
+          <h4 className="card-title">{props.name}</h4>
+        </div>
         <div className="card-body">
-          <div className="card-title pb-2">
-            <h4>{props.name}</h4>
-          </div>
           <ul className="list-group">
             {props.items.map((item) => {
               return (

@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import preact from "@preact/preset-vite";
 import mockDevServerPlugin from 'vite-plugin-mock-dev-server'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import brotli from "rollup-plugin-brotli";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -20,5 +21,13 @@ export default defineConfig({
     proxy: {
       '^/api': { target: 'http://example.com' },
     }
+  },
+  build: {
+    rollupOptions: {
+      // https://rollupjs.org/configuration-options/
+      plugins: [
+        brotli(),
+      ],
+    },
   }
 });
