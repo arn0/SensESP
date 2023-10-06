@@ -139,6 +139,8 @@ const SystemSettingsCard = ({ children }) => {
 const RestartCard = () => {
   const [httpErrorText, setHttpErrorText] = useState("");
 
+  const id = useId();
+
   const handleRestart = async () => {
     console.log("Restarting the device");
 
@@ -190,6 +192,8 @@ const RestartCard = () => {
  */
 const ResetCard = () => {
   const [httpErrorText, setHttpErrorText] = useState("");
+
+  const id = useId();
 
   const handleReset = async () => {
     console.log("Resetting the device");

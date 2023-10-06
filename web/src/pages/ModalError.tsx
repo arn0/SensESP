@@ -1,4 +1,4 @@
-import { Modal } from "bootstrap/js/dist/modal";
+import Modal from "bootstrap/js/dist/modal";
 import { useEffect } from "preact/hooks";
 
 export function ModalError({ id, title, children, show, onHide }) {

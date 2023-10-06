@@ -9,6 +9,8 @@ export const SignalKSettingsPanel = () => {
   const [requestSave, setRequestSave] = useState(false);
   const [errorText, setErrorText] = useState("");
 
+  const id = useId();
+
   function handleError(e) {
     setErrorText(e);
   }
