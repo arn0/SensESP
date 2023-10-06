@@ -12,7 +12,6 @@ export class InfoItemData {
 }
 
 export const InfoItem = memo((props: InfoItemData) => {
-  console.log("InfoItem:", props);
   return (
     <div className="InfoItem">
       <ListGroup.Item className="d-flex justify-content-between align-items-start">

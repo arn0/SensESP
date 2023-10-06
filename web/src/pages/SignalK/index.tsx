@@ -2,17 +2,17 @@ import { AppPage } from "pages/AppPage";
 import { PageContents } from "../PageContents";
 import { PageHeading } from "../PageHeading";
 import { SKStatusProvider } from "./SKStatusContext";
-import { SignalKSettings } from "./SignalKSettings";
+import { SignalKSettingsPanel } from "./SignalKSettingsPanel";
 
 export const SignalKPage = () => {
   return (
     <AppPage>
-      <SKStatusProvider>
-        <PageHeading title="Signal K Configuration" />
-        <PageContents>
-          <SignalKSettings />
-        </PageContents>
-      </SKStatusProvider>
+      <PageHeading title="Signal K Configuration" />
+      <PageContents>
+        <SKStatusProvider>
+          <SignalKSettingsPanel />
+        </SKStatusProvider>
+      </PageContents>
     </AppPage>
   );
 };

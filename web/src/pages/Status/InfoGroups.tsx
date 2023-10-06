@@ -9,7 +9,6 @@ class InfoGroupsState {
 }
 
 const updateGroups = async () => {
-  console.log("updateGroups");
   try {
     const response = await fetch(app_config.info_path);
     if (!response.ok) {
@@ -51,7 +50,7 @@ export function InfoGroups() {
   useEffect(() => {
     const interval = setInterval(timerFunc, 5000);
     return () => clearInterval(interval);
-  });
+  }, []);
 
   if (Object.keys(groups).length === 0) {
     // Display a spinner while waiting for data. Center the spinner

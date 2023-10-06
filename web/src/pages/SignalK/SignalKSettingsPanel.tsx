@@ -3,16 +3,15 @@ import { useContext, useId, useState } from "preact/hooks";
 import Card from "react-bootstrap/Card";
 import Stack from "react-bootstrap/Stack";
 import { fetchConfigData, saveConfigData } from "../configAPIClient";
-import { ReCollapse } from "./ReCollapse";
+import { ReCollapse } from "../ReCollapse";
 import { SKStatusContext } from "./SKStatusContext";
 
-export const SignalKSettings = () => {
+export const SignalKSettingsPanel = () => {
   const [config, setConfig] = useState({});
   const [requestSave, setRequestSave] = useState(false);
   const [errorText, setErrorText] = useState("");
 
   function handleError(e) {
-    console.log("handleError", e);
     setErrorText(e);
   }
 

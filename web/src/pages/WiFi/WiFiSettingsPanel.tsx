@@ -20,10 +20,7 @@ export function WiFiSettingsPanel() {
   const [requestSave, setRequestSave] = useState(false);
   const [errorText, setErrorText] = useState("");
 
-  console.log("WiFiSettingsPanel", config);
-
   function handleError(e) {
-    console.log("handleError", e);
     setErrorText(e);
   }
 

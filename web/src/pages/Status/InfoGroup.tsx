@@ -11,7 +11,6 @@ interface InfoGroupProps {
 export { InfoItemData };
 
 export function InfoGroup(props: InfoGroupProps) {
-  console.log("InfoGroup:", props.items);
   return (
     <div className="InfoGroup">
       <Card>
