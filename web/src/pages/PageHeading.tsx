@@ -4,7 +4,5 @@ interface PageHeadingProps {
 }
 
 export function PageHeading(props: PageHeadingProps) {
-  return (
-    <h1 class="display-6">{props.title}</h1>
-  );
+  return <h1 class="display-6">{props.title}</h1>;
 }

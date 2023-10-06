@@ -51,7 +51,7 @@ const SystemCards = () => {
 function AuthCard() {
   const [authEnabled, setAuthEnabled] = useState(false);
 
-  console.log("AuthCard: authEnabled = " + authEnabled)
+  console.log("AuthCard: authEnabled = " + authEnabled);
 
   const id = useId();
 
@@ -160,17 +160,17 @@ const RestartCard = () => {
 
   return (
     <>
-      {httpErrorText !== "" && (
-        <ModalError
-          title="Error"
-          onHide={() => {
-            setHttpErrorText("");
-          }}
-        >
-          <p>Failed to restart the device:</p>
-          <p>{httpErrorText}</p>
-        </ModalError>
-      )}
+      <ModalError
+        id={id + "-modal"}
+        title="Error"
+        show={httpErrorText !== ""}
+        onHide={() => {
+          setHttpErrorText("");
+        }}
+      >
+        <p>Failed to restart the device:</p>
+        <p>{httpErrorText}</p>
+      </ModalError>
       <SystemCard>
         <h5 className="card-title">Restart the device</h5>
         <p className="card-text">
@@ -212,17 +212,17 @@ const ResetCard = () => {
 
   return (
     <>
-      {httpErrorText !== "" && (
-        <ModalError
-          title="Error"
-          onHide={() => {
-            setHttpErrorText("");
-          }}
-        >
-          <p>Failed to reset the device:</p>
-          <p>{httpErrorText}</p>
-        </ModalError>
-      )}
+      <ModalError
+        id={id + "-modal"}
+        title="Error"
+        show={httpErrorText !== ""}
+        onHide={() => {
+          setHttpErrorText("");
+        }}
+      >
+        <p>Failed to reset the device:</p>
+        <p>{httpErrorText}</p>
+      </ModalError>
       <SystemCard>
         <h5 className="card-title">Reset the device to factory defaults</h5>
         <p className="card-text">

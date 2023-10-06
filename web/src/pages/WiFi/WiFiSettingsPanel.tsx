@@ -58,11 +58,14 @@ export function WiFiSettingsPanel() {
 
   return (
     <>
-      {errorText !== "" && (
-        <ModalError title="Error" onHide={() => setErrorText("")}>
-          <p>{errorText}</p>
-        </ModalError>
-      )}
+      <ModalError
+        id={id + "-modal"}
+        title="Error"
+        show={errorText !== ""}
+        onHide={() => setErrorText("")}
+      >
+        <p>{errorText}</p>
+      </ModalError>
       <div className="mb-3">
         <div className="vstack gap-4">
           <APSettingsPanel config={config.apSettings} setConfig={setAPConfig} />

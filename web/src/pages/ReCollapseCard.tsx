@@ -1,4 +1,5 @@
 import Collapse from "bootstrap/js/dist/collapse";
+import { JSX } from "preact";
 import { useEffect, useId } from "preact/hooks";
 
 type ReCollapseProps = {
@@ -19,7 +20,6 @@ export function ReCollapse({
   children,
   expanded,
 }: ReCollapseProps): JSX.Element {
-
   useEffect(() => {
     const collapseEl = document.getElementById(id);
     const bsCollapse = new Collapse(collapseEl, { toggle: false });
@@ -55,14 +55,7 @@ function CheckToggle({ expanded, setExpanded }) {
  *
  * The collapse behavior is controlled by a checkbox in the card header.
  */
-export function CollapseCard({
-  id,
-  title,
-  children,
-  expanded,
-  setExpanded,
-}) {
-
+export function CollapseCard({ id, title, children, expanded, setExpanded }) {
   return (
     <div className="card">
       <div className="card-header justify-content-between align-items-start">

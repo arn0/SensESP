@@ -4,7 +4,7 @@ import { render } from "preact";
 import { App } from "./App";
 
 import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap/dist/js/bootstrap.js"
+import "bootstrap/dist/js/bootstrap.js";
 import "./style.css";
 
 render(<App />, document.getElementById("app"));

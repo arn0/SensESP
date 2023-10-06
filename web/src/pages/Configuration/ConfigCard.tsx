@@ -1,10 +1,10 @@
 import { useId, useState } from "preact/hooks";
 import { fetchConfigData, saveConfigData } from "../configAPIClient";
 
+import { ModalError } from "pages/ModalError";
 import { ReFormInput } from "pages/ReForm";
 import { ConfigData } from "pages/configAPIClient";
-import { ChangeEvent } from "preact/compat";
-import { ModalError } from "pages/ModalError";
+import { ChangeEvent, JSX } from "preact/compat";
 
 interface EditControlProps {
   id: string;
@@ -150,10 +150,15 @@ export function ConfigCard({ path }: ConfigCardProps): JSX.Element {
 
   return (
     <div className="ConfigCard">
-      <ModalError id={id+"-modal"} title="Error" show={httpErrorText!==""} onHide={() => setHttpErrorText("")}>
-          <p>There was an error saving the configuration:</p>
-          <p>{httpErrorText}</p>
-        </ModalError>
+      <ModalError
+        id={id + "-modal"}
+        title="Error"
+        show={httpErrorText !== ""}
+        onHide={() => setHttpErrorText("")}
+      >
+        <p>There was an error saving the configuration:</p>
+        <p>{httpErrorText}</p>
+      </ModalError>
 
       <div className="card">
         <div className="card-body">

@@ -34,11 +34,15 @@ export const SignalKSettingsPanel = () => {
 
   return (
     <>
-      {errorText !== "" && (
-        <ModalError title="Error" onHide={() => setErrorText("")}>
-          <p>{errorText}</p>
-        </ModalError>
-      )}
+      <ModalError
+        id={id + "-modal"}
+        title="Error"
+        show={errorText !== ""}
+        onHide={() => setErrorText("")}
+      >
+        <p>{errorText}</p>
+      </ModalError>
+
       <div className="vstack gap-4">
         <SKConnectionStatus />
         <SKCounters />

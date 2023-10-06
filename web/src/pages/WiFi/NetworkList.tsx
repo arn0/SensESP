@@ -24,7 +24,7 @@ export function NetworkList({ selectedNetwork, setSelectedNetwork }) {
   ];
 
   const sortedNetworks = availableNetworks.sort(
-    (a, b) => b.strength - a.strength
+    (a, b) => b.strength - a.strength,
   );
 
   return (
@@ -38,7 +38,8 @@ export function NetworkList({ selectedNetwork, setSelectedNetwork }) {
           name={network.name}
           strength={network.strength}
           active={network.name === selectedNetwork}
-          setActive={() => setSelectedNetwork(network.name)} />
+          setActive={() => setSelectedNetwork(network.name)}
+        />
       ))}
     </ul>
   );
@@ -51,8 +52,10 @@ export function NetworkList({ selectedNetwork, setSelectedNetwork }) {
 
     return (
       <li
-        className={"list-group-item d-flex justify-content-between align-items-start" +
-          (active ? " active" : "")}
+        className={
+          "list-group-item d-flex justify-content-between align-items-start" +
+          (active ? " active" : "")
+        }
         id={name}
         onClick={handleSelect}
       >
