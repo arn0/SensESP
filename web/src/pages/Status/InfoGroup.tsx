@@ -1,6 +1,3 @@
-import Card from "react-bootstrap/Card";
-import ListGroup from "react-bootstrap/ListGroup";
-
 import { InfoItem, InfoItemData } from "./InfoItem";
 
 interface InfoGroupProps {
@@ -13,10 +10,12 @@ export { InfoItemData };
 export function InfoGroup(props: InfoGroupProps) {
   return (
     <div className="InfoGroup">
-      <Card>
-        <Card.Body>
-          <Card.Title className="pb-2">{props.name}</Card.Title>
-          <ListGroup>
+      <div className="card">
+        <div className="card-body">
+          <div className="card-title pb-2">
+            <h4>{props.name}</h4>
+          </div>
+          <ul className="list-group">
             {props.items.map((item) => {
               return (
                 <InfoItem
@@ -26,9 +25,9 @@ export function InfoGroup(props: InfoGroupProps) {
                 />
               );
             })}
-          </ListGroup>
-        </Card.Body>
-      </Card>
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }

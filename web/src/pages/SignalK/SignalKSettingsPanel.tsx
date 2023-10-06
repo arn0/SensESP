@@ -1,9 +1,7 @@
 import { ModalError } from "pages/ModalError";
 import { useContext, useId, useState } from "preact/hooks";
-import Card from "react-bootstrap/Card";
-import Stack from "react-bootstrap/Stack";
+import { ReCollapse } from "../ReCollapseCard";
 import { fetchConfigData, saveConfigData } from "../configAPIClient";
-import { ReCollapse } from "../ReCollapse";
 import { SKStatusContext } from "./SKStatusContext";
 
 export const SignalKSettingsPanel = () => {
@@ -41,7 +39,7 @@ export const SignalKSettingsPanel = () => {
           <p>{errorText}</p>
         </ModalError>
       )}
-      <Stack gap={4}>
+      <div className="vstack gap-4">
         <SKConnectionStatus />
         <SKCounters />
         <SKConnectionSettings
@@ -54,19 +52,19 @@ export const SignalKSettingsPanel = () => {
           setConfig={setConfig}
           setRequestSave={setRequestSave}
         />
-      </Stack>
+      </div>
     </>
   );
 };
 
 const SKCard = ({ title, children }) => {
   return (
-    <Card>
-      <Card.Body>
-        <Card.Title>{title}</Card.Title>
+    <div className="card">
+      <div className="card-body">
+        <div className="card-title">{title}</div>
         {children}
-      </Card.Body>
-    </Card>
+      </div>
+    </div>
   );
 };
 
@@ -171,7 +169,7 @@ function SKConnectionSettings({ config, setConfig, setRequestSave }) {
   return (
     <>
       <SKCard title="Connection Settings">
-        <Stack gap={2}>
+        <div className="vstack gap-2">
           <form>
             <div class="mb-3 form-check form-switch">
               <label
@@ -180,7 +178,7 @@ function SKConnectionSettings({ config, setConfig, setRequestSave }) {
                 data-bs-toggle="collapse"
                 data-target={`#${id}-collapse`}
               >
-                Use mDNS
+                Automatic server discovery
               </label>
               <input
                 type="checkbox"
@@ -191,7 +189,7 @@ function SKConnectionSettings({ config, setConfig, setRequestSave }) {
               />
             </div>
 
-            <ReCollapse id={id + "-collapse"} isCollapsed={mdns}>
+            <ReCollapse id={id + "-collapse"} expanded={!mdns}>
               <div class="mb-3">
                 <label for={id + "-hostname"} class="form-label">
                   Hostname
@@ -239,7 +237,7 @@ function SKConnectionSettings({ config, setConfig, setRequestSave }) {
               Save
             </button>
           </form>
-        </Stack>
+        </div>
       </SKCard>
     </>
   );

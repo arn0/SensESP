@@ -1,17 +1,13 @@
-import Form from "react-bootstrap/Form";
-import Stack from "react-bootstrap/Stack";
-
 import { produce } from "immer";
 import { ModalError } from "pages/ModalError";
+import { CollapseCard } from "pages/ReCollapseCard";
+import { ReFormInput } from "pages/ReForm";
 import { ReTab, ReTabs } from "pages/ReTab";
 import { fetchConfigData, saveConfigData } from "pages/configAPIClient";
 import { useEffect, useId, useState } from "react";
-import { Button } from "react-bootstrap";
-import { CheckboxAccordion } from "./CheckboxAccordion";
 import { NetworkList } from "./NetworkList";
-import { SingleClientConfig } from "./WiFiSettingsConfig";
 import { SingleClientConfigPanel } from "./SingleClientConfigPanel";
-import { WiFiSettingsConfig, APSettingsConfig, ClientSettingsConfig } from "./WiFiSettingsConfig";
+import { SingleClientConfig, WiFiSettingsConfig } from "./WiFiSettingsConfig";
 
 export function WiFiSettingsPanel() {
   const [config, setConfig] = useState<WiFiSettingsConfig>(
@@ -68,12 +64,21 @@ export function WiFiSettingsPanel() {
         </ModalError>
       )}
       <div className="mb-3">
-        <Stack gap={4}>
+        <div className="vstack gap-4">
           <APSettingsPanel config={config.apSettings} setConfig={setAPConfig} />
-          <ClientSettingsPanel config={config.clientSettings} setConfig={setClientConfig} />
-        </Stack>
+          <ClientSettingsPanel
+            config={config.clientSettings}
+            setConfig={setClientConfig}
+          />
+        </div>
       </div>
-      <Button>Save</Button>
+      <button
+        type="button"
+        className="btn btn-primary"
+        onClick={() => setRequestSave(true)}
+      >
+        Save
+      </button>
     </>
   );
 }
@@ -85,79 +90,76 @@ function APSettingsPanel({ config, setConfig }) {
     return (event) => {
       setConfig({
         ...config,
-        [field]: event.target.type === "checkbox"
-          ? event.target.checked
-          : event.target.value,
+        [field]:
+          event.target.type === "checkbox"
+            ? event.target.checked
+            : event.target.value,
       });
     };
   }
 
-  function handleExpandedChange(expanded) {
-    produce(config, (draft) => {
-      draft.enabled = expanded;
-    });
+  function setExpanded(expanded) {
+    setConfig(
+      produce(config, (draft) => {
+        draft.enabled = expanded;
+      }),
+    );
   }
 
   return (
-    <CheckboxAccordion
-      title="Access Point"
-      description="Create a new WiFi network"
+    <CollapseCard
+      id={id + "-collapsecard"}
+      title={
+        <>
+          <div className="fw-bold">Access Point</div>
+          Create a new WiFi network
+        </>
+      }
       expanded={config.enabled}
-      onExpandedChange={handleExpandedChange}
+      setExpanded={setExpanded}
     >
-      <Form>
-        <Stack gap={2}>
-          <Form.Group>
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              id={id + "-name"}
-              type="text"
-              placeholder="Network Name"
-              value={config.name}
-              onChange={handleApSettingsChange("name")}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              id={id + "-password"}
-              type="password"
-              placeholder="Network Password"
-              value={config.password}
-              onChange={handleApSettingsChange("password")}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Channel</Form.Label>
-            <Form.Select
-              id={id + "-channel"}
-              aria-label="Select WiFi channel"
-              value={config.channel}
-              onChange={handleApSettingsChange("channel")}
-            >
-              <option value="Auto">Auto</option>
-              {[...Array(11).keys()].map((i) => (
-                <option value={i + 1}>{i + 1}</option>
-              ))}
-            </Form.Select>
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Hidden</Form.Label>
-            <Form.Check
-              id={id + "-hidden"}
-              type="switch"
-              label="Hidden"
-              checked={config.hidden}
-              onChange={handleApSettingsChange("hidden")}
-            />
-          </Form.Group>
-        </Stack>
-      </Form>
-    </CheckboxAccordion>
+      <form>
+        <div className="vstack gap-2">
+          <ReFormInput
+            id={id + "-name"}
+            label="Name"
+            type="text"
+            placeholder="Network Name"
+            value={config.name}
+            onChange={handleApSettingsChange("name")}
+          />
+
+          <ReFormInput
+            id={id + "-password"}
+            label="Password"
+            type="password"
+            placeholder="Network Password"
+            value={config.password}
+            onChange={handleApSettingsChange("password")}
+          />
+
+          <ReFormInput
+            id={id + "-channel"}
+            label="Channel"
+            aria-label="Select WiFi channel"
+            value={config.channel}
+            onChange={handleApSettingsChange("channel")}
+          />
+
+          <ReFormInput
+            id={id + "-hidden"}
+            label="Hidden"
+            type="switch"
+            checked={config.hidden}
+            onChange={handleApSettingsChange("hidden")}
+          />
+        </div>
+      </form>
+    </CollapseCard>
   );
 }
 
-function ClientSettingsPanel({config, setConfig}) {
+function ClientSettingsPanel({ config, setConfig }) {
   const [selectedNetwork, setSelectedNetwork] = useState("");
   const [activeTab, setActiveTab] = useState(0);
 
@@ -184,14 +186,28 @@ function ClientSettingsPanel({config, setConfig}) {
     setActiveTab(tabNum);
   }
 
-  function handleExpandedChange(expanded) {
-    produce(config, (draft) => {
-      draft.enabled = expanded;
-    });
+  console.log("ClientSettingsPanel:", config.enabled)
+
+  function setExpanded(expanded) {
+    setConfig(
+      produce(config, (draft) => {
+        draft.enabled = expanded;
+      }),
+    );
   }
 
   return (
-    <CheckboxAccordion title="Client" description="Connect to existing WiFi" expanded={config.enabled} onExpandedChange={handleExpandedChange}>
+    <CollapseCard
+      id={id + "-collapseclient"}
+      title={
+        <>
+          <div className="fw-bold">Client</div>
+          Connect to existing WiFi
+        </>
+      }
+      expanded={config.enabled}
+      setExpanded={setExpanded}
+    >
       <div className="container-fluid">
         <div className="row">
           <div className="col-sm overflow-auto">
@@ -225,6 +241,6 @@ function ClientSettingsPanel({config, setConfig}) {
           </div>
         </div>
       </div>
-    </CheckboxAccordion>
+    </CollapseCard>
   );
 }

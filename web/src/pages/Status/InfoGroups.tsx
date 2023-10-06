@@ -1,7 +1,5 @@
 import { app_config } from "app_config";
 import { useEffect, useState } from "preact/hooks";
-import Spinner from "react-bootstrap/Spinner";
-import Stack from "react-bootstrap/Stack";
 import { InfoGroup, InfoItemData } from "./InfoGroup";
 
 class InfoGroupsState {
@@ -60,7 +58,9 @@ export function InfoGroups() {
         class="d-flex align-items-center justify-content-center min"
         style="height: 100vh"
       >
-        <Spinner animation="border" />
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
       </div>
     );
   }
@@ -69,11 +69,11 @@ export function InfoGroups() {
 
   return (
     <div>
-      <Stack gap={3}>
+      <div className="vstack gap-4">
         {groupNames.map((groupName) => (
           <InfoGroup name={groupName} items={groups[groupName]} />
         ))}
-      </Stack>
+      </div>
     </div>
   );
 }

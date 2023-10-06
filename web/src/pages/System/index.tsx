@@ -1,18 +1,106 @@
+import { AppPage } from "pages/AppPage";
+import { ReFormInput, ReFormSwitch } from "pages/ReForm";
 import { useId, useState } from "preact/hooks";
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
-import Stack from "react-bootstrap/Stack";
 import { ModalError } from "../ModalError";
 import { PageContents } from "../PageContents";
 import { PageHeading } from "../PageHeading";
-import { AppPage } from "pages/AppPage";
+
+export const SystemPage = () => {
+  return (
+    <AppPage>
+      <PageHeading title="System Settings" />
+      <PageContents>
+        <SystemCards />
+      </PageContents>
+    </AppPage>
+  );
+};
+
+const SystemCards = () => {
+  const id = useId();
+
+  return (
+    <div className="vstack gap-4">
+      <DeviceNameCard />
+      <AuthCard />
+      <RestartCard />
+      <ResetCard />
+    </div>
+  );
+
+  function DeviceNameCard() {
+    return (
+      <SystemSettingsCard>
+        <h5 className="card-title">Device Name</h5>
+        <p className="card-text">
+          The device name is used to identify this device on the network. It is
+          used both as a hostname (e.g. "my-device.local") and as an identifying
+          name in the Signal K network.
+        </p>
+        <ReFormInput
+          label="Hostname"
+          id={id + "-name"}
+          type="text"
+          placeholder="Device Name"
+        />
+      </SystemSettingsCard>
+    );
+  }
+};
+
+function AuthCard() {
+  const [authEnabled, setAuthEnabled] = useState(false);
+
+  console.log("AuthCard: authEnabled = " + authEnabled)
+
+  const id = useId();
+
+  return (
+    <SystemSettingsCard>
+      <h5 className="card-title">Authentication</h5>
+      <p className="card-text">
+        Authentication is used to restrict access to the configuration
+        interface. If you are using this device on a trusted private network,
+        you can disable authentication.
+      </p>
+      <div>
+        <ReFormSwitch
+          label="Enable authentication"
+          id={id + "-enableAuth"}
+          type="checkbox"
+          checked={authEnabled}
+          onChange={(e) => setAuthEnabled(e.currentTarget.checked)}
+        />
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <ReFormInput
+            label="Username"
+            id={id + "-username"}
+            type="text"
+            placeholder="Username"
+            disabled={!authEnabled}
+          />
+        </div>
+        <div class="col-sm-6">
+          <ReFormInput
+            label="Password"
+            id={id + "-password"}
+            type="password"
+            placeholder="Password"
+            disabled={!authEnabled}
+          />
+        </div>
+      </div>
+    </SystemSettingsCard>
+  );
+}
 
 const SystemCard = ({ children }) => {
   return (
-    <Card>
-      <Card.Body>{children}</Card.Body>
-    </Card>
+    <div className="card">
+      <div className="card-body">{children}</div>
+    </div>
   );
 };
 
@@ -33,9 +121,14 @@ const SystemSettingsCard = ({ children }) => {
       <div class="mb-3" onInput={handleInput}>
         {children}
       </div>
-      <Button disabled={!isDirty} onClick={handleSave}>
+      <button
+        type="button"
+        class="btn btn-primary"
+        disabled={!isDirty}
+        onClick={handleSave}
+      >
         Save
-      </Button>
+      </button>
     </SystemCard>
   );
 };
@@ -79,12 +172,14 @@ const RestartCard = () => {
         </ModalError>
       )}
       <SystemCard>
-        <Card.Title>Restart the device</Card.Title>
-        <Card.Text>
+        <h5 className="card-title">Restart the device</h5>
+        <p className="card-text">
           Restarting the device will take a few seconds. If you are connected to
           the device's WiFi access point, you may have to manually reconnect.
-        </Card.Text>
-        <Button onClick={handleRestart}>Restart</Button>
+        </p>
+        <button type="button" class="btn btn-primary" onClick={handleRestart}>
+          Restart
+        </button>
       </SystemCard>
     </>
   );
@@ -129,107 +224,16 @@ const ResetCard = () => {
         </ModalError>
       )}
       <SystemCard>
-        <Card.Title>Reset the device to factory defaults</Card.Title>
-        <Card.Text>
+        <h5 className="card-title">Reset the device to factory defaults</h5>
+        <p className="card-text">
           <strong>Warning:</strong> This will reset the device to factory
           defaults, erasing all configuration and data. You will need to
           reconfigure the device after resetting.
-        </Card.Text>
-        <Button variant="danger" onClick={handleReset}>
+        </p>
+        <button type="button" class="btn btn-danger" onClick={handleReset}>
           Reset
-        </Button>
+        </button>
       </SystemCard>
     </>
-  );
-};
-
-const SystemCards = () => {
-  const id = useId();
-
-  return (
-    <Stack gap={2}>
-      <DeviceNameCard />
-      <AuthCard />
-      <RestartCard />
-      <ResetCard />
-    </Stack>
-  );
-
-  function DeviceNameCard() {
-    return (
-      <SystemSettingsCard>
-        <Card.Title>Device Name</Card.Title>
-        <Card.Text>
-          The device name is used to identify this device on the network. It is
-          used both as a hostname (e.g. "my-device.local") and as an identifying
-          name in the Signal K network.
-        </Card.Text>
-        <Form.Group controlId={id + "-name"}>
-          <Form.Label>Hostname</Form.Label>
-          <Form.Control type="text" placeholder="Device Name" />
-        </Form.Group>
-        <div class="row"></div>
-      </SystemSettingsCard>
-    );
-  }
-};
-
-function AuthCard() {
-  const [authEnabled, setAuthEnabled] = useState(false);
-
-  const id = useId();
-
-  return (
-    <SystemSettingsCard>
-      <Card.Title>Authentication</Card.Title>
-      <Card.Text>
-        Authentication is used to restrict access to the configuration
-        interface. If you are using this device on a trusted private network,
-        you can disable authentication.
-      </Card.Text>
-      <div class="row">
-        <Form.Group controlId={id + "-enableAuth"}>
-          <Form.Label>Enable</Form.Label>
-          <Form.Check
-            type="switch"
-            label="Enable authentication"
-            onChange={(e) => setAuthEnabled(e.target.checked)}
-          />
-        </Form.Group>
-      </div>
-      <div class="row">
-        <div class="col-sm-6">
-          <Form.Group controlId={id + "-username"}>
-            <Form.Label>Username</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Username"
-              disabled={!authEnabled}
-            />
-          </Form.Group>
-        </div>
-        <div class="col-sm-6">
-          <Form.Group controlId={id + "-password"}>
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Password"
-              disabled={!authEnabled}
-            />
-          </Form.Group>
-        </div>
-      </div>
-    </SystemSettingsCard>
-  );
-}
-
-export const SystemPage = () => {
-  return (
-    <AppPage>
-      <PageHeading title="System Settings" />
-      <PageContents>
-        <SystemCards />
-      </PageContents>
-    </AppPage>
   );
 };

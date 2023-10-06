@@ -2,7 +2,6 @@ import { produce } from "immer";
 import { useId, useState } from "react";
 import Collapse from "react-bootstrap/Collapse";
 import Form from "react-bootstrap/Form";
-import Stack from "react-bootstrap/Stack";
 
 export function SingleClientConfigPanel({ config, setConfig }) {
   const id = useId();
@@ -19,7 +18,7 @@ export function SingleClientConfigPanel({ config, setConfig }) {
 
   return (
     <>
-      <Stack gap={2}>
+      <div className="vstack gap-2">
         <Form.Group>
           <Form.Label>Name</Form.Label>
           <Form.Control
@@ -72,7 +71,7 @@ export function SingleClientConfigPanel({ config, setConfig }) {
             />
           </div>
         </Collapse>
-      </Stack>
+      </div>
     </>
   );
 }
