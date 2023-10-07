@@ -1,5 +1,6 @@
+import { ButtonCard } from "components/Card";
+import { FormInput, FormSwitch } from "components/Form";
 import { AppPage } from "pages/AppPage";
-import { ReFormInput, ReFormSwitch } from "components/ReForm";
 import { useId, useState } from "preact/hooks";
 import { ModalError } from "../../components/ModalError";
 import { PageContents } from "../PageContents";
@@ -32,11 +33,11 @@ const SystemCards = () => {
     return (
       <SystemSettingsCard title={<h5 className="card-title">Device Name</h5>}>
         <p className="card-text">
-          The device name is used to identify this device on the network. It
-          is used both as a hostname (e.g. "my-device.local") and as an
-          identifying name in the Signal K network.
+          The device name is used to identify this device on the network. It is
+          used both as a hostname (e.g. "my-device.local") and as an identifying
+          name in the Signal K network.
         </p>
-        <ReFormInput
+        <FormInput
           label="Hostname"
           id={id + "-name"}
           type="text"
@@ -62,7 +63,7 @@ function AuthCard() {
         you can disable authentication.
       </p>
       <div>
-        <ReFormSwitch
+        <FormSwitch
           label="Enable authentication"
           id={id + "-enableAuth"}
           type="checkbox"
@@ -72,7 +73,7 @@ function AuthCard() {
       </div>
       <div class="row">
         <div class="col-sm-6">
-          <ReFormInput
+          <FormInput
             label="Username"
             id={id + "-username"}
             type="text"
@@ -81,7 +82,7 @@ function AuthCard() {
           />
         </div>
         <div class="col-sm-6">
-          <ReFormInput
+          <FormInput
             label="Password"
             id={id + "-password"}
             type="password"
@@ -112,9 +113,7 @@ const SystemSettingsCard = ({ title, children }) => {
 
   return (
     <SystemCard>
-      <div className="card-header">
-        {title}
-      </div>
+      <div className="card-header">{title}</div>
       <div className="card-body">
         {children}
         <button
@@ -170,21 +169,17 @@ const RestartCard = () => {
         <p>Failed to restart the device:</p>
         <p>{httpErrorText}</p>
       </ModalError>
-      <SystemCard>
-        <div className="card-header">
-          <h5 className="card-title">Restart the device</h5>
-        </div>
-        <div className="card-body">
-          <p className="card-text">
-            Restarting the device will take a few seconds. If you are connected
-            to the device's WiFi access point, you may have to manually
-            reconnect.
-          </p>
-          <button type="button" class="btn btn-primary" onClick={handleRestart}>
-            Restart
-          </button>
-        </div>
-      </SystemCard>
+      <ButtonCard
+        title="Restart the device"
+        buttonText="Restart"
+        isButtonEnabled={true}
+        onClick={handleRestart}
+      >
+        <p className="card-text">
+          Restarting the device will take a few seconds. If you are connected to
+          the device's WiFi access point, you may have to manually reconnect.
+        </p>
+      </ButtonCard>
     </>
   );
 };
@@ -229,21 +224,19 @@ const ResetCard = () => {
         <p>Failed to reset the device:</p>
         <p>{httpErrorText}</p>
       </ModalError>
-      <SystemCard>
-        <div className="card-header">
-          <h5 className="card-title">Reset the device to factory defaults</h5>
-        </div>
-        <div className="card-body">
-          <p className="card-text">
-            <strong>Warning:</strong> This will reset the device to factory
-            defaults, erasing all configuration and data. You will need to
-            reconfigure the device after resetting.
-          </p>
-          <button type="button" class="btn btn-danger" onClick={handleReset}>
-            Reset
-          </button>
-        </div>
-      </SystemCard>
+      <ButtonCard
+        title="Reset the device to factory defaults"
+        buttonText="Reset"
+        buttonVariant="danger"
+        isButtonEnabled={true}
+        onClick={handleReset}
+      >
+        <p className="card-text">
+          <strong>Warning:</strong> This will reset the device to factory
+          defaults, erasing all configuration and data. You will need to
+          reconfigure the device after resetting.
+        </p>
+      </ButtonCard>
     </>
   );
 };

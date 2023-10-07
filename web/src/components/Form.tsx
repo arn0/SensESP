@@ -1,4 +1,4 @@
-export function ReFormInput(props) {
+export function FormInput(props) {
   return (
     <div>
       <label className="form-label" htmlFor={props.id}>
@@ -9,7 +9,7 @@ export function ReFormInput(props) {
   );
 }
 
-export function ReFormFloatInput(props) {
+export function FormFloatInput(props) {
   return (
     <div className="form-floating mb-3">
       <input className="form-control" {...props} />
@@ -20,7 +20,7 @@ export function ReFormFloatInput(props) {
   );
 }
 
-export function ReFormSelect(props) {
+export function FormSelect(props) {
   return (
     <div className="mb-3">
       <label className="form-label" htmlFor={props.id}>
@@ -32,7 +32,7 @@ export function ReFormSelect(props) {
   );
 }
 
-export function ReFormCheck(props) {
+export function FormCheck(props) {
   return (
     <div className="form-check">
       <input className="form-check-input" {...props} />
@@ -43,7 +43,7 @@ export function ReFormCheck(props) {
   );
 }
 
-export function ReFormSwitch(props) {
+export function FormSwitch(props) {
   return (
     <div className="form-check form-switch mb-3">
       <input className="form-check-input" role="switch" {...props} />

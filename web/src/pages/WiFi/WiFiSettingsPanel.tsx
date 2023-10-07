@@ -1,8 +1,8 @@
 import { produce } from "immer";
 import { ModalError } from "components/ModalError";
-import { CollapseCard } from "components/ReCollapseCard";
-import { ReFormInput, ReFormSwitch } from "components/ReForm";
-import { ReTab, ReTabs } from "components/ReTab";
+import { CollapseCard } from "components/Card";
+import { FormInput, FormSwitch } from "components/Form";
+import { ReTab, Tabs } from "components/Tab";
 import { fetchConfigData, saveConfigData } from "common/configAPIClient";
 import { useEffect, useId, useState } from "preact/hooks";
 import { NetworkList } from "./NetworkList";
@@ -125,7 +125,7 @@ function APSettingsPanel({ config, setConfig }) {
     >
       <form>
         <div className="vstack gap-2">
-          <ReFormInput
+          <FormInput
             id={id + "-name"}
             label="Name"
             type="text"
@@ -134,7 +134,7 @@ function APSettingsPanel({ config, setConfig }) {
             onChange={handleApSettingsChange("name")}
           />
 
-          <ReFormInput
+          <FormInput
             id={id + "-password"}
             label="Password"
             type="password"
@@ -143,7 +143,7 @@ function APSettingsPanel({ config, setConfig }) {
             onChange={handleApSettingsChange("password")}
           />
 
-          <ReFormInput
+          <FormInput
             id={id + "-channel"}
             label="Channel"
             aria-label="Select WiFi channel"
@@ -151,7 +151,7 @@ function APSettingsPanel({ config, setConfig }) {
             onChange={handleApSettingsChange("channel")}
           />
 
-          <ReFormSwitch
+          <FormSwitch
             id={id + "-hidden"}
             label="Hidden"
             type="checkbox"
@@ -221,7 +221,7 @@ function ClientSettingsPanel({ config, setConfig }) {
             />
           </div>
           <div className="col-sm">
-            <ReTabs id={id + "-retabs"}>
+            <Tabs id={id + "-retabs"}>
               <ReTab title="First" onClick={() => handleActiveTab(0)}>
                 <SingleClientConfigPanel
                   config={config.singleClientConfigs[0]}
@@ -240,7 +240,7 @@ function ClientSettingsPanel({ config, setConfig }) {
                   setConfig={(cfg) => updateClientConfig(2, cfg)}
                 />
               </ReTab>
-            </ReTabs>
+            </Tabs>
           </div>
         </div>
       </div>

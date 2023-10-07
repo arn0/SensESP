@@ -1,8 +1,9 @@
 import { ModalError } from "components/ModalError";
 import { useContext, useId, useState } from "preact/hooks";
-import { ReCollapse } from "../../components/ReCollapseCard";
+import { Collapse } from "../../components/Collapse";
 import { fetchConfigData, saveConfigData } from "../../common/configAPIClient";
 import { SKStatusContext } from "./SKStatusContext";
+import { Card } from "components/Card";
 
 export const SignalKSettingsPanel = () => {
   const [config, setConfig] = useState({});
@@ -60,17 +61,6 @@ export const SignalKSettingsPanel = () => {
         />
       </div>
     </>
-  );
-};
-
-const SKCard = ({ title, children }) => {
-  return (
-    <div className="card">
-      <div className="card-header">
-        <div className="card-title">{title}</div>
-      </div>
-      <div className="card-body">{children}</div>
-    </div>
   );
 };
 
@@ -133,9 +123,9 @@ const SKConnectionStatus = () => {
   };
 
   return (
-    <SKCard title="Connection Status">
+    <Card title="Connection Status">
       <div style="height: 100px;">{displayStatus()}</div>
-    </SKCard>
+    </Card>
   );
 };
 
@@ -145,7 +135,7 @@ const SKCounters = () => {
   const num_tx = skStatus["num_tx_deltas"] || 0;
 
   return (
-    <SKCard title="Counters">
+    <Card title="Counters">
       <div style="height: 100px;">
         <table className="table">
           <tr>
@@ -159,7 +149,7 @@ const SKCounters = () => {
           <tr></tr>
         </table>
       </div>
-    </SKCard>
+    </Card>
   );
 };
 
@@ -174,7 +164,7 @@ function SKConnectionSettings({ config, setConfig, setRequestSave }) {
 
   return (
     <>
-      <SKCard title="Connection Settings">
+      <Card title="Connection Settings">
         <div className="vstack gap-2">
           <form>
             <div class="mb-3 form-check form-switch">
@@ -195,7 +185,7 @@ function SKConnectionSettings({ config, setConfig, setRequestSave }) {
               />
             </div>
 
-            <ReCollapse id={id + "-collapse"} expanded={!mdns}>
+            <Collapse id={id + "-collapse"} expanded={!mdns}>
               <div class="mb-3">
                 <label for={id + "-hostname"} class="form-label">
                   Hostname
@@ -230,7 +220,7 @@ function SKConnectionSettings({ config, setConfig, setRequestSave }) {
                   Use TLS
                 </label>
               </div>
-            </ReCollapse>
+            </Collapse>
 
             <button
               type="submit"
@@ -244,7 +234,7 @@ function SKConnectionSettings({ config, setConfig, setRequestSave }) {
             </button>
           </form>
         </div>
-      </SKCard>
+      </Card>
     </>
   );
 }
@@ -256,7 +246,7 @@ const SKAuthToken = ({ config, setConfig, setRequestSave }) => {
   };
 
   return (
-    <SKCard title="Authentication Token">
+    <Card title="Authentication Token">
       <p>
         Click the button to clear the Signal K authentication token. This causes
         the device to request a new token from the Signal K server.
@@ -264,6 +254,6 @@ const SKAuthToken = ({ config, setConfig, setRequestSave }) => {
       <button class="btn btn-primary" onClick={handleClearToken}>
         Clear Token
       </button>
-    </SKCard>
+    </Card>
   );
 };

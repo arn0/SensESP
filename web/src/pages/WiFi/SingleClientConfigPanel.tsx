@@ -1,6 +1,6 @@
 import { produce } from "immer";
-import { ReCollapse } from "components/ReCollapseCard";
-import { ReFormCheck, ReFormInput } from "components/ReForm";
+import { Collapse } from "components/Collapse";
+import { FormCheck, FormInput } from "components/Form";
 import { useId } from "preact/hooks";
 
 export function SingleClientConfigPanel({ config, setConfig }) {
@@ -19,7 +19,7 @@ export function SingleClientConfigPanel({ config, setConfig }) {
   return (
     <>
       <div className="vstack gap-2">
-        <ReFormInput
+        <FormInput
           id={id + "-name"}
           type="text"
           label="Name"
@@ -29,7 +29,7 @@ export function SingleClientConfigPanel({ config, setConfig }) {
             updateConfigField("name", event.currentTarget.value)
           }
         />
-        <ReFormInput
+        <FormInput
           id={id + "-password"}
           type="password"
           label="Password"
@@ -41,7 +41,7 @@ export function SingleClientConfigPanel({ config, setConfig }) {
         />
 
         <div>
-          <ReFormCheck
+          <FormCheck
             id={id + "-dhcp"}
             name={id}
             type="radio"
@@ -53,7 +53,7 @@ export function SingleClientConfigPanel({ config, setConfig }) {
             }
           />
 
-          <ReFormCheck
+          <FormCheck
             id={id + "-static"}
             name={id}
             type="radio"
@@ -65,14 +65,14 @@ export function SingleClientConfigPanel({ config, setConfig }) {
             }
           />
         </div>
-        <ReCollapse id={id + "-collapse"} expanded={!useDHCP}>
+        <Collapse id={id + "-collapse"} expanded={!useDHCP}>
           <div>
             <StaticIPConfig
               config={config}
               updateConfigField={updateConfigField}
             />
           </div>
-        </ReCollapse>
+        </Collapse>
       </div>
     </>
   );
@@ -82,7 +82,7 @@ function StaticIPConfig({ config, updateConfigField }) {
   const id = useId();
   return (
     <div>
-      <ReFormInput
+      <FormInput
         id={id + "-ipAddress"}
         type="text"
         label="IP Address"
@@ -93,7 +93,7 @@ function StaticIPConfig({ config, updateConfigField }) {
         }
       />
 
-      <ReFormInput
+      <FormInput
         id={id + "-netmask"}
         type="text"
         label="Netmask"
@@ -104,7 +104,7 @@ function StaticIPConfig({ config, updateConfigField }) {
         }
       />
 
-      <ReFormInput
+      <FormInput
         id={id + "-gateway"}
         type="text"
         label="Gateway"
@@ -115,7 +115,7 @@ function StaticIPConfig({ config, updateConfigField }) {
         }
       />
 
-      <ReFormInput
+      <FormInput
         id={id + "-dnsServer"}
         type="text"
         label="DNS Server"

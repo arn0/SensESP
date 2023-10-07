@@ -30,7 +30,7 @@ function TabPanel(props) {
   );
 }
 
-export function ReTabs(props) {
+export function Tabs(props) {
   const [activeTab, setActiveTab] = useState(0);
 
   const id = props.id || useId();

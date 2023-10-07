@@ -1,9 +1,10 @@
 import { useId, useState } from "preact/hooks";
 import { fetchConfigData, saveConfigData } from "../../common/configAPIClient";
 
-import { ModalError } from "components/ModalError";
-import { ReFormInput } from "components/ReForm";
 import { ConfigData } from "common/configAPIClient";
+import { Card } from "components/Card";
+import { ModalError } from "components/ModalError";
+import { FormInput } from "components/Form";
 import { ChangeEvent, JSX } from "preact/compat";
 
 interface EditControlProps {
@@ -54,7 +55,7 @@ const EditControl = ({
 
   return (
     <div>
-      <ReFormInput
+      <FormInput
         type={type}
         as={as}
         id={id}
@@ -149,7 +150,7 @@ export function ConfigCard({ path }: ConfigCardProps): JSX.Element {
   }
 
   return (
-    <div className="ConfigCard">
+    <>
       <ModalError
         id={id + "-modal"}
         title="Error"
@@ -160,40 +161,35 @@ export function ConfigCard({ path }: ConfigCardProps): JSX.Element {
         <p>{httpErrorText}</p>
       </ModalError>
 
-      <div className="card">
-          <div className="card-header">
-            <h2 className="card-title pb-2">{title}</h2>
+      <Card title={title}>
+        <form>
+          <div onInput={() => setIsDirty(true)} className="mb-2">
+            <CardContents
+              config={config}
+              schema={schema}
+              description={description}
+              setConfig={setConfig}
+            />
           </div>
-        <div className="card-body">
-          <form>
-            <div onInput={() => setIsDirty(true)} className="mb-2">
-              <CardContents
-                config={config}
-                schema={schema}
-                description={description}
-                setConfig={setConfig}
-              />
+          <div className="d-flex justify-content-begin">
+            <div
+              class={"spinner-border me-2" + saving ? "" : " visually-hidden"}
+              role="status"
+            >
+              <span class="visually-hidden">Loading...</span>
             </div>
-            <div className="d-flex justify-content-begin">
-              <div
-                class={"spinner-border me-2" + saving ? "" : " visually-hidden"}
-                role="status"
-              >
-                <span class="visually-hidden">Loading...</span>
-              </div>
 
-              <button
-                className="btn btn-primary"
-                type="submit"
-                onClick={handleSave}
-                disabled={saving || !isDirty}
-              >
-                Save
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+            <button
+              className="btn btn-primary"
+              type="submit"
+              onClick={handleSave}
+              disabled={saving || !isDirty}
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </Card>
+    </>
   );
 }
