@@ -6,21 +6,21 @@ export function Header() {
   return (
     <header>
       <nav>
-        <a href="/ui/status" className={url == "/ui/status" && "active"}>
+        <a href="/status" className={url == "/status" && "active"}>
           Status
         </a>
-        <a href="/ui/system" className={url == "/ui/system" && "active"}>
+        <a href="/system" className={url == "/system" && "active"}>
           System
         </a>
-        <a href="/ui/wifi" className={url == "/ui/wifi" && "active"}>
+        <a href="/wifi" className={url == "/wifi" && "active"}>
           WiFi
         </a>
-        <a href="/ui/signalk" className={url == "/ui/signalk" && "active"}>
+        <a href="/signalk" className={url == "/signalk" && "active"}>
           Signal K
         </a>
         <a
-          href="/ui/configuration"
-          className={url == "/ui/configuration" && "active"}
+          href="/configuration"
+          className={url == "/configuration" && "active"}
         >
           Configuration
         </a>

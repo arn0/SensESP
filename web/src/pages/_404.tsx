@@ -1,8 +1,15 @@
+import { AppPage } from "./AppPage";
+import { PageContents } from "./PageContents";
+import { PageHeading } from "./PageHeading";
+
 export function NotFound() {
   return (
-    <section>
-      <h1>404: Not Found</h1>
-      <p>It's gone :(</p>
-    </section>
+    <AppPage>
+    <PageHeading title="&nbsp;" />
+    <PageContents>
+    <h1>404: Not Found</h1>
+      <p>Sorry!</p>
+    </PageContents>
+  </AppPage>
   );
 }

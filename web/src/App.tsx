@@ -14,11 +14,11 @@ export function App() {
       <Header />
       <Router>
         <RedirectRoot path="/" />
-        <StatusPage path="/ui/status" />
-        <SystemPage path="/ui/system" />
-        <WiFiConfigPage path="/ui/wifi" />
-        <SignalKPage path="/ui/signalk" />
-        <ConfigurationPage path="/ui/configuration" />
+        <StatusPage path="/status" />
+        <SystemPage path="/system" />
+        <WiFiConfigPage path="/wifi" />
+        <SignalKPage path="/signalk" />
+        <ConfigurationPage path="/configuration" />
         <Route default component={NotFound} />
       </Router>
     </LocationProvider>

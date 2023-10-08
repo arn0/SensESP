@@ -7,7 +7,7 @@ export function RedirectRoot() {
   useEffect(() => {
     const timeout = setTimeout(() => {
       // 👇️ redirects to an external URL
-      window.location.replace("/ui/status");
+      window.location.replace("/status");
     }, 0);
 
     return () => clearTimeout(timeout);
