@@ -12,6 +12,4 @@ import "bootstrap/js/dist/collapse";
 import "bootstrap/js/dist/modal";
 import "bootstrap/js/dist/tab";
 
-import "./style.css";
-
 render(<App />, document.getElementById("app"));
