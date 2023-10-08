@@ -7,7 +7,7 @@ export function Header() {
 
   return (
     <>
-      <header className="d-flex flex-wrap justify-content-center py-3 bg-body-secondary">
+      <header className="navbar navbar-expand-md d-flex flex-wrap justify-content-center py-3 bg-body-secondary">
         <a
           href="/"
           className="navbar-brand d-flex align-items-center mb-md-0 me-md-auto ms-2 me-4 link-body-emphasis text-decoration-none"
