@@ -6,12 +6,14 @@ import { WiFiConfigPage } from "pages/WiFi";
 import { NotFound } from "pages/_404.jsx";
 import { LocationProvider, Route, Router } from "preact-iso";
 import { Header } from "./components/Header.js";
+import { RedirectRoot } from "pages/Root.js";
 
 export function App() {
   return (
     <LocationProvider>
       <Header />
       <Router>
+        <RedirectRoot path="/" />
         <StatusPage path="/ui/status" />
         <SystemPage path="/ui/system" />
         <WiFiConfigPage path="/ui/wifi" />
