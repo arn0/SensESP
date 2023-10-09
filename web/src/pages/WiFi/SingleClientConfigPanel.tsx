@@ -1,6 +1,6 @@
-import { produce } from "immer";
 import { Collapse } from "components/Collapse";
 import { FormCheck, FormInput } from "components/Form";
+import { produce } from "immer";
 import { useId } from "preact/hooks";
 
 export function SingleClientConfigPanel({ config, setConfig }) {

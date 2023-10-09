@@ -1,9 +1,9 @@
+import { Card } from "components/Card";
 import { ModalError } from "components/ModalError";
 import { useContext, useId, useState } from "preact/hooks";
-import { Collapse } from "../../components/Collapse";
 import { fetchConfigData, saveConfigData } from "../../common/configAPIClient";
+import { Collapse } from "../../components/Collapse";
 import { SKStatusContext } from "./SKStatusContext";
-import { Card } from "components/Card";
 
 export const SignalKSettingsPanel = () => {
   const [config, setConfig] = useState({});

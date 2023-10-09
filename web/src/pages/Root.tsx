@@ -3,11 +3,11 @@ import { AppPage } from "./AppPage";
 import { PageContents } from "./PageContents";
 import { PageHeading } from "./PageHeading";
 
-export function RedirectRoot() {
+export function RedirectRoot({ destination }) {
   useEffect(() => {
     const timeout = setTimeout(() => {
       // 👇️ redirects to an external URL
-      window.location.replace("/status");
+      window.location.replace(destination);
     }, 0);
 
     return () => clearTimeout(timeout);

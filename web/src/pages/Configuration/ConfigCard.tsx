@@ -3,8 +3,8 @@ import { fetchConfigData, saveConfigData } from "../../common/configAPIClient";
 
 import { ConfigData } from "common/configAPIClient";
 import { Card } from "components/Card";
-import { ModalError } from "components/ModalError";
 import { FormInput } from "components/Form";
+import { ModalError } from "components/ModalError";
 import { ChangeEvent, JSX } from "preact/compat";
 
 interface EditControlProps {

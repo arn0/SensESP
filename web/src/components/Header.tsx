@@ -7,8 +7,8 @@ export function Header() {
 
   return (
     <>
-        <header className="navbar navbar-expand d-flex flex-wrap justify-content-center bg-body-secondary">
-      <div className="container px-3">
+      <header className="navbar navbar-expand d-flex flex-wrap justify-content-center bg-body-secondary">
+        <div className="container px-3">
           <a
             href="/"
             className="navbar-brand d-flex align-items-center mb-0 ms-2 me-4 text-decoration-none"
@@ -34,7 +34,10 @@ export function Header() {
               <li className="nav-item">
                 <a
                   href="/system"
-                  className={"nav-link" + (url == "/system" ? " active" : " link-body-emphasis")}
+                  className={
+                    "nav-link" +
+                    (url == "/system" ? " active" : " link-body-emphasis")
+                  }
                 >
                   System
                 </a>
@@ -42,7 +45,10 @@ export function Header() {
               <li className="nav-item">
                 <a
                   href="/wifi"
-                  className={"nav-link" + (url == "/wifi" ? " active" : " link-body-emphasis")}
+                  className={
+                    "nav-link" +
+                    (url == "/wifi" ? " active" : " link-body-emphasis")
+                  }
                 >
                   WiFi
                 </a>
@@ -50,7 +56,10 @@ export function Header() {
               <li className="nav-item">
                 <a
                   href="/signalk"
-                  className={"nav-link" + (url == "/signalk" ? " active" : " link-body-emphasis")}
+                  className={
+                    "nav-link" +
+                    (url == "/signalk" ? " active" : " link-body-emphasis")
+                  }
                 >
                   Signal K
                 </a>
@@ -59,7 +68,10 @@ export function Header() {
                 <a
                   href="/configuration"
                   className={
-                    "nav-link " + (url == "/configuration" ? " active" : " link-body-emphasis")
+                    "nav-link " +
+                    (url == "/configuration"
+                      ? " active"
+                      : " link-body-emphasis")
                   }
                 >
                   Configuration
@@ -67,8 +79,8 @@ export function Header() {
               </li>
             </ul>
           </nav>
-      </div>
-        </header>
+        </div>
+      </header>
     </>
   );
 }
