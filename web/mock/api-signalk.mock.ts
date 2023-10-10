@@ -7,7 +7,7 @@ export default defineMock(
       delay: 800,
       method: 'GET',
       body: () => {
-        const status_choices = [
+        const statusChoices = [
           "connected",
           "disconnected",
           "connecting",
@@ -16,19 +16,20 @@ export default defineMock(
           "error",
           "authenticating",
         ];
-        const random_status = status_choices[
-          Math.floor(Math.random() * status_choices.length)
+        const randomStatus = statusChoices[
+          Math.floor(Math.random() * statusChoices.length)
         ];
         // create rx and tx deltas with random values between 0 and 100000
-        const random_rx_deltas = Math.floor(Math.random() * 100000);
-        const random_tx_deltas = Math.floor(Math.random() * 100000);
+        const randomRxDeltas = Math.floor(Math.random() * 100000);
+        const randomTxDeltas = Math.floor(Math.random() * 100000);
         const data = {
-          connection_status: random_status,
-          num_rx_deltas: random_rx_deltas,
-          num_tx_deltas: random_tx_deltas,
+          connectionStatus: randomStatus,
+          numRxDeltas: randomRxDeltas,
+          numTxDeltas: randomTxDeltas,
         };
         return data;
       }
+
     },
   ]
 );

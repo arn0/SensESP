@@ -1,6 +1,11 @@
 import { immerable } from "immer";
 
-export class WiFiSettingsConfig {
+export interface IWiFiSettingsConfig {
+  apSettings: IAPSettingsConfig;
+  clientSettings: IClientSettingsConfig;
+}
+
+export class WiFiSettingsConfig implements IWiFiSettingsConfig {
   apSettings: APSettingsConfig;
   clientSettings: ClientSettingsConfig;
 
@@ -10,7 +15,15 @@ export class WiFiSettingsConfig {
   }
 }
 
-export class APSettingsConfig {
+export interface IAPSettingsConfig {
+  enabled: boolean;
+  name: string;
+  password: string;
+  channel: string;
+  hidden: boolean;
+}
+
+export class APSettingsConfig implements IAPSettingsConfig {
   enabled: boolean;
   name: string;
   password: string;
@@ -26,7 +39,12 @@ export class APSettingsConfig {
   }
 }
 
-export class ClientSettingsConfig {
+export interface IClientSettingsConfig {
+  enabled: boolean;
+  singleClientConfigs: ISingleClientConfig[]; // expected length of 3
+}
+
+export class ClientSettingsConfig implements IClientSettingsConfig {
   enabled: boolean;
   singleClientConfigs: SingleClientConfig[]; // expected length of 3
 
@@ -40,7 +58,17 @@ export class ClientSettingsConfig {
   }
 }
 
-export class SingleClientConfig {
+export interface ISingleClientConfig {
+  name: string;
+  password: string;
+  useDHCP: boolean;
+  ipAddress: string;
+  netmask: string;
+  gateway: string;
+  dnsServer: string;
+}
+
+export class SingleClientConfig implements ISingleClientConfig {
   [immerable] = true;
   name: string;
   password: string;

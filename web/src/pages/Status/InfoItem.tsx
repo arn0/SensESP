@@ -1,11 +1,6 @@
 import { memo } from "preact/compat";
 
-export class InfoItemData {
-  constructor(name: string, value: string) {
-    this.name = name;
-    this.value = value;
-  }
-
+export interface InfoItemData {
   name: string;
   value: string;
 }

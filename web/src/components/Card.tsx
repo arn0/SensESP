@@ -1,7 +1,13 @@
-import { ReactNode, useId } from "preact/compat";
+import { type JSX } from "preact";
+import { useId, type ReactNode } from "preact/compat";
 import { Collapse } from "./Collapse";
 
-export function Card({ title, children }) {
+interface CardProps {
+  title: string;
+  children: ReactNode;
+}
+
+export function Card({ title, children }: CardProps): JSX.Element {
   return (
     <div className="card">
       <div className="card-header">{title}</div>
@@ -10,14 +16,14 @@ export function Card({ title, children }) {
   );
 }
 
-type ButtonCardProps = {
+interface ButtonCardProps {
   title: string;
   buttonText: string;
   buttonVariant?: string;
   isButtonEnabled: boolean;
   onClick: () => void;
   children: ReactNode;
-};
+}
 
 export function ButtonCard({
   title,
@@ -26,7 +32,7 @@ export function ButtonCard({
   isButtonEnabled,
   onClick,
   children,
-}: ButtonCardProps) {
+}: ButtonCardProps): JSX.Element {
   return (
     <Card title={title}>
       {children}
@@ -42,23 +48,33 @@ export function ButtonCard({
   );
 }
 
-type ButtonTitleProps = {
+interface ButtonTitleProps {
   title: string;
   description?: string;
-};
+}
 
-export function ButtonTitle({ title, description }: ButtonTitleProps) {
+export function ButtonTitle({
+  title,
+  description,
+}: ButtonTitleProps): JSX.Element {
   return (
     <>
       <strong>{title}</strong>
-      {description && (
+      {description != null && (
         <>
           <br /> <small>{description}</small>
         </>
       )}
-      <p>{description}</p>
     </>
   );
+}
+
+interface CollapseCardProps {
+  id: string;
+  title: string | JSX.Element;
+  children: ReactNode;
+  expanded: boolean;
+  setExpanded: (expanded: boolean) => void;
 }
 
 /**
@@ -67,7 +83,13 @@ export function ButtonTitle({ title, description }: ButtonTitleProps) {
  * The collapse behavior is controlled by a checkbox in the card header.
  */
 
-export function CollapseCard({ id, title, children, expanded, setExpanded }) {
+export function CollapseCard({
+  id,
+  title,
+  children,
+  expanded,
+  setExpanded,
+}: CollapseCardProps): JSX.Element {
   return (
     <div className="card">
       <div className="card-header justify-content-between align-items-start">
@@ -87,7 +109,12 @@ export function CollapseCard({ id, title, children, expanded, setExpanded }) {
   );
 }
 
-function CheckToggle({ expanded, setExpanded }) {
+interface CheckToggleProps {
+  expanded: boolean;
+  setExpanded: (expanded: boolean) => void;
+}
+
+function CheckToggle({ expanded, setExpanded }: CheckToggleProps): JSX.Element {
   const id = useId();
 
   return (
@@ -98,7 +125,9 @@ function CheckToggle({ expanded, setExpanded }) {
         value=""
         id={id}
         checked={expanded}
-        onClick={() => setExpanded(!expanded)}
+        onClick={() => {
+          setExpanded(!expanded);
+        }}
       />
     </div>
   );

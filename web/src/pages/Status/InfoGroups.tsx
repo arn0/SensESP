@@ -1,65 +1,68 @@
-import { app_config } from "app_config";
+import { APP_CONFIG } from "config";
+import { type JSX } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { InfoGroup, InfoItemData } from "./InfoGroup";
+import { InfoGroup, type InfoItemData } from "./InfoGroup";
 
-class InfoGroupsState {
-  groups: { [key: string]: [InfoItemData] };
-}
+type InfoGroupsState = Array<Record<string, InfoItemData[]>>;
 
-const updateGroups = async () => {
+async function updateGroups(): Promise<InfoGroupsState> {
   try {
-    const response = await fetch(app_config.info_path);
+    const response = await fetch(APP_CONFIG.info_path);
     if (!response.ok) {
       throw new Error(`HTTP Error ${response.status} ${response.statusText}`);
     }
     const data = await response.json();
 
-    const items = data["items"];
+    const items = data.items;
     const sortedItems = items.sort((a, b) => {
-      return a["name"].localeCompare(b["name"]);
+      return a.name.localeCompare(b.name);
     });
     const groupedItems = sortedItems.reduce((groups, item) => {
-      const group = item["group"];
-      if (!groups[group]) {
+      const group = item.group;
+      if (!(group in groups)) {
         groups[group] = [];
       }
-      groups[group].push(new InfoItemData(item["name"], item["value"]));
+      groups[group].push({ name: item.name, value: item.value });
       return groups;
     }, {});
     return groupedItems;
   } catch (e) {
     console.log("Error getting data from server", e);
   }
-};
+  return [];
+}
 
-export function InfoGroups() {
-  const [groups, setGroups] = useState(new InfoGroupsState());
+export function InfoGroups(): JSX.Element {
+  const [groups, setGroups] = useState<InfoGroupsState>([]);
 
-  const timerFunc = async () => {
+  async function timerFunc(): Promise<void> {
     // fetch updated group items from server
     const groupedItems = await updateGroups();
     setGroups(groupedItems);
-  };
-
-  if (Object.keys(groups).length === 0) {
-    timerFunc();
   }
 
   useEffect(() => {
-    const interval = setInterval(timerFunc, 5000);
-    return () => clearInterval(interval);
-  }, []);
+    if (Object.keys(groups).length === 0) {
+      void timerFunc();
+    }
+    const interval = setInterval(() => {
+      void timerFunc();
+    }, 5000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [groups]);
 
   if (Object.keys(groups).length === 0) {
     // Display a spinner while waiting for data. Center the spinner
     // in the page.
     return (
       <div
-        class="d-flex align-items-center justify-content-center min"
+        className="d-flex align-items-center justify-content-center min"
         style="height: 100vh"
       >
-        <div class="spinner-border" role="status">
-          <span class="visually-hidden">Loading...</span>
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Loading...</span>
         </div>
       </div>
     );
@@ -71,7 +74,11 @@ export function InfoGroups() {
     <div>
       <div className="vstack gap-4">
         {groupNames.map((groupName) => (
-          <InfoGroup name={groupName} items={groups[groupName]} />
+          <InfoGroup
+            key={groupName}
+            name={groupName}
+            items={groups[groupName]}
+          />
         ))}
       </div>
     </div>

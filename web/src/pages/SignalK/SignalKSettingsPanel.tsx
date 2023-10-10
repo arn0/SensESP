@@ -1,28 +1,36 @@
+import { type JsonObject } from "common/jsonTypes";
 import { Card } from "components/Card";
 import { ModalError } from "components/ModalError";
-import { useContext, useId, useState } from "preact/hooks";
+import { type JSX } from "preact";
+import { useContext, useEffect, useId, useState } from "preact/hooks";
 import { fetchConfigData, saveConfigData } from "../../common/configAPIClient";
 import { Collapse } from "../../components/Collapse";
 import { SKStatusContext } from "./SKStatusContext";
 
-export const SignalKSettingsPanel = () => {
+export function SignalKSettingsPanel(): JSX.Element {
   const [config, setConfig] = useState({});
   const [requestSave, setRequestSave] = useState(false);
   const [errorText, setErrorText] = useState("");
 
   const id = useId();
 
-  function handleError(e) {
+  function handleError(e: string): void {
     setErrorText(e);
   }
 
-  if (requestSave) {
-    // save config data to server
-    saveConfigData("/System/Signal K Settings", config, handleError);
-    setRequestSave(false);
-  }
+  useEffect(() => {
+    if (requestSave) {
+      // save config data to server
+      void saveConfigData(
+        "/System/Signal K Settings",
+        JSON.stringify(config),
+        handleError,
+      );
+      setRequestSave(false);
+    }
+  }, [config, requestSave]);
 
-  async function updateConfig() {
+  async function updateConfig(): Promise<void> {
     try {
       const data = await fetchConfigData("/System/Signal K Settings");
       setConfig(data.config);
@@ -31,17 +39,21 @@ export const SignalKSettingsPanel = () => {
     }
   }
 
-  if (Object.keys(config).length === 0) {
-    updateConfig();
-  }
+  useEffect(() => {
+    if (Object.keys(config).length === 0) {
+      void updateConfig();
+    }
+  }, [config]);
 
   return (
     <>
       <ModalError
-        id={id + "-modal"}
+        id={`${id}-modal`}
         title="Error"
         show={errorText !== ""}
-        onHide={() => setErrorText("")}
+        onHide={() => {
+          setErrorText("");
+        }}
       >
         <p>{errorText}</p>
       </ModalError>
@@ -62,18 +74,18 @@ export const SignalKSettingsPanel = () => {
       </div>
     </>
   );
-};
+}
 
-const SKConnectionStatus = () => {
+function SKConnectionStatus(): JSX.Element {
   const skStatus = useContext(SKStatusContext);
 
-  const displayStatus = () => {
-    const stat = skStatus["connection_status"] || "error";
+  function displayStatus(): JSX.Element {
+    const stat = skStatus.connectionStatus;
     switch (stat) {
-      case "server_not_found":
+      case "serverNotFound":
         return (
           <>
-            <p class="fs-2">❌ Server not found</p>
+            <p className="fs-2">❌ Server not found</p>
             <p>
               Check the mDNS settings on the server or configure the server
               hostname and port manually.
@@ -83,26 +95,26 @@ const SKConnectionStatus = () => {
       case "disconnected":
         return (
           <>
-            <p class="fs-2">🛑 Disconnected</p>
+            <p className="fs-2">🛑 Disconnected</p>
             <p>Is the server running?</p>
           </>
         );
       case "connecting":
         return (
           <>
-            <p class="fs-2">📡 Connecting...</p>
+            <p className="fs-2">📡 Connecting...</p>
           </>
         );
       case "connected":
         return (
           <>
-            <p class="fs-2">✅ Connected</p>
+            <p className="fs-2">✅ Connected</p>
           </>
         );
       case "authenticating":
         return (
           <>
-            <p class="fs-2">🔑 Authenticating</p>
+            <p className="fs-2">🔑 Authenticating</p>
             <p>Log in to the Signal K server and approve the Access Request.</p>
           </>
         );
@@ -110,29 +122,29 @@ const SKConnectionStatus = () => {
       case "error":
         return (
           <>
-            <p class="fs-2">⚠️ Error</p>
+            <p className="fs-2">⚠️ Error</p>
           </>
         );
       default:
         return (
           <>
-            <p class="fs-2">🤷‍♂️ Unknown</p>
+            <p className="fs-2">🤷‍♂️ Unknown</p>
           </>
         );
     }
-  };
+  }
 
   return (
     <Card title="Connection Status">
       <div style="height: 100px;">{displayStatus()}</div>
     </Card>
   );
-};
+}
 
-const SKCounters = () => {
+function SKCounters(): JSX.Element {
   const skStatus = useContext(SKStatusContext);
-  const num_rx = skStatus["num_rx_deltas"] || 0;
-  const num_tx = skStatus["num_tx_deltas"] || 0;
+  const numRx = skStatus.numRxDeltas;
+  const numTx = skStatus.numRxDeltas;
 
   return (
     <Card title="Counters">
@@ -140,37 +152,47 @@ const SKCounters = () => {
         <table className="table">
           <tr>
             <td>Transmitted deltas</td>
-            <td>{num_rx}</td>
+            <td>{numRx}</td>
           </tr>
           <tr>
             <td>Received deltas</td>
-            <td>{num_tx}</td>
+            <td>{numTx}</td>
           </tr>
-          <tr></tr>
+          <tr />
         </table>
       </div>
     </Card>
   );
-};
+}
 
-function SKConnectionSettings({ config, setConfig, setRequestSave }) {
+interface SKConnectionSettingsProps {
+  config: JsonObject;
+  setConfig: (cfg: JsonObject) => void;
+  setRequestSave: (b: boolean) => void;
+}
+
+function SKConnectionSettings({
+  config,
+  setConfig,
+  setRequestSave,
+}: SKConnectionSettingsProps): JSX.Element {
   const [mdns, setMdns] = useState(false);
   const id = useId();
 
-  const handleMDNSChange = (event) => {
+  function handleMDNSChange(event): void {
     setMdns(event.target.checked);
     setConfig({ ...config, mdns: event.target.checked });
-  };
+  }
 
   return (
     <>
       <Card title="Connection Settings">
         <div className="vstack gap-2">
           <form>
-            <div class="mb-3 form-check form-switch">
+            <div className="mb-3 form-check form-switch">
               <label
-                for={id + "-mdns"}
-                class="form-label"
+                htmlFor={`${id}-mdns`}
+                className="form-label"
                 data-bs-toggle="collapse"
                 data-target={`#${id}-collapse`}
               >
@@ -178,45 +200,45 @@ function SKConnectionSettings({ config, setConfig, setRequestSave }) {
               </label>
               <input
                 type="checkbox"
-                class="form-check-input switch"
-                id={id + "-mdns"}
-                checked={config.mdns}
+                className="form-check-input switch"
+                id={`${id}-mdns`}
+                checked={config.mdns === true}
                 onChange={handleMDNSChange}
               />
             </div>
 
-            <Collapse id={id + "-collapse"} expanded={!mdns}>
-              <div class="mb-3">
-                <label for={id + "-hostname"} class="form-label">
+            <Collapse id={`${id}-collapse`} expanded={!mdns}>
+              <div className="mb-3">
+                <label htmlFor={`${id}-hostname`} className="form-label">
                   Hostname
                 </label>
                 <input
                   type="text"
-                  class="form-control"
-                  id={id + "-hostname"}
-                  value={config.sk_address}
+                  className="form-control"
+                  id={`${id}-hostname`}
+                  value={String(config.sk_address)}
                 />
               </div>
-              <div class="mb-3">
-                <label for={id + "-port"} class="form-label">
+              <div className="mb-3">
+                <label htmlFor={`${id}-port`} className="form-label">
                   Port
                 </label>
                 <input
                   type="number"
                   step={1}
-                  class="form-control"
-                  value={config.sk_port}
-                  id={id + "-port"}
+                  className="form-control"
+                  value={Number(config.sk_port)}
+                  id={`${id}-port`}
                 />
               </div>
-              <div class="mb-3 form-check">
+              <div className="mb-3 form-check">
                 <input
                   type="checkbox"
-                  class="form-check-input"
-                  id={id + "-tls"}
+                  className="form-check-input"
+                  id={`${id}-tls`}
                   disabled
                 />
-                <label class="form-check-label" for={id + "-tls"}>
+                <label className="form-check-label" htmlFor={`${id}-tls`}>
                   Use TLS
                 </label>
               </div>
@@ -224,7 +246,7 @@ function SKConnectionSettings({ config, setConfig, setRequestSave }) {
 
             <button
               type="submit"
-              class="btn btn-primary"
+              className="btn btn-primary"
               onClick={(e) => {
                 e.preventDefault();
                 setRequestSave(true);
@@ -239,11 +261,21 @@ function SKConnectionSettings({ config, setConfig, setRequestSave }) {
   );
 }
 
-const SKAuthToken = ({ config, setConfig, setRequestSave }) => {
-  const handleClearToken = () => {
+interface SKAuthTokenProps {
+  config: JsonObject;
+  setConfig: (cfg: JsonObject) => void;
+  setRequestSave: (b: boolean) => void;
+}
+
+function SKAuthToken({
+  config,
+  setConfig,
+  setRequestSave,
+}: SKAuthTokenProps): JSX.Element {
+  function handleClearToken(): void {
     setConfig({ ...config, token: "" });
     setRequestSave(true);
-  };
+  }
 
   return (
     <Card title="Authentication Token">
@@ -251,9 +283,9 @@ const SKAuthToken = ({ config, setConfig, setRequestSave }) => {
         Click the button to clear the Signal K authentication token. This causes
         the device to request a new token from the Signal K server.
       </p>
-      <button class="btn btn-primary" onClick={handleClearToken}>
+      <button className="btn btn-primary" onClick={handleClearToken}>
         Clear Token
       </button>
     </Card>
   );
-};
+}

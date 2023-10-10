@@ -1,12 +1,12 @@
 import BSCollapse from "bootstrap/js/dist/collapse";
-import { JSX } from "preact";
+import { type JSX } from "preact";
 import { useEffect } from "preact/hooks";
 
-type ReCollapseProps = {
+interface ReCollapseProps {
   id: string;
   children: React.ReactNode;
   expanded: boolean;
-};
+}
 
 /**
  * Renders a collapsible component that can be triggered to show or hide its content.
@@ -21,7 +21,7 @@ export function Collapse({
   expanded,
 }: ReCollapseProps): JSX.Element {
   useEffect(() => {
-    const collapseEl = document.getElementById(id);
+    const collapseEl = document.getElementById(id) ?? "";
     const bsCollapse = new BSCollapse(collapseEl, { toggle: false });
     expanded ? bsCollapse.show() : bsCollapse.hide();
   });

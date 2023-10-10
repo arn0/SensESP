@@ -1,14 +1,15 @@
 import { Card } from "components/Card";
-import { InfoItem, InfoItemData } from "./InfoItem";
+import { type JSX } from "preact";
+import { InfoItem, type InfoItemData } from "./InfoItem";
 
 interface InfoGroupProps {
   name: string;
   items: [InfoItemData];
 }
 
-export { InfoItemData };
+export { type InfoItemData };
 
-export function InfoGroup(props: InfoGroupProps) {
+export function InfoGroup(props: InfoGroupProps): JSX.Element {
   return (
     <>
       <Card title={props.name}>

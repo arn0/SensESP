@@ -1,6 +1,15 @@
+import { type JSX } from "preact";
 import { useId } from "preact/hooks";
 
-export function NetworkList({ selectedNetwork, setSelectedNetwork }) {
+interface NetworkListProps {
+  selectedNetwork: string;
+  setSelectedNetwork: (network: string) => void;
+}
+
+export function NetworkList({
+  selectedNetwork,
+  setSelectedNetwork,
+}: NetworkListProps): JSX.Element {
   const id = useId();
 
   // Replace this part with real data from scanning WiFi
@@ -30,36 +39,50 @@ export function NetworkList({ selectedNetwork, setSelectedNetwork }) {
   return (
     <ul
       className="list-group"
-      id={id + "-networks"}
+      id={`${id}-networks`}
       style={{ maxHeight: "400px" }}
     >
       {sortedNetworks.map((network) => (
         <NetworkListItem
+          key={network.name}
           name={network.name}
           strength={network.strength}
           active={network.name === selectedNetwork}
-          setActive={() => setSelectedNetwork(network.name)}
+          setActive={() => {
+            setSelectedNetwork(network.name);
+          }}
         />
       ))}
     </ul>
   );
 
-  function NetworkListItem({ name, strength, active, setActive }) {
-    function handleSelect(event) {
+  interface NetworkListItemProps {
+    name: string;
+    strength: number;
+    active: boolean;
+    setActive: () => void;
+  }
+
+  function NetworkListItem({
+    name,
+    strength,
+    active,
+    setActive,
+  }: NetworkListItemProps): JSX.Element {
+    function handleSelect(event): void {
       event.target.active = true;
       setActive();
     }
 
     return (
       <li
-        className={
-          "list-group-item d-flex justify-content-between align-items-start" +
-          (active ? " active" : "")
-        }
+        className={`list-group-item d-flex justify-content-between align-items-start${
+          active ? " active" : ""
+        }`}
         id={name}
         onClick={handleSelect}
       >
-        <div class="ms-2 me-auto">{name}</div>
+        <div className="ms-2 me-auto">{name}</div>
         <div style={{ fontSize: "smaller" }}> {strength}</div>
       </li>
     );

@@ -6,14 +6,15 @@ import { StatusPage } from "pages/Status";
 import { SystemPage } from "pages/System";
 import { WiFiConfigPage } from "pages/WiFi";
 import { NotFound } from "pages/_404.jsx";
+import { type JSX } from "preact";
 import { LocationProvider, Route, Router } from "preact-iso";
 
-export function App() {
+export function App(): JSX.Element {
   return (
     <LocationProvider>
       <Header />
       <Router>
-        <RedirectRoot path="/" />
+        <RedirectRoot path="/" destination="/status" />
         <StatusPage path="/status" />
         <SystemPage path="/system" />
         <WiFiConfigPage path="/wifi" />

@@ -1,8 +1,10 @@
+import { type JSX } from "preact";
+
 interface PageHeadingProps {
   title: string;
   subtitle?: string;
 }
 
-export function PageHeading(props: PageHeadingProps) {
-  return <h1 class="display-6">{props.title}</h1>;
+export function PageHeading(props: PageHeadingProps): JSX.Element {
+  return <h1 className="display-6">{props.title}</h1>;
 }

@@ -2,15 +2,23 @@ import { fetchConfigData, saveConfigData } from "common/configAPIClient";
 import { CollapseCard } from "components/Card";
 import { FormInput, FormSwitch } from "components/Form";
 import { ModalError } from "components/ModalError";
-import { ReTab, Tabs } from "components/Tab";
+import { Tabs } from "components/Tab";
 import { produce } from "immer";
+import { type JSX } from "preact";
 import { useEffect, useId, useState } from "preact/hooks";
 import { NetworkList } from "./NetworkList";
 import { SingleClientConfigPanel } from "./SingleClientConfigPanel";
-import { SingleClientConfig, WiFiSettingsConfig } from "./WiFiSettingsConfig";
+import {
+  WiFiSettingsConfig,
+  type APSettingsConfig,
+  type ClientSettingsConfig,
+  type IClientSettingsConfig,
+  type ISingleClientConfig,
+  type IWiFiSettingsConfig,
+} from "./WiFiSettingsConfig";
 
-export function WiFiSettingsPanel() {
-  const [config, setConfig] = useState<WiFiSettingsConfig>(
+export function WiFiSettingsPanel(): JSX.Element {
+  const [config, setConfig] = useState<IWiFiSettingsConfig>(
     new WiFiSettingsConfig(),
   );
   const [requestSave, setRequestSave] = useState(false);
@@ -18,31 +26,39 @@ export function WiFiSettingsPanel() {
 
   const id = useId();
 
-  function handleError(e) {
+  function handleError(e: string): void {
     setErrorText(e);
   }
 
-  if (requestSave) {
-    // save config data to server
-    saveConfigData("/System/WiFi Settings", config, handleError);
-    setRequestSave(false);
-  }
+  useEffect(() => {
+    if (requestSave) {
+      // save config data to server
+      void saveConfigData(
+        "/System/WiFi Settings",
+        JSON.stringify(config),
+        handleError,
+      );
+      setRequestSave(false);
+    }
+  }, [config, requestSave]);
 
-  async function updateConfig() {
+  async function updateConfig(): Promise<void> {
     try {
       const data = await fetchConfigData("/System/WiFi Settings");
+      const unkData = data.config as unknown;
+      const iData = unkData as IWiFiSettingsConfig;
 
-      setConfig(data.config as WiFiSettingsConfig); // living dangerously
+      setConfig(iData); // living dangerously
     } catch (e) {
       setErrorText(e);
     }
   }
 
   useEffect(() => {
-    updateConfig();
+    void updateConfig();
   }, []);
 
-  function setAPConfig(apSettings) {
+  function setAPConfig(apSettings: APSettingsConfig): void {
     setConfig(
       produce(config, (draft) => {
         draft.apSettings = apSettings;
@@ -50,7 +66,7 @@ export function WiFiSettingsPanel() {
     );
   }
 
-  function setClientConfig(clientSettings) {
+  function setClientConfig(clientSettings: ClientSettingsConfig): void {
     setConfig(
       produce(config, (draft) => {
         draft.clientSettings = clientSettings;
@@ -61,10 +77,12 @@ export function WiFiSettingsPanel() {
   return (
     <>
       <ModalError
-        id={id + "-modal"}
+        id={`${id}-modal`}
         title="Error"
         show={errorText !== ""}
-        onHide={() => setErrorText("")}
+        onHide={() => {
+          setErrorText("");
+        }}
       >
         <p>{errorText}</p>
       </ModalError>
@@ -80,7 +98,9 @@ export function WiFiSettingsPanel() {
       <button
         type="button"
         className="btn btn-primary"
-        onClick={() => setRequestSave(true)}
+        onClick={() => {
+          setRequestSave(true);
+        }}
       >
         Save
       </button>
@@ -88,22 +108,32 @@ export function WiFiSettingsPanel() {
   );
 }
 
-function APSettingsPanel({ config, setConfig }) {
+interface APSettingsPanelProps {
+  config: APSettingsConfig;
+  setConfig: (cfg: APSettingsConfig) => void;
+}
+
+function APSettingsPanel({
+  config,
+  setConfig,
+}: APSettingsPanelProps): JSX.Element {
   const id = useId();
 
-  function handleApSettingsChange(field) {
+  function handleApSettingsChange(
+    field,
+  ): (event: JSX.TargetedEvent<HTMLInputElement, Event>) => void {
     return (event) => {
       setConfig({
         ...config,
         [field]:
-          event.target.type === "checkbox"
-            ? event.target.checked
-            : event.target.value,
+          event.currentTarget?.type === "checkbox"
+            ? event.currentTarget?.checked
+            : event.currentTarget?.value,
       });
     };
   }
 
-  function setExpanded(expanded) {
+  function setExpanded(expanded: boolean): void {
     setConfig(
       produce(config, (draft) => {
         draft.enabled = expanded;
@@ -113,7 +143,7 @@ function APSettingsPanel({ config, setConfig }) {
 
   return (
     <CollapseCard
-      id={id + "-collapsecard"}
+      id={`${id}-collapsecard`}
       title={
         <>
           <div className="fw-bold">Access Point</div>
@@ -126,33 +156,33 @@ function APSettingsPanel({ config, setConfig }) {
       <form>
         <div className="vstack gap-2">
           <FormInput
-            id={id + "-name"}
+            id={`${id}-name`}
             label="Name"
             type="text"
             placeholder="Network Name"
             value={config.name}
-            onChange={handleApSettingsChange("name")}
+            onchange={handleApSettingsChange("name")}
           />
 
           <FormInput
-            id={id + "-password"}
+            id={`${id}-password`}
             label="Password"
             type="password"
             placeholder="Network Password"
             value={config.password}
-            onChange={handleApSettingsChange("password")}
+            onchange={handleApSettingsChange("password")}
           />
 
           <FormInput
-            id={id + "-channel"}
+            id={`${id}-channel`}
             label="Channel"
             aria-label="Select WiFi channel"
             value={config.channel}
-            onChange={handleApSettingsChange("channel")}
+            onchange={handleApSettingsChange("channel")}
           />
 
           <FormSwitch
-            id={id + "-hidden"}
+            id={`${id}-hidden`}
             label="Hidden"
             type="checkbox"
             checked={config.hidden}
@@ -164,13 +194,24 @@ function APSettingsPanel({ config, setConfig }) {
   );
 }
 
-function ClientSettingsPanel({ config, setConfig }) {
+interface ClientSettingsPanelProps {
+  config: IClientSettingsConfig;
+  setConfig: (cfg: IClientSettingsConfig) => void;
+}
+
+function ClientSettingsPanel({
+  config,
+  setConfig,
+}: ClientSettingsPanelProps): JSX.Element {
   const [selectedNetwork, setSelectedNetwork] = useState("");
   const [activeTab, setActiveTab] = useState(0);
 
   const id = useId();
 
-  function updateClientConfig(num: number, singleConfig: SingleClientConfig) {
+  function updateClientConfig(
+    num: number,
+    singleConfig: ISingleClientConfig,
+  ): void {
     setConfig(
       produce(config, (draft) => {
         draft.singleClientConfigs[num] = singleConfig;
@@ -178,7 +219,7 @@ function ClientSettingsPanel({ config, setConfig }) {
     );
   }
 
-  function handleClickNetwork(networkName) {
+  function handleClickNetwork(networkName: string): void {
     setSelectedNetwork(networkName);
     setConfig(
       produce(config, (draft) => {
@@ -187,11 +228,11 @@ function ClientSettingsPanel({ config, setConfig }) {
     );
   }
 
-  function handleActiveTab(tabNum) {
+  function handleActiveTab(tabNum: number): void {
     setActiveTab(tabNum);
   }
 
-  function setExpanded(expanded) {
+  function setExpanded(expanded: boolean): void {
     setConfig(
       produce(config, (draft) => {
         draft.enabled = expanded;
@@ -201,7 +242,7 @@ function ClientSettingsPanel({ config, setConfig }) {
 
   return (
     <CollapseCard
-      id={id + "-collapseclient"}
+      id={`${id}-collapseclient`}
       title={
         <>
           <div className="fw-bold">Client</div>
@@ -221,25 +262,46 @@ function ClientSettingsPanel({ config, setConfig }) {
             />
           </div>
           <div className="col-sm">
-            <Tabs id={id + "-retabs"}>
-              <ReTab title="First" onClick={() => handleActiveTab(0)}>
+            <Tabs id={`${id}-retabs`}>
+              <li
+                title="First"
+                onClick={() => {
+                  handleActiveTab(0);
+                }}
+              >
                 <SingleClientConfigPanel
                   config={config.singleClientConfigs[0]}
-                  setConfig={(cfg) => updateClientConfig(0, cfg)}
+                  setConfig={(cfg) => {
+                    updateClientConfig(0, cfg);
+                  }}
                 />
-              </ReTab>
-              <ReTab title="Second" onClick={() => handleActiveTab(1)}>
+              </li>
+              <li
+                title="Second"
+                onClick={() => {
+                  handleActiveTab(1);
+                }}
+              >
                 <SingleClientConfigPanel
                   config={config.singleClientConfigs[1]}
-                  setConfig={(cfg) => updateClientConfig(1, cfg)}
+                  setConfig={(cfg) => {
+                    updateClientConfig(1, cfg);
+                  }}
                 />
-              </ReTab>
-              <ReTab title="Third" onClick={() => handleActiveTab(2)}>
+              </li>
+              <li
+                title="Third"
+                onClick={() => {
+                  handleActiveTab(2);
+                }}
+              >
                 <SingleClientConfigPanel
                   config={config.singleClientConfigs[2]}
-                  setConfig={(cfg) => updateClientConfig(2, cfg)}
+                  setConfig={(cfg) => {
+                    updateClientConfig(2, cfg);
+                  }}
                 />
-              </ReTab>
+              </li>
             </Tabs>
           </div>
         </div>

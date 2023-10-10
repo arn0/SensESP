@@ -10,9 +10,9 @@ export default defineConfig({
     preact(),
     mockDevServerPlugin(
       {
-        //prefix: '^/config',
+        // prefix: '^/config',
         log: 'debug',
-        //include: 'mock/**/*.mock.{ts,js,cjs,mjs,json,json5}',
+        // include: 'mock/**/*.mock.{ts,js,cjs,mjs,json,json5}',
       }
     ),
     tsconfigPaths(),

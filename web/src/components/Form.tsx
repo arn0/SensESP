@@ -1,15 +1,41 @@
-export function FormInput(props) {
+import { type JSX } from "preact";
+
+interface FormInputProps {
+  id: string;
+  label: string;
+  type?: string;
+  as?: string;
+  placeholder?: string;
+  readOnly?: boolean;
+  value?: string | number;
+  step?: number;
+  disabled?: boolean;
+  checked?: boolean;
+  onchange?: (e: JSX.TargetedEvent<HTMLInputElement, Event>) => void;
+}
+
+export function FormInput(props: FormInputProps): JSX.Element {
   return (
     <div>
       <label className="form-label" htmlFor={props.id}>
         {props.label}
       </label>
-      <input className="form-control" {...props} />
+
+      {props.as === "textarea" ? (
+        <textarea className="form-control" {...props} />
+      ) : (
+        <input className="form-control" {...props} />
+      )}
     </div>
   );
 }
 
-export function FormFloatInput(props) {
+interface FormFloatInputProps {
+  id: string;
+  label: string;
+}
+
+export function FormFloatInput(props: FormFloatInputProps): JSX.Element {
   return (
     <div className="form-floating mb-3">
       <input className="form-control" {...props} />
@@ -20,7 +46,13 @@ export function FormFloatInput(props) {
   );
 }
 
-export function FormSelect(props) {
+interface FormSelectProps {
+  id: string;
+  label: string;
+  children: React.ReactNode;
+}
+
+export function FormSelect(props: FormSelectProps): JSX.Element {
   return (
     <div className="mb-3">
       <label className="form-label" htmlFor={props.id}>
@@ -32,7 +64,16 @@ export function FormSelect(props) {
   );
 }
 
-export function FormCheck(props) {
+interface FormCheckProps {
+  id: string;
+  name: string;
+  type: string;
+  checked: boolean;
+  label: string;
+  onchange: (e: JSX.TargetedEvent<HTMLInputElement, Event>) => void;
+}
+
+export function FormCheck(props: FormCheckProps): JSX.Element {
   return (
     <div className="form-check">
       <input className="form-check-input" {...props} />
@@ -43,7 +84,9 @@ export function FormCheck(props) {
   );
 }
 
-export function FormSwitch(props) {
+export function FormSwitch(
+  props: JSX.IntrinsicAttributes & JSX.HTMLAttributes<HTMLInputElement>,
+): JSX.Element {
   return (
     <div className="form-check form-switch mb-3">
       <input className="form-check-input" role="switch" {...props} />

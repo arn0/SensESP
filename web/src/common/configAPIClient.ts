@@ -1,4 +1,5 @@
-import { app_config } from "app_config";
+import { APP_CONFIG } from "config";
+import { type JsonObject } from "./jsonTypes";
 
 /**
  * Represents the configuration data.
@@ -7,11 +8,11 @@ export interface ConfigData {
   /**
    * The configuration data.
    */
-  config: Record<string, any>;
+  config: JsonObject;
   /**
    * The schema of the configuration data.
    */
-  schema: Record<string, any>;
+  schema: JsonObject;
   /**
    * The description of the configuration data.
    */
@@ -26,7 +27,7 @@ export interface ConfigData {
  */
 export async function fetchConfigData(path: string): Promise<ConfigData> {
   try {
-    const response = await fetch(app_config.config_path + path);
+    const response = await fetch(APP_CONFIG.config_path + path);
     if (!response.ok) {
       throw new Error(`HTTP Error ${response.status} ${response.statusText}`);
     }
@@ -39,26 +40,27 @@ export async function fetchConfigData(path: string): Promise<ConfigData> {
 /**
  * Saves the configuration data to the server.
  * @param path - The path of the configuration data.
- * @param data - The configuration data to be saved.
+ * @param string - The configuration data to be saved.
  * @throws An error if there is an issue saving the configuration data.
  */
 export async function saveConfigData(
   path: string,
-  data: any,
+  data: string,
   errorHandler: (e: string) => void,
+  contentType: string = "application/json",
 ): Promise<void> {
   try {
-    const response = await fetch(app_config.config_path + path, {
+    const response = await fetch(APP_CONFIG.config_path + path, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": contentType,
       },
-      body: JSON.stringify(data),
+      body: data,
     });
     if (!response.ok) {
       errorHandler(`HTTP Error ${response.status} ${response.statusText}`);
     }
   } catch (e) {
-    errorHandler("Error saving config data to server: " + e.message);
+    errorHandler(`Error saving config data to server: ${e.message}`);
   }
 }

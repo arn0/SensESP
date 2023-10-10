@@ -1,61 +1,90 @@
-import { useId, useState } from "preact/hooks";
+import { type JSX } from "preact";
+import { useState } from "preact/hooks";
 
-function TabItem(props) {
+interface TabItemProps {
+  id: string;
+  title: string;
+  active?: boolean;
+  target: string;
+  onClick: () => void;
+}
+
+export function TabItem({
+  id,
+  title,
+  active,
+  target,
+  onClick,
+}: TabItemProps): JSX.Element {
   return (
-    <li class="nav-item">
+    <li className="nav-item">
       <button
-        className={"nav-link" + (props.active ? " active" : "")}
-        id={props.id}
+        className={`nav-link${active ?? false ? " active" : ""}`}
+        id={id}
         type="button"
         data-bs-toggle="tab"
-        data-bs-target={props.target}
+        data-bs-target={target}
         role="tab"
-        onClick={props.onClick}
+        onClick={onClick}
       >
-        {props.title}
+        {title}
       </button>
     </li>
   );
 }
 
-function TabPanel(props) {
+interface TabPanelProps {
+  id: string;
+  active?: boolean;
+  children: JSX.Element;
+}
+
+function TabPanel({ id, active, children }: TabPanelProps): JSX.Element {
   return (
     <div
-      className={"tab-pane fade" + (props.active ? " show active" : "")}
-      id={props.id}
+      className={`tab-pane fade${active ?? false ? " show active" : ""}`}
+      id={id}
       role="tabpanel"
     >
-      {props.children}
+      {children}
     </div>
   );
 }
 
-export function Tabs(props) {
+interface TabsProps {
+  id?: string;
+  children: JSX.Element[];
+}
+
+export function Tabs({ id, children }: TabsProps): JSX.Element {
   const [activeTab, setActiveTab] = useState(0);
 
-  const id = props.id || useId();
-
-  function generateTabItems() {
-    return props.children.map((child, idx) => {
+  function generateTabItems(): JSX.Element[] {
+    return children.map((child, idx) => {
       return (
         <TabItem
-          id={id + "-tab-" + idx}
+          id={`${id}-tab-${idx}`}
+          key={child.props.title}
           title={child.props.title}
-          target={"#" + id + "-tab-panel-" + idx}
+          target={`#${id}-tab-panel-${idx}`}
           active={idx === activeTab}
-          onClick={(e) => {
+          onClick={() => {
             setActiveTab(idx);
-            child.props.onClick(e);
+            child.props.onClick();
           }}
         />
       );
     });
   }
 
-  function generateTabPanels() {
-    return props.children.map((child, idx) => {
+  function generateTabPanels(): JSX.Element[] {
+    return children.map((child, idx) => {
       return (
-        <TabPanel id={id + "-tab-panel-" + idx} active={idx === activeTab}>
+        <TabPanel
+          id={`${id}-tab-panel-${idx}`}
+          key={idx}
+          active={idx === activeTab}
+        >
           {child.props.children}
         </TabPanel>
       );
@@ -64,16 +93,12 @@ export function Tabs(props) {
 
   return (
     <>
-      <ul class="nav nav-tabs" id={id}>
+      <ul className="nav nav-tabs" id={id}>
         {generateTabItems()}
       </ul>
-      <div class="tab-content" id={id + "-tab-panels"}>
+      <div className="tab-content" id={`${id}-tab-panels`}>
         {generateTabPanels()}
       </div>
     </>
   );
-}
-
-export function ReTab(props) {
-  return null;
 }

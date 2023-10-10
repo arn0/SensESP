@@ -1,11 +1,12 @@
-import { useId, useState } from "preact/hooks";
+import { useEffect, useId, useState } from "preact/hooks";
 import { fetchConfigData, saveConfigData } from "../../common/configAPIClient";
 
-import { ConfigData } from "common/configAPIClient";
+import { type ConfigData } from "common/configAPIClient";
+import { type JsonObject } from "common/jsonTypes";
 import { Card } from "components/Card";
 import { FormInput } from "components/Form";
 import { ModalError } from "components/ModalError";
-import { ChangeEvent, JSX } from "preact/compat";
+import { type ChangeEvent, type JSX } from "preact/compat";
 
 interface EditControlProps {
   id: string;
@@ -18,15 +19,15 @@ interface EditControlProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const EditControl = ({
+function EditControl({
   id,
   schema,
   value,
   onChange,
-}: EditControlProps): JSX.Element => {
+}: EditControlProps): JSX.Element {
   let type: string = schema.type;
-  let step: number | undefined = undefined;
-  let as: string | undefined = undefined;
+  let step: number | undefined;
+  let as: string | undefined;
 
   switch (type) {
     case "string":
@@ -61,46 +62,66 @@ const EditControl = ({
         id={id}
         label={schema.title}
         value={value}
-        readOnly={schema.readOnly || false}
+        readOnly={schema.readOnly ?? false}
         step={step}
-        onChange={onChange}
+        onchange={onChange}
       />
     </div>
   );
-};
+}
 
 export default EditControl;
 
-const CardContents = ({ config, schema, description, setConfig }) => {
-  const updateConfig = (key: string, value: any) => {
+interface CardContentsProps {
+  config: JsonObject;
+  schema: JsonObject | null;
+  description: string;
+  setConfig: (config: JsonObject) => void;
+}
+
+function CardContents({
+  config,
+  schema,
+  description,
+  setConfig,
+}: CardContentsProps): JSX.Element {
+  const updateConfig = (key: string, value: string | number): void => {
     setConfig({ ...config, [key]: value });
   };
 
+  const properties = schema?.properties ?? {};
+  const keys = Object.keys(properties);
+
+  console.log("keys", keys);
+
   return (
     <>
-      {description || null}
+      {description !== "" || null}
 
-      {Object.keys(schema["properties"]).map((key) => {
+      {keys.map((key) => {
         return (
           <EditControl
             id={key}
-            schema={schema["properties"][key]}
-            value={config[key]}
-            onChange={(event: any) => updateConfig(key, event.target.value)}
+            key={key}
+            schema={properties[key]}
+            value={String(config[key] ?? "")}
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              updateConfig(key, event.currentTarget.value);
+            }}
           />
         );
       })}
     </>
   );
-};
+}
 
 interface ConfigCardProps {
   path: string;
 }
 
-export function ConfigCard({ path }: ConfigCardProps): JSX.Element {
-  const [config, setConfig] = useState<Record<string, any>>({});
-  const [schema, setSchema] = useState<Record<string, any>>({});
+export function ConfigCard({ path }: ConfigCardProps): JSX.Element | null {
+  const [config, setConfig] = useState<JsonObject>({});
+  const [schema, setSchema] = useState<JsonObject | null>({});
   const [description, setDescription] = useState<string>("");
   const [saving, setSaving] = useState<boolean>(false);
   const [httpErrorText, setHttpErrorText] = useState<string>("");
@@ -115,14 +136,16 @@ export function ConfigCard({ path }: ConfigCardProps): JSX.Element {
     setDescription(data.description);
   };
 
-  if (Object.keys(config).length === 0) {
-    updateFunc(path);
-  }
+  useEffect(() => {
+    if (Object.keys(config).length === 0) {
+      void updateFunc(path);
+    }
+  }, [config, path]);
 
   async function handleSave(e): Promise<void> {
     e.preventDefault();
     setSaving(true);
-    await saveConfigData(path, config, (e) => {
+    await saveConfigData(path, JSON.stringify(config), (e) => {
       console.log("Error saving config data", e);
       setIsDirty(true);
       setHttpErrorText(e);
@@ -135,15 +158,15 @@ export function ConfigCard({ path }: ConfigCardProps): JSX.Element {
 
   const title = path.slice(1).replace(/\//g, " ▸ ");
 
-  if (!schema) {
+  if ((schema ?? "") === "") {
     return null;
   }
 
   if (Object.keys(config).length === 0) {
     return (
-      <div class="d-flex align-items-center justify-content-center min">
-        <div class="spinner-border" role="status">
-          <span class="visually-hidden">Loading...</span>
+      <div className="d-flex align-items-center justify-content-center min">
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Loading...</span>
         </div>
       </div>
     );
@@ -152,10 +175,12 @@ export function ConfigCard({ path }: ConfigCardProps): JSX.Element {
   return (
     <>
       <ModalError
-        id={id + "-modal"}
+        id={`${id}-modal`}
         title="Error"
         show={httpErrorText !== ""}
-        onHide={() => setHttpErrorText("")}
+        onHide={() => {
+          setHttpErrorText("");
+        }}
       >
         <p>There was an error saving the configuration:</p>
         <p>{httpErrorText}</p>
@@ -163,7 +188,12 @@ export function ConfigCard({ path }: ConfigCardProps): JSX.Element {
 
       <Card title={title}>
         <form>
-          <div onInput={() => setIsDirty(true)} className="mb-2">
+          <div
+            onInput={() => {
+              setIsDirty(true);
+            }}
+            className="mb-2"
+          >
             <CardContents
               config={config}
               schema={schema}
@@ -173,16 +203,20 @@ export function ConfigCard({ path }: ConfigCardProps): JSX.Element {
           </div>
           <div className="d-flex justify-content-begin">
             <div
-              class={"spinner-border me-2" + saving ? "" : " visually-hidden"}
+              className={
+                `spinner-border me-2${saving}` === "" ? "" : " visually-hidden"
+              }
               role="status"
             >
-              <span class="visually-hidden">Loading...</span>
+              <span className="visually-hidden">Loading...</span>
             </div>
 
             <button
               className="btn btn-primary"
               type="submit"
-              onClick={handleSave}
+              onClick={(e) => {
+                void handleSave(e);
+              }}
               disabled={saving || !isDirty}
             >
               Save

@@ -1,8 +1,9 @@
+import { type JSX } from "preact";
 import { useLocation } from "preact-iso";
 
-//import "./header.css"
+// import "./header.css"
 
-export function Header() {
+export function Header(): JSX.Element {
   const { url } = useLocation();
 
   return (
@@ -22,11 +23,13 @@ export function Header() {
             />
           </a>
           <nav className="navbar-nav mb-0">
-            <ul class="nav nav-pills">
+            <ul className="nav nav-pills">
               <li className="nav-item">
                 <a
                   href="/status"
-                  className={"nav-link" + (url == "/status" ? " active" : " ")}
+                  className={`nav-link${
+                    url === "/status" ? " active" : " link-body-emphasis"
+                  }`}
                 >
                   Status
                 </a>
@@ -34,10 +37,9 @@ export function Header() {
               <li className="nav-item">
                 <a
                   href="/system"
-                  className={
-                    "nav-link" +
-                    (url == "/system" ? " active" : " link-body-emphasis")
-                  }
+                  className={`nav-link${
+                    url === "/system" ? " active" : " link-body-emphasis"
+                  }`}
                 >
                   System
                 </a>
@@ -45,10 +47,9 @@ export function Header() {
               <li className="nav-item">
                 <a
                   href="/wifi"
-                  className={
-                    "nav-link" +
-                    (url == "/wifi" ? " active" : " link-body-emphasis")
-                  }
+                  className={`nav-link${
+                    url === "/wifi" ? " active" : " link-body-emphasis"
+                  }`}
                 >
                   WiFi
                 </a>
@@ -56,10 +57,9 @@ export function Header() {
               <li className="nav-item">
                 <a
                   href="/signalk"
-                  className={
-                    "nav-link" +
-                    (url == "/signalk" ? " active" : " link-body-emphasis")
-                  }
+                  className={`nav-link${
+                    url === "/signalk" ? " active" : " link-body-emphasis"
+                  }`}
                 >
                   Signal K
                 </a>
@@ -67,12 +67,9 @@ export function Header() {
               <li className="nav-item">
                 <a
                   href="/configuration"
-                  className={
-                    "nav-link " +
-                    (url == "/configuration"
-                      ? " active"
-                      : " link-body-emphasis")
-                  }
+                  className={`nav-link ${
+                    url === "/configuration" ? " active" : " link-body-emphasis"
+                  }`}
                 >
                   Configuration
                 </a>
