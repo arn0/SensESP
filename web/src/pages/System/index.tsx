@@ -52,8 +52,6 @@ function SystemCards(): JSX.Element {
 function AuthCard(): JSX.Element {
   const [authEnabled, setAuthEnabled] = useState(false);
 
-  console.log(`AuthCard: authEnabled = ${authEnabled}`);
-
   const id = useId();
 
   return (
