@@ -1,27 +1,101 @@
 import { Header } from "components/Header";
 import { ConfigurationPage } from "pages/Configuration";
-import { RedirectRoot } from "pages/Root";
 import { SignalKPage } from "pages/SignalK";
 import { StatusPage } from "pages/Status";
 import { SystemPage } from "pages/System";
 import { WiFiConfigPage } from "pages/WiFi";
-import { NotFound } from "pages/_404.jsx";
-import { type JSX } from "preact";
+import { JSX } from "preact";
 import { LocationProvider, Route, Router } from "preact-iso";
+import { useEffect, useState } from "preact/hooks";
+import {
+  __federation_method_getRemote,
+  __federation_method_setRemote,
+  __federation_method_unwrapDefault,
+} from "virtual:__federation__";
+
+export interface RouteInstruction {
+  name: string;
+  path: string;
+  componentName: string;
+  loadPath?: string;
+  component?: () => JSX.Element;
+}
+
+type KnownComponents = {
+  [key: string]: () => JSX.Element;
+};
+
+const KNOWN_COMPONENTS: KnownComponents = {
+  StatusPage,
+  SystemPage,
+  WiFiConfigPage,
+  SignalKPage,
+  ConfigurationPage,
+};
 
 export function App(): JSX.Element {
+  const [routes, setRoutes] = useState<RouteInstruction[]>([]);
+
+  useEffect(() => {
+    // Fetch routes from the backend API
+    void (async () => {
+      const res = await fetch("/api/routes");
+      const data = await res.json();
+      console.log("Got routes", data);
+      setRoutes(data);
+
+      let populatedRoutes: RouteInstruction[] = [];
+      for (const route of data) {
+        if (route.loadPath) {
+          const remoteInfo = {
+            url: () => Promise.resolve(route.loadPath),
+            format: "esm",
+            from: "vite",
+          };
+
+          __federation_method_setRemote(route.componentName, remoteInfo);
+          const module = await __federation_method_getRemote(
+            route.componentName,
+            "./SensESPPlugin",
+          );
+          const unwrapped = await __federation_method_unwrapDefault(module);
+          populatedRoutes.push({ ...route, component: unwrapped });
+        } else if (route.componentName in KNOWN_COMPONENTS) {
+          populatedRoutes.push({
+            ...route,
+            component: KNOWN_COMPONENTS[route.componentName],
+          });
+        } else {
+          // We don't know about this component - throw an error
+          throw new Error(`Unknown component: ${route.componentName}`);
+        }
+      }
+
+      setRoutes(populatedRoutes);
+    })();
+  }, []);
+
+  const [routeComponents, setRouteComponents] = useState<JSX.Element[]>([]);
+  useEffect(() => {
+    const newRouteComponents: JSX.Element[] = [];
+    routes.forEach((route) => {
+      if (route.component) {
+        newRouteComponents.push(
+          <Route
+            key={route.path}
+            path={route.path}
+            component={route.component}
+          />,
+        );
+      }
+    });
+    setRouteComponents(newRouteComponents);
+  }, [routes]);
+
   return (
     <LocationProvider>
-      <Header />
-      <Router>
-        <RedirectRoot path="/" destination="/status" />
-        <StatusPage path="/status" />
-        <SystemPage path="/system" />
-        <WiFiConfigPage path="/wifi" />
-        <SignalKPage path="/signalk" />
-        <ConfigurationPage path="/configuration" />
-        <Route default component={NotFound} />
-      </Router>
+      <Header routes={routes} />
+      {routes.length === 0 ? null : <Router>{routeComponents}</Router>}
     </LocationProvider>
   );
 }

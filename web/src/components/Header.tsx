@@ -1,11 +1,29 @@
+import { RouteInstruction } from "App";
 import { type JSX } from "preact";
 import { useLocation } from "preact-iso";
 
-// import "./header.css"
+type HeaderProps = {
+  routes: RouteInstruction[];
+};
 
-export function Header(): JSX.Element {
+function RouteLink({ route }: { route: RouteInstruction }): JSX.Element {
   const { url } = useLocation();
 
+  return (
+    <li className="nav-item">
+      <a
+        href={route.path}
+        className={`nav-link${
+          url === route.path ? " active" : " link-body-emphasis"
+        }`}
+      >
+        {route.name}
+      </a>
+    </li>
+  );
+}
+
+export function Header({ routes }: HeaderProps): JSX.Element {
   return (
     <>
       <header className="navbar navbar-expand d-flex flex-wrap justify-content-center bg-body-secondary">
@@ -24,56 +42,9 @@ export function Header(): JSX.Element {
           </a>
           <nav className="navbar-nav mb-0">
             <ul className="nav nav-pills">
-              <li className="nav-item">
-                <a
-                  href="/status"
-                  className={`nav-link${
-                    url === "/status" ? " active" : " link-body-emphasis"
-                  }`}
-                >
-                  Status
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  href="/system"
-                  className={`nav-link${
-                    url === "/system" ? " active" : " link-body-emphasis"
-                  }`}
-                >
-                  System
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  href="/wifi"
-                  className={`nav-link${
-                    url === "/wifi" ? " active" : " link-body-emphasis"
-                  }`}
-                >
-                  WiFi
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  href="/signalk"
-                  className={`nav-link${
-                    url === "/signalk" ? " active" : " link-body-emphasis"
-                  }`}
-                >
-                  Signal K
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  href="/configuration"
-                  className={`nav-link ${
-                    url === "/configuration" ? " active" : " link-body-emphasis"
-                  }`}
-                >
-                  Configuration
-                </a>
-              </li>
+              {routes.map((route) => (
+                <RouteLink key={route.path} route={route} />
+              ))}
             </ul>
           </nav>
         </div>
