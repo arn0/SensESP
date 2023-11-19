@@ -97,9 +97,8 @@ class StaticPage:
 
         output = f"""{{
   "{self.path}",
-  {{
-{wrapped_content}
-  }},
+
+{wrapped_content},
   {self.length},
   {content_type_output}
   "br",
