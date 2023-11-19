@@ -21,10 +21,10 @@ export default defineConfig({
     minify: true,
     cssCodeSplit: false,
     target: 'esnext',
-    rollupOptions: {
-      plugins: [
-        brotli(),
-      ],
-    }
+    // rollupOptions: {
+    //   plugins: [
+    //     brotli(),
+    //   ],
+    // }
   }
 })
