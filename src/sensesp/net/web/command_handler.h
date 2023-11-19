@@ -15,13 +15,13 @@ namespace sensesp {
  * @brief Handle HTTP requests to different action endpoints.
  *
  */
-class HTTPCommandHandler : public HTTPServerHandler {
+class HTTPResetHandler : public HTTPServerHandler {
  public:
-  HTTPCommandHandler() : HTTPServerHandler(){};
+  HTTPResetHandler() : HTTPServerHandler(){};
   virtual void set_handler(HTTPServer* server) override {
     // handler for GET /device/reset
     const httpd_uri_t reset_handler = {
-        .uri = "/device/reset",
+        .uri = "/api/device/reset",
         .method = HTTP_GET,
         .handler = [](httpd_req_t* req) {
           httpd_resp_send(req,
@@ -32,10 +32,17 @@ class HTTPCommandHandler : public HTTPServerHandler {
           return ESP_OK;
         }};
     server->register_handler(&reset_handler);
+  };
+};
 
+
+class HTTPRestartHandler : public HTTPServerHandler {
+ public:
+  HTTPRestartHandler() : HTTPServerHandler(){};
+  virtual void set_handler(HTTPServer* server) override {
     // handler for GET /device/restart
     const httpd_uri_t restart_handler = {
-        .uri = "/device/restart",
+        .uri = "/api/device/restart",
         .method = HTTP_GET,
         .handler = [](httpd_req_t* req) {
           httpd_resp_send(req, "Restarting device", 0);
@@ -43,11 +50,17 @@ class HTTPCommandHandler : public HTTPServerHandler {
           return ESP_OK;
         }};
     server->register_handler(&restart_handler);
+  };
+};
 
-    // handler for GET /info
+class HTTPInfoHandler : public HTTPServerHandler {
+  public:
+  HTTPInfoHandler() : HTTPServerHandler(){};
+  virtual void set_handler(HTTPServer* server) override {
+    // handler for GET /api/info
     const httpd_uri_t info_handler = {
-        .uri = "/info", .method = HTTP_GET, .handler = [](httpd_req_t* req) {
-          return call_member_handler(req, &HTTPCommandHandler::handle_info_get);
+        .uri = "/api/info", .method = HTTP_GET, .handler = [](httpd_req_t* req) {
+          return call_member_handler(req, &HTTPInfoHandler::handle_info_get);
         }};
     server->register_handler(&info_handler);
   };
@@ -97,6 +110,12 @@ class HTTPCommandHandler : public HTTPServerHandler {
     }
   }
 };
+
+void add_http_command_handlers(HTTPServer* server) {
+  (new HTTPResetHandler())->set_handler(server);
+  (new HTTPRestartHandler())->set_handler(server);
+  (new HTTPInfoHandler())->set_handler(server);
+}
 
 }  // namespace sensesp
 
