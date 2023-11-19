@@ -12,13 +12,13 @@ export default defineMock(
         { name: "WiFi", path: "/wifi", componentName: "WiFiConfigPage" },
         { name: "Signal K", path: "/signalk", componentName: "SignalKPage" },
         { name: "Configuration", path: "/configuration", componentName: "ConfigurationPage" },
-        { name: "SensESP Plugin", path: "/sensesp-plugin", componentName: "SensESPPluginPage", loadPath: "/api/plugins/sensesp-plugin.js" },
+        { name: "SensESP Plugin", path: "/sensesp-plugin/sensesp-plugin", componentName: "SensESPPluginPage", loadPath: "/api/plugins/sensesp-plugin/sensesp-plugin.js" },
       ]
       ,
       delay: 100,
     },
     {
-      url: '/api/plugins/sensesp-plugin.js',
+      url: '/api/plugins/sensesp-plugin/sensesp-plugin.js',
       method: 'GET',
       headers: {
         'Content-Type': 'application/javascript'
@@ -26,7 +26,7 @@ export default defineMock(
       body: await readFile('../webui-plugins/sample-plugin-js/dist/assets/sensesp-plugin.js', 'utf-8'),
     },
     {
-      url: '/api/plugins/__federation_fn_import.js',
+      url: '/api/plugins/sensesp-plugin/__federation_fn_import.js',
       method: 'GET',
       headers: {
         'Content-Type': 'application/javascript'
@@ -34,28 +34,28 @@ export default defineMock(
       body: await readFile('../webui-plugins/sample-plugin-js/dist/assets/__federation_fn_import.js', 'utf-8'),
     },
     {
-      url: '/api/plugins/__federation_shared_preact-7ae36016.js',
+      url: '/api/plugins/sensesp-plugin/__federation_shared_preact-8_xvI4no.js',
       method: 'GET',
       headers: {
         'Content-Type': 'application/javascript'
       },
-      body: await readFile('../webui-plugins/sample-plugin-js/dist/assets/__federation_shared_preact-7ae36016.js', 'utf-8'),
+      body: await readFile('../webui-plugins/sample-plugin-js/dist/assets/__federation_shared_preact-8_xvI4no.js', 'utf-8'),
     },
     {
-      url: '/api/plugins/preload-helper-a7f72f97.js',
+      url: '/api/plugins/sensesp-plugin/preload-helper-xR9xMGMN.js',
       method: 'GET',
       headers: {
         'Content-Type': 'application/javascript'
       },
-      body: await readFile('../webui-plugins/sample-plugin-js/dist/assets/preload-helper-a7f72f97.js', 'utf-8'),
+      body: await readFile('../webui-plugins/sample-plugin-js/dist/assets/preload-helper-xR9xMGMN.js', 'utf-8'),
     },
     {
-      url: '/api/plugins/__federation_expose_SensESPPlugin-af7cb6d7.js',
+      url: '/api/plugins/sensesp-plugin/__federation_expose_SensESPPlugin-jc4KNWOO.js',
       method: 'GET',
       headers: {
         'Content-Type': 'application/javascript'
       },
-      body: await readFile('../webui-plugins/sample-plugin-js/dist/assets/__federation_expose_SensESPPlugin-af7cb6d7.js', 'utf-8'),
+      body: await readFile('../webui-plugins/sample-plugin-js/dist/assets/__federation_expose_SensESPPlugin-jc4KNWOO.js', 'utf-8'),
     }
   ]
 )

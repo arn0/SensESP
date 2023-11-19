@@ -58,8 +58,8 @@ function AuthCard(): JSX.Element {
     <SystemSettingsCard title={<h5 className="card-title">Authentication</h5>}>
       <p className="card-text">
         Authentication is used to restrict access to the configuration
-        interface. If you are using this device on a trusted private network,
-        you can disable authentication.
+        interface. You should disable authentication only if
+        you are using this device on a trusted private network.
       </p>
       <div>
         <FormSwitch
@@ -142,7 +142,7 @@ function RestartCard(): JSX.Element {
     console.log("Restarting the device");
 
     try {
-      const response = await fetch("/device/restart", { method: "POST" });
+      const response = await fetch("/api/device/restart", { method: "POST" });
       if (!response.ok) {
         setHttpErrorText(`${response.status} ${response.statusText}`);
         return;
@@ -200,7 +200,7 @@ function ResetCard(): JSX.Element {
     console.log("Resetting the device");
 
     try {
-      const response = await fetch("/device/reset", { method: "POST" });
+      const response = await fetch("/api/device/reset", { method: "POST" });
       if (!response.ok) {
         setHttpErrorText(`${response.status} ${response.statusText}`);
         return;

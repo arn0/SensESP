@@ -22,6 +22,7 @@ def build_web_ui(*args, **kwargs) -> None:
         pathlib.Path("web/dist/index.html"),
         "src/sensesp/net/web/autogen/web_ui_files.h",
         "kWebUIFiles",
+        "/"
     )
 
 

@@ -46,13 +46,16 @@ class StaticPage:
     # Content-encoding doesn't have to be defined because everything is Brotli
 
     @classmethod
-    def from_path(cls, path: pathlib.Path, omit_root: str = None):
+    def from_path(cls, path: pathlib.Path, omit_root: str = None, base_path: str = "/"):
         path_ = str(path)
         if omit_root is not None:
             path_ = path_.replace(omit_root, "", 1)
         # treat index.html as the root
         if path_.endswith("index.html"):
             path_ = path_.replace("index.html", "", 1)
+        if path_.startswith("/"):
+            path_ = path_[1:]
+        path_ = base_path + path_
         with path.open("rb") as f:
             content = f.read()
             compressed_content = brotli.compress(content)
@@ -135,13 +138,15 @@ const StaticFileData {constant_name}[] = {{
             f.write(output)
 
 
-def convert_files(root_file_path: pathlib.Path, target: str, constant_name: str):
+def convert_files(
+    root_file_path: pathlib.Path, target: str, constant_name: str, base_path: str = "/"
+):
     required_files = gather_files(root_file_path.parent, root_file_path.name)
 
     # compress and generate header files
 
     static_pages = [
-        StaticPage.from_path(rf, omit_root=str(root_file_path.parent))
+        StaticPage.from_path(rf, omit_root=str(root_file_path.parent), base_path=base_path)
         for rf in required_files
     ]
 
@@ -150,4 +155,4 @@ def convert_files(root_file_path: pathlib.Path, target: str, constant_name: str)
 
 
 if __name__ == "__main__":
-    convert_files(pathlib.Path(sys.argv[1]), sys.argv[2]. sys.argv[3])
+    convert_files(pathlib.Path(sys.argv[1]), sys.argv[2], sys.argv[3], sys.argv[4])
