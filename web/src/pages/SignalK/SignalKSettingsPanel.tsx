@@ -14,8 +14,8 @@ export function SignalKSettingsPanel(): JSX.Element {
 
   const id = useId();
 
-  function handleError(e: string): void {
-    setErrorText(e);
+  function handleError(e: Error): void {
+    setErrorText(e.message);
   }
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export function SignalKSettingsPanel(): JSX.Element {
       const data = await fetchConfigData("/System/Signal K Settings");
       setConfig(data.config);
     } catch (e) {
-      setErrorText(e);
+      setErrorText(e.message);
     }
   }
 

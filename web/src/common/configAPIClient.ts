@@ -33,7 +33,7 @@ export async function fetchConfigData(path: string): Promise<ConfigData> {
     }
     return await response.json();
   } catch (e) {
-    throw new Error("Error getting config data from server");
+    throw new Error("Error getting config data from the device.");
   }
 }
 
@@ -46,7 +46,7 @@ export async function fetchConfigData(path: string): Promise<ConfigData> {
 export async function saveConfigData(
   path: string,
   data: string,
-  errorHandler: (e: string) => void,
+  errorHandler: (e: Error) => void,
   contentType: string = "application/json",
 ): Promise<void> {
   try {
@@ -58,9 +58,9 @@ export async function saveConfigData(
       body: data,
     });
     if (!response.ok) {
-      errorHandler(`HTTP Error ${response.status} ${response.statusText}`);
+      errorHandler(Error(`HTTP Error ${response.status} ${response.statusText}`));
     }
   } catch (e) {
-    errorHandler(`Error saving config data to server: ${e.message}`);
+    errorHandler(Error(`Error saving config data to server: ${e.message}`));
   }
 }

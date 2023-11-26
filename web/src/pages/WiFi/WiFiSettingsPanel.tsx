@@ -26,8 +26,8 @@ export function WiFiSettingsPanel(): JSX.Element {
 
   const id = useId();
 
-  function handleError(e: string): void {
-    setErrorText(e);
+  function handleError(e: Error): void {
+    setErrorText(e.message);
   }
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export function WiFiSettingsPanel(): JSX.Element {
 
       setConfig(iData); // living dangerously
     } catch (e) {
-      setErrorText(e);
+      setErrorText(`Failed to fetch data: ${e.message}`);
     }
   }
 
