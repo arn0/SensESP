@@ -44,6 +44,7 @@ void SensESPApp::setup() {
   // Add the default HTTP server response handlers
   this->http_static_file_handler_ = new HTTPStaticFileHandler(kWebUIFiles);
   add_http_command_handlers(this->http_server_);
+
   this->http_config_handler_ = new HTTPConfigHandler();
 
   // create the SK delta object
