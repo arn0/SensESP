@@ -1,13 +1,14 @@
 import pathlib
 import scripts.convert_html
 
-# install brotli if it isn't installed
-try:
-    import brotli
-except ImportError:
-    env.Execute("$PYTHONEXE -m pip install brotli")
-
 Import("env")
+
+# install brotli if it isn't installed
+#try:
+#    import brotli
+#except ImportError:
+#    env.Execute("$PYTHONEXE -m pip install brotli")
+
 
 
 def convert_files(root_file_path: pathlib.Path, target):

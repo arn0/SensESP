@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
 from dataclasses import dataclass
+import gzip
+import itertools
 import pathlib
 import logging
 import sys
 
-import brotli
+# import brotli
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -34,7 +36,7 @@ def gather_files(root_dir: pathlib.Path, root_file_name: str) -> list[pathlib.Pa
                         traverse_files.append(file)
                         required_files.add(file)
 
-    return list(required_files)
+    return sorted(list(required_files))
 
 
 @dataclass
@@ -58,7 +60,8 @@ class StaticPage:
         path_ = base_path + path_
         with path.open("rb") as f:
             content = f.read()
-            compressed_content = brotli.compress(content)
+            # compressed_content = brotli.compress(content)
+            compressed_content = gzip.compress(content)
             ext = path.suffix
             if ext == ".js":
                 content_type = "application/javascript"
@@ -83,12 +86,12 @@ class StaticPage:
 
         chunk_size = 16
 
-        def grouper(n, iterable, padvalue=None):
-            "grouper(3, 'abcdefg', 'x') --> ('a','b','c'), ('d','e','f'), ('g','x','x')"
-            return zip(*[iter(iterable)] * n)
+        def chunks(lst, chk_size):
+            lst_it = iter(lst)
+            return iter(lambda: tuple(itertools.islice(lst_it, chk_size)), ())
 
         wrapped_content = "\n".join(
-            '    "' + "".join(g) + '"' for g in grouper(chunk_size, hex_content)
+            '    "' + "".join(g) + '"' for g in chunks(hex_content, chunk_size)
         )
 
         content_type_output = (
@@ -101,7 +104,7 @@ class StaticPage:
 {wrapped_content},
   {self.length},
   {content_type_output}
-  "br",
+  "gzip",
 }}"""
 
         return output
@@ -145,7 +148,9 @@ def convert_files(
     # compress and generate header files
 
     static_pages = [
-        StaticPage.from_path(rf, omit_root=str(root_file_path.parent), base_path=base_path)
+        StaticPage.from_path(
+            rf, omit_root=str(root_file_path.parent), base_path=base_path
+        )
         for rf in required_files
     ]
 
