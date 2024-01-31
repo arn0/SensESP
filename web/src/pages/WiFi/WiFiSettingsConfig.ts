@@ -19,7 +19,7 @@ export interface IAPSettingsConfig {
   enabled: boolean;
   name: string;
   password: string;
-  channel: string;
+  channel: number;
   hidden: boolean;
 }
 
@@ -27,30 +27,30 @@ export class APSettingsConfig implements IAPSettingsConfig {
   enabled: boolean;
   name: string;
   password: string;
-  channel: string;
+  channel: number;
   hidden: boolean;
 
   constructor() {
     this.enabled = false;
     this.name = "";
     this.password = "";
-    this.channel = "Auto";
+    this.channel = 1;
     this.hidden = false;
   }
 }
 
 export interface IClientSettingsConfig {
   enabled: boolean;
-  singleClientConfigs: ISingleClientConfig[]; // expected length of 3
+  settings: ISingleClientConfig[]; // expected length of 3
 }
 
 export class ClientSettingsConfig implements IClientSettingsConfig {
   enabled: boolean;
-  singleClientConfigs: SingleClientConfig[]; // expected length of 3
+  settings: SingleClientConfig[]; // expected length of 3
 
   constructor() {
     this.enabled = false;
-    this.singleClientConfigs = [
+    this.settings = [
       new SingleClientConfig(),
       new SingleClientConfig(),
       new SingleClientConfig(),

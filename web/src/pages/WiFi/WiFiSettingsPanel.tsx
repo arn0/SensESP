@@ -150,7 +150,7 @@ function APSettingsPanel({
           Create a new WiFi network
         </>
       }
-      expanded={config.enabled}
+      expanded={config.enabled ?? false}
       setExpanded={setExpanded}
     >
       <form>
@@ -160,7 +160,7 @@ function APSettingsPanel({
             label="Name"
             type="text"
             placeholder="Network Name"
-            value={config.name}
+            value={config.name ?? ""}
             onchange={handleApSettingsChange("name")}
           />
 
@@ -169,15 +169,16 @@ function APSettingsPanel({
             label="Password"
             type="password"
             placeholder="Network Password"
-            value={config.password}
+            value={config.password ?? ""}
             onchange={handleApSettingsChange("password")}
           />
 
           <FormInput
             id={`${id}-channel`}
             label="Channel"
+            type="number"
             aria-label="Select WiFi channel"
-            value={config.channel}
+            value={config.channel ?? 1}
             onchange={handleApSettingsChange("channel")}
           />
 
@@ -185,7 +186,7 @@ function APSettingsPanel({
             id={`${id}-hidden`}
             label="Hidden"
             type="checkbox"
-            checked={config.hidden}
+            checked={config.hidden ?? false}
             onChange={handleApSettingsChange("hidden")}
           />
         </div>
@@ -205,6 +206,7 @@ function ClientSettingsPanel({
 }: ClientSettingsPanelProps): JSX.Element {
   const [selectedNetwork, setSelectedNetwork] = useState("");
   const [activeTab, setActiveTab] = useState(0);
+  const [isScanning, setIsScanning] = useState(false);
 
   const id = useId();
 
@@ -214,7 +216,7 @@ function ClientSettingsPanel({
   ): void {
     setConfig(
       produce(config, (draft) => {
-        draft.singleClientConfigs[num] = singleConfig;
+        draft.settings[num] = singleConfig;
       }),
     );
   }
@@ -223,13 +225,14 @@ function ClientSettingsPanel({
     setSelectedNetwork(networkName);
     setConfig(
       produce(config, (draft) => {
-        draft[activeTab].name = networkName;
+        draft.settings[activeTab].name = networkName;
       }),
     );
   }
 
   function handleActiveTab(tabNum: number): void {
     setActiveTab(tabNum);
+    setSelectedNetwork(config.settings[tabNum].name);
   }
 
   function setExpanded(expanded: boolean): void {
@@ -249,16 +252,25 @@ function ClientSettingsPanel({
           Connect to existing WiFi
         </>
       }
-      expanded={config.enabled}
+      expanded={config.enabled ?? false}
       setExpanded={setExpanded}
     >
       <div className="container-fluid">
         <div className="row">
           <div className="col-sm overflow-auto">
-            <h4>Available Networks</h4>
+            <div className="d-flex align-items-center">
+              <h4>Available Networks</h4>
+              {isScanning && (
+                <div className="spinner-border spinner-border-sm ms-auto" role="status">
+                  <span className="visually-hidden">Scanning...</span>
+                </div>
+              )}
+            </div>
             <NetworkList
               selectedNetwork={selectedNetwork}
               setSelectedNetwork={handleClickNetwork}
+              isScanning={isScanning}
+              setIsScanning={setIsScanning}
             />
           </div>
           <div className="col-sm">
@@ -270,7 +282,7 @@ function ClientSettingsPanel({
                 }}
               >
                 <SingleClientConfigPanel
-                  config={config.singleClientConfigs[0]}
+                  config={config.settings[0]}
                   setConfig={(cfg) => {
                     updateClientConfig(0, cfg);
                   }}
@@ -283,7 +295,7 @@ function ClientSettingsPanel({
                 }}
               >
                 <SingleClientConfigPanel
-                  config={config.singleClientConfigs[1]}
+                  config={config.settings[1]}
                   setConfig={(cfg) => {
                     updateClientConfig(1, cfg);
                   }}
@@ -296,7 +308,7 @@ function ClientSettingsPanel({
                 }}
               >
                 <SingleClientConfigPanel
-                  config={config.singleClientConfigs[2]}
+                  config={config.settings[2]}
                   setConfig={(cfg) => {
                     updateClientConfig(2, cfg);
                   }}

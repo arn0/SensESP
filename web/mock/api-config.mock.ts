@@ -43,7 +43,7 @@ export default defineMock(
           },
           "clientSettings": {
             "enabled": true,
-            "singleClientConfigs": [
+            "settings": [
               {
                 name: "Hat Labs Sensors",
                 password: "mypassword",

@@ -16,7 +16,7 @@ export function SingleClientConfigPanel({
 }: SingleClientConfigPanelProps): JSX.Element {
   const id = useId();
 
-  const useDHCP = config.useDHCP;
+  const useDHCP = config.useDHCP ?? true;
 
   function updateConfigField(field: string, value): void {
     setConfig(
@@ -34,7 +34,7 @@ export function SingleClientConfigPanel({
           type="text"
           label="Name"
           placeholder="Network Name"
-          value={config.name}
+          value={config.name ?? "WiFi Name"}
           onchange={(event) => {
             updateConfigField("name", event.currentTarget.value);
           }}
@@ -43,8 +43,8 @@ export function SingleClientConfigPanel({
           id={`${id}-password`}
           type="password"
           label="Password"
-          placeholder="Network Password"
-          value={config.password}
+          placeholder="WiFi Password"
+          value={config.password ?? ""}
           onchange={(event) => {
             updateConfigField("password", event.currentTarget.value);
           }}
@@ -103,7 +103,7 @@ function StaticIPConfig({
         type="text"
         label="IP Address"
         placeholder="IP Address"
-        value={config.ipAddress}
+        value={config.ipAddress ?? "192.168.0.2"}
         onchange={(event) => {
           updateConfigField("ipAddress", event.currentTarget.value);
         }}
@@ -114,7 +114,7 @@ function StaticIPConfig({
         type="text"
         label="Netmask"
         placeholder="Netmask"
-        value={config.netmask}
+        value={config.netmask ?? "255.255.255.0"}
         onchange={(event) => {
           updateConfigField("netmask", event.currentTarget.value);
         }}
@@ -125,7 +125,7 @@ function StaticIPConfig({
         type="text"
         label="Gateway"
         placeholder="Gateway"
-        value={config.gateway}
+        value={config.gateway ?? "192.168.0.1"}
         onchange={(event) => {
           updateConfigField("gateway", event.currentTarget.value);
         }}
@@ -136,7 +136,7 @@ function StaticIPConfig({
         type="text"
         label="DNS Server"
         placeholder="DNS Server"
-        value={config.dnsServer}
+        value={config.dnsServer ?? "8.8.8.8"}
         onchange={(event) => {
           updateConfigField("dnsServer", event.currentTarget.value);
         }}
