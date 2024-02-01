@@ -1,11 +1,12 @@
+import NavPathContext from "common/NavPathContext";
 import { Header } from "components/Header";
 import { ConfigurationPage } from "pages/Configuration";
 import { SignalKPage } from "pages/SignalK";
 import { StatusPage } from "pages/Status";
 import { SystemPage } from "pages/System";
 import { WiFiConfigPage } from "pages/WiFi";
-import { Component, JSX } from "preact";
-import { Router, route } from "preact-router";
+import { JSX } from "preact";
+import { Route, Router, RouterOnChangeArgs, route } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
 import {
   __federation_method_getRemote,
@@ -38,20 +39,19 @@ interface RedirectProps {
   to: string;
 }
 
-function Redirect({path, to}: RedirectProps): JSX.Element {
+function Redirect({ path, to }: RedirectProps): JSX.Element {
   useEffect(() => {
     route(to);
     // Also update the browser URL
     window.history.pushState({}, "", to);
   }, []);
 
-  return (
-    <></>
-  );
+  return <></>;
 }
 
 export function App(): JSX.Element {
   const [routes, setRoutes] = useState<RouteInstruction[]>([]);
+  const [navPath, setNavPath] = useState<string>("/");
 
   useEffect(() => {
     // Fetch routes from the backend API
@@ -96,15 +96,24 @@ export function App(): JSX.Element {
 
   useEffect(() => {
     // Always add a redirection from root to the first route
-    const newRouteComponents: JSX.Element[] = [<Redirect path="/" to={routes[0].path} />];
+    const newRouteComponents: JSX.Element[] = [
+      <Redirect path="/" to={routes[0].path} />,
+    ];
     routes.forEach((route) => {
       if (route.component) {
-        const Component = route.component;
-        newRouteComponents.push(<Component path={route.path} />);
+        newRouteComponents.push(
+          <Route path={route.path} component={route.component} />,
+        );
       }
     });
     setRouteComponents(newRouteComponents);
   }, [routes]);
+
+  async function handleRouteChange(e: RouterOnChangeArgs): Promise<void> {
+    setNavPath(e.url);
+  }
+
+  console.log("NavPath", navPath);
 
   if (routes.length === 0) {
     return (
@@ -118,8 +127,12 @@ export function App(): JSX.Element {
 
   return (
     <>
-      <Header routes={routes} />
-      {routes.length === 0 ? null : <Router>{routeComponents}</Router>}
+      <NavPathContext.Provider value={navPath}>
+        <Header routes={routes} />
+      </NavPathContext.Provider>
+      {routes.length === 0 ? null : (
+        <Router onChange={handleRouteChange}>{routeComponents}</Router>
+      )}
     </>
   );
 }

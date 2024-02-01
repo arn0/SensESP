@@ -1,20 +1,17 @@
 import { RouteInstruction } from "App";
+import NavPathContext from "common/NavPathContext";
 import { type JSX } from "preact";
-import { useLocation } from "preact-iso";
-
-type HeaderProps = {
-  routes: RouteInstruction[];
-};
+import { useContext, useEffect, useState } from "preact/hooks";
 
 function RouteLink({ route }: { route: RouteInstruction }): JSX.Element {
-  const { url } = useLocation();
+  const navPath = useContext(NavPathContext);
 
   return (
     <li className="nav-item">
       <a
         href={route.path}
         className={`nav-link${
-          url === route.path ? " active" : " link-body-emphasis"
+          navPath === route.path ? " active" : " link-body-emphasis"
         }`}
       >
         {route.name}
@@ -22,6 +19,10 @@ function RouteLink({ route }: { route: RouteInstruction }): JSX.Element {
     </li>
   );
 }
+
+type HeaderProps = {
+  routes: RouteInstruction[];
+};
 
 export function Header({ routes }: HeaderProps): JSX.Element {
   return (
