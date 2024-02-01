@@ -1,3 +1,4 @@
+import { InputDirtyContext } from "common/InputDirtyContext";
 import { ButtonCard } from "components/Card";
 import { FormInput, FormSwitch } from "components/Form";
 import { AppPage } from "pages/AppPage";
@@ -35,7 +36,7 @@ function SystemCards(): JSX.Element {
       <SystemSettingsCard title={<h5 className="card-title">Device Name</h5>}>
         <p className="card-text">
           The device name is used to identify this device on the network. It is
-          used both as a hostname (e.g. &quot;my-device.local&quot;) and as an
+          used both as a hostname (e.g. <code>my-device.local</code>) and as an
           identifying name in the Signal K network.
         </p>
         <FormInput
@@ -58,8 +59,8 @@ function AuthCard(): JSX.Element {
     <SystemSettingsCard title={<h5 className="card-title">Authentication</h5>}>
       <p className="card-text">
         Authentication is used to restrict access to the configuration
-        interface. You should disable authentication only if
-        you are using this device on a trusted private network.
+        interface. You should disable authentication only if you are using this
+        device on a trusted private network.
       </p>
       <div>
         <FormSwitch
@@ -113,20 +114,24 @@ function SystemSettingsCard({ title, children }: SystemCardProps): JSX.Element {
   }
 
   return (
-    <SystemCard>
-      <div className="card-header">{title}</div>
-      <div className="card-body">
-        {children}
-        <button
-          type="button"
-          className="btn btn-primary mt-3"
-          disabled={!isDirty}
-          onClick={handleSave}
-        >
-          Save
-        </button>
-      </div>
-    </SystemCard>
+    <InputDirtyContext.Provider
+      value={{ isInputDirty: isDirty, setInputDirty: setIsDirty }}
+    >
+      <SystemCard>
+        <div className="card-header">{title}</div>
+        <div className="card-body">
+          {children}
+          <button
+            type="button"
+            className="btn btn-primary mt-3"
+            disabled={!isDirty}
+            onClick={handleSave}
+          >
+            Save
+          </button>
+        </div>
+      </SystemCard>
+    </InputDirtyContext.Provider>
   );
 }
 
