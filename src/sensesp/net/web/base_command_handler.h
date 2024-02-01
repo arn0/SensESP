@@ -24,7 +24,7 @@ class HTTPResetHandler : public HTTPServerHandler {
     // handler for GET /device/reset
     const httpd_uri_t reset_handler = {
         .uri = "/api/device/reset",
-        .method = HTTP_GET,
+        .method = HTTP_POST,
         .handler = [](httpd_req_t* req) {
           httpd_resp_send(req,
                           "Resetting device back to factory defaults. "
@@ -44,7 +44,7 @@ class HTTPRestartHandler : public HTTPServerHandler {
     // handler for GET /device/restart
     const httpd_uri_t restart_handler = {
         .uri = "/api/device/restart",
-        .method = HTTP_GET,
+        .method = HTTP_POST,
         .handler = [](httpd_req_t* req) {
           httpd_resp_send(req, "Restarting device", 0);
           ReactESP::app->onDelay(500, []() { ESP.restart(); });
