@@ -4,8 +4,8 @@ import { SignalKPage } from "pages/SignalK";
 import { StatusPage } from "pages/Status";
 import { SystemPage } from "pages/System";
 import { WiFiConfigPage } from "pages/WiFi";
-import { JSX } from "preact";
-import { LocationProvider, Route, Router } from "preact-iso";
+import { Component, JSX } from "preact";
+import { Router, route } from "preact-router";
 import { useEffect, useState } from "preact/hooks";
 import {
   __federation_method_getRemote,
@@ -32,6 +32,23 @@ const KNOWN_COMPONENTS: KnownComponents = {
   SignalKPage,
   ConfigurationPage,
 };
+
+interface RedirectProps {
+  path: string;
+  to: string;
+}
+
+function Redirect({path, to}: RedirectProps): JSX.Element {
+  useEffect(() => {
+    route(to);
+    // Also update the browser URL
+    window.history.pushState({}, "", to);
+  }, []);
+
+  return (
+    <></>
+  );
+}
 
 export function App(): JSX.Element {
   const [routes, setRoutes] = useState<RouteInstruction[]>([]);
@@ -76,26 +93,33 @@ export function App(): JSX.Element {
   }, []);
 
   const [routeComponents, setRouteComponents] = useState<JSX.Element[]>([]);
+
   useEffect(() => {
-    const newRouteComponents: JSX.Element[] = [];
+    // Always add a redirection from root to the first route
+    const newRouteComponents: JSX.Element[] = [<Redirect path="/" to={routes[0].path} />];
     routes.forEach((route) => {
       if (route.component) {
-        newRouteComponents.push(
-          <Route
-            key={route.path}
-            path={route.path}
-            component={route.component}
-          />,
-        );
+        const Component = route.component;
+        newRouteComponents.push(<Component path={route.path} />);
       }
     });
     setRouteComponents(newRouteComponents);
   }, [routes]);
 
+  if (routes.length === 0) {
+    return (
+      <div className="d-flex align-items-center justify-content-center min">
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <LocationProvider>
+    <>
       <Header routes={routes} />
       {routes.length === 0 ? null : <Router>{routeComponents}</Router>}
-    </LocationProvider>
+    </>
   );
 }
