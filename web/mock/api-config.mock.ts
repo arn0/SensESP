@@ -1,4 +1,12 @@
+import { JsonObject } from 'common/jsonTypes';
 import { defineMock } from 'vite-plugin-mock-dev-server'
+
+let hostname = "localhost";
+let authenticationSettings: JsonObject = {
+  "authEnabled": false,
+  "username": "",
+  "password": ""
+};
 
 export default defineMock(
   [
@@ -28,6 +36,44 @@ export default defineMock(
         "description": ""
       },
       delay: 600,
+    },
+    {
+      url: '/api/config/system/hostname',
+      response(req, resp) {
+        if (req.method === 'GET') {
+          const doc = {
+            "config": {
+              "value": hostname
+            },
+            "schema": {},
+            "description": "The hostname of the device."
+          };
+          resp.end(JSON.stringify(doc));
+        } else if (req.method === 'POST') {
+          const doc = req.body;
+          console.log(doc);
+          hostname = doc.value;
+          resp.end();
+        }
+      }
+    },
+    {
+      url: '/api/config/system/authentication',
+      response(req, resp) {
+        if (req.method === 'GET') {
+          const doc = {
+            "config": authenticationSettings,
+            "schema": {},
+            "description": "Auth."
+          };
+          resp.end(JSON.stringify(doc));
+        } else if (req.method === 'POST') {
+          const doc = req.body;
+          console.log(doc);
+          authenticationSettings = doc;
+          resp.end();
+        }
+      }
     },
     {
       url: '/api/config/System/WiFi Settings',

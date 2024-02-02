@@ -1,9 +1,16 @@
-import { InputDirtyContext } from "common/InputDirtyContext";
+import {
+  ConfigData,
+  fetchConfigData,
+  saveConfigData,
+} from "common/configAPIClient";
+import { JsonObject } from "common/jsonTypes";
 import { ButtonCard } from "components/Card";
 import { FormInput, FormSwitch } from "components/Form";
+import { produce } from "immer";
 import { AppPage } from "pages/AppPage";
 import { type JSX } from "preact";
-import { useId, useState } from "preact/hooks";
+import { ChangeEvent } from "preact/compat";
+import { useEffect, useId, useState } from "preact/hooks";
 import { ModalError } from "../../components/ModalError";
 import { PageContents } from "../PageContents";
 import { PageHeading } from "../PageHeading";
@@ -32,8 +39,53 @@ function SystemCards(): JSX.Element {
   );
 
   function DeviceNameCard(): JSX.Element {
+    const [origData, setOrigData] = useState<JsonObject>({});
+    const [data, setData] = useState<JsonObject>({});
+    const [errorMessage, setErrorMessage] = useState<string>("");
+
+    const configPath = "/system/hostname";
+
+    const isDirty = origData !== data;
+
+    const fetchData = async (): Promise<void> => {
+      const data: ConfigData = await fetchConfigData(configPath);
+      // Get data.config and set it to config
+      setOrigData(data.config);
+      setData(data.config);
+    };
+
+    async function handleSaveData(): Promise<void> {
+      const success = await saveConfigData(configPath, JSON.stringify(data), (e) => {
+        console.log("Error saving config data", e);
+        setErrorMessage(e.message);
+      });
+      if (success) {
+        setOrigData(data);
+      }
+    }
+
+    const hostname = String(data?.value ?? "");
+    function setHostname(hostname: string): void {
+      // Use immer to update the hostname property of the config object
+      setData(
+        produce(data, (draft) => {
+          draft.value = hostname;
+        }),
+      );
+    }
+
+    useEffect(() => {
+      void fetchData();
+    }, []);
+
     return (
-      <SystemSettingsCard title={<h5 className="card-title">Device Name</h5>}>
+      <SystemSettingsCard
+        title={<h5 className="card-title">Device Name</h5>}
+        isDirty={isDirty}
+        handleSaveData={handleSaveData}
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
+      >
         <p className="card-text">
           The device name is used to identify this device on the network. It is
           used both as a hostname (e.g. <code>my-device.local</code>) and as an
@@ -43,7 +95,10 @@ function SystemCards(): JSX.Element {
           label="Hostname"
           id={`${id}-name`}
           type="text"
-          placeholder="Device Name"
+          value={hostname}
+          onInput={(e: ChangeEvent<HTMLInputElement>) =>
+            setHostname(e.currentTarget.value)
+          }
         />
       </SystemSettingsCard>
     );
@@ -51,12 +106,72 @@ function SystemCards(): JSX.Element {
 }
 
 function AuthCard(): JSX.Element {
-  const [authEnabled, setAuthEnabled] = useState(false);
-
+  const [origData, setOrigData] = useState<JsonObject>({});
+  const [data, setData] = useState<JsonObject>({});
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const id = useId();
 
+  const configPath = "/system/authentication";
+
+  const isDirty = origData !== data;
+
+  const authEnabled = data?.authEnabled === true;
+  const username = String(data?.username ?? "");
+  const password = String(data?.password ?? "");
+
+  const fetchData = async (): Promise<void> => {
+    const data: ConfigData = await fetchConfigData(configPath);
+    // Get data.config and set it to config
+    setOrigData(data.config);
+    setData(data.config);
+  };
+
+  useEffect(() => {
+    void fetchData();
+  }, []);
+
+  async function handleSaveData(): Promise<void> {
+    const success = await saveConfigData(configPath, JSON.stringify(data), (e) => {
+      console.log("Error saving config data", e);
+      setErrorMessage(e.message);
+    });
+    if (success) {
+      setOrigData(data);
+    }
+  }
+
+  function setAuthEnabled(authEnabled: boolean): void {
+    setData(
+      produce(data, (draft) => {
+        draft.authEnabled = authEnabled;
+      }),
+    );
+  }
+
+  function setUsername(username: string): void {
+    setData(
+      produce(data, (draft) => {
+        draft.username = username;
+      }),
+    );
+  }
+
+  function setPassword(password: string): void {
+    setData(
+      produce(data, (draft) => {
+        draft.password = password;
+      }),
+    );
+  }
+
   return (
-    <SystemSettingsCard title={<h5 className="card-title">Authentication</h5>}>
+    <SystemSettingsCard
+      title={<h5 className="card-title">Authentication</h5>}
+      isDirty={isDirty}
+      handleSaveData={handleSaveData}
+      errorMessage={errorMessage}
+      setErrorMessage={setErrorMessage}
+    >
       <p className="card-text">
         Authentication is used to restrict access to the configuration
         interface. You should disable authentication only if you are using this
@@ -68,7 +183,7 @@ function AuthCard(): JSX.Element {
           id={`${id}-enableAuth`}
           type="checkbox"
           checked={authEnabled}
-          onChange={(e) => {
+          onInput={(e) => {
             setAuthEnabled(e.currentTarget.checked);
           }}
         />
@@ -80,7 +195,11 @@ function AuthCard(): JSX.Element {
             id={`${id}-username`}
             type="text"
             placeholder="Username"
+            value={username}
             disabled={!authEnabled}
+            onInput={(e: ChangeEvent<HTMLInputElement>) => {
+              setUsername(e.currentTarget.value);
+            }}
           />
         </div>
         <div className="col-sm-6">
@@ -89,7 +208,11 @@ function AuthCard(): JSX.Element {
             id={`${id}-password`}
             type="password"
             placeholder="Password"
+            value={password}
             disabled={!authEnabled}
+            onInput={(e: ChangeEvent<HTMLInputElement>) => {
+              setPassword(e.currentTarget.value);
+            }}
           />
         </div>
       </div>
@@ -106,17 +229,48 @@ function SystemCard({ children }: SystemCardProps): JSX.Element {
   return <div className="card">{children}</div>;
 }
 
-function SystemSettingsCard({ title, children }: SystemCardProps): JSX.Element {
-  const [isDirty, setIsDirty] = useState(false);
+interface SystemSettingsCardProps {
+  title: React.ReactNode;
+  isDirty: boolean;
+  handleSaveData: () => Promise<void>;
+  errorMessage: string;
+  setErrorMessage: (message: string) => void;
+  children: React.ReactNode;
+}
 
-  function handleSave(): void {
-    setIsDirty(false);
+function SystemSettingsCard({
+  title,
+  isDirty,
+  handleSaveData,
+  errorMessage,
+  setErrorMessage,
+  children,
+}: SystemSettingsCardProps): JSX.Element {
+  const [saving, setSaving] = useState<boolean>(false);
+
+  const id = useId();
+
+  async function handleSave(e: MouseEvent): Promise<void> {
+    e.preventDefault();
+    setSaving(true);
+    await handleSaveData();
+    setSaving(false);
   }
 
   return (
-    <InputDirtyContext.Provider
-      value={{ isInputDirty: isDirty, setInputDirty: setIsDirty }}
-    >
+    <>
+      <ModalError
+        id={`${id}-modal`}
+        title="Error"
+        show={errorMessage !== ""}
+        onHide={() => {
+          setErrorMessage("");
+        }}
+      >
+        <p>There was an error saving the configuration:</p>
+        <p>{errorMessage}</p>
+      </ModalError>
+
       <SystemCard>
         <div className="card-header">{title}</div>
         <div className="card-body">
@@ -127,11 +281,22 @@ function SystemSettingsCard({ title, children }: SystemCardProps): JSX.Element {
             disabled={!isDirty}
             onClick={handleSave}
           >
-            Save
+            {saving ? (
+              <>
+                <span
+                  className="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                Saving...
+              </>
+            ) : (
+              "Save"
+            )}
           </button>
         </div>
       </SystemCard>
-    </InputDirtyContext.Provider>
+    </>
   );
 }
 

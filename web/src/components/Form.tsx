@@ -16,12 +16,11 @@ interface FormInputProps {
   step?: number;
   disabled?: boolean;
   checked?: boolean;
-  onchange?: (e: JSX.TargetedEvent<HTMLInputElement, Event>) => void;
+  onInput?: (e: JSX.TargetedEvent<HTMLInputElement|HTMLTextAreaElement, Event>) => void;
 }
 
 export function FormInput(props: FormInputProps): JSX.Element {
-  const { isInputDirty, setInputDirty } =
-    useContext<InputDirtyContextType>(InputDirtyContext);
+
   return (
     <div>
       <label className="form-label" htmlFor={props.id}>
@@ -31,13 +30,11 @@ export function FormInput(props: FormInputProps): JSX.Element {
       {props.as === "textarea" ? (
         <textarea
           className="form-control"
-          onChange={() => setInputDirty(true)}
           {...props}
         />
       ) : (
         <input
           className="form-control"
-          onChange={() => setInputDirty(true)}
           {...props}
         />
       )}
@@ -51,14 +48,11 @@ interface FormFloatInputProps {
 }
 
 export function FormFloatInput(props: FormFloatInputProps): JSX.Element {
-  const { isInputDirty, setInputDirty } =
-    useContext<InputDirtyContextType>(InputDirtyContext);
 
   return (
     <div className="form-floating mb-3">
       <input
         className="form-control"
-        onChange={() => setInputDirty(true)}
         {...props}
       />
       <label className="form-label" htmlFor={props.id}>
@@ -75,8 +69,6 @@ interface FormSelectProps {
 }
 
 export function FormSelect(props: FormSelectProps): JSX.Element {
-  const { isInputDirty, setInputDirty } =
-    useContext<InputDirtyContextType>(InputDirtyContext);
 
   return (
     <div className="mb-3">
@@ -85,7 +77,6 @@ export function FormSelect(props: FormSelectProps): JSX.Element {
       </label>
       <select
         className="form-select"
-        onChange={() => setInputDirty(true)}
         {...props}
       />
       {props.children}
@@ -99,18 +90,15 @@ interface FormCheckProps {
   type: string;
   checked: boolean;
   label: string;
-  onchange: (e: JSX.TargetedEvent<HTMLInputElement, Event>) => void;
+  handleValueChange: (value: string) => void;
 }
 
 export function FormCheck(props: FormCheckProps): JSX.Element {
-  const { isInputDirty, setInputDirty } =
-    useContext<InputDirtyContextType>(InputDirtyContext);
 
   return (
     <div className="form-check">
       <input
         className="form-check-input"
-        onChange={() => setInputDirty(true)}
         {...props}
       />
       <label className="form-check-label" htmlFor={props.id}>
@@ -123,17 +111,6 @@ export function FormCheck(props: FormCheckProps): JSX.Element {
 export function FormSwitch(
   props: JSX.IntrinsicAttributes & JSX.HTMLAttributes<HTMLInputElement>,
 ): JSX.Element {
-  const { isInputDirty, setInputDirty } =
-    useContext<InputDirtyContextType>(InputDirtyContext);
-
-  // Extend props.onChange (if it exists) to set the dirty flag
-  if (props.onChange) {
-    const onChange = props.onChange;
-    props.onChange = (e) => {
-      setInputDirty(true);
-      onChange(e);
-    };
-  }
 
   return (
     <div className="form-check form-switch mb-3">

@@ -142,13 +142,13 @@ export function ConfigCard({ path }: ConfigCardProps): JSX.Element | null {
     }
   }, [config, path]);
 
-  async function handleSave(e): Promise<void> {
+  async function handleSave(e: MouseEvent): Promise<void> {
     e.preventDefault();
     setSaving(true);
     await saveConfigData(path, JSON.stringify(config), (e) => {
       console.log("Error saving config data", e);
       setIsDirty(true);
-      setHttpErrorText(e);
+      setHttpErrorText(e.message);
     });
     setIsDirty(false);
     setSaving(false);
@@ -214,7 +214,7 @@ export function ConfigCard({ path }: ConfigCardProps): JSX.Element | null {
             <button
               className="btn btn-primary"
               type="submit"
-              onClick={(e) => {
+              onClick={(e: MouseEvent): void => {
                 void handleSave(e);
               }}
               disabled={saving || !isDirty}

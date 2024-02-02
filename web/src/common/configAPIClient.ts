@@ -48,7 +48,7 @@ export async function saveConfigData(
   data: string,
   errorHandler: (e: Error) => void,
   contentType: string = "application/json",
-): Promise<void> {
+): Promise<boolean> {
   try {
     const response = await fetch(APP_CONFIG.config_path + path, {
       method: "POST",
@@ -59,8 +59,11 @@ export async function saveConfigData(
     });
     if (!response.ok) {
       errorHandler(Error(`HTTP Error ${response.status} ${response.statusText}`));
+      return false;
     }
   } catch (e) {
     errorHandler(Error(`Error saving config data to server: ${e.message}`));
+    return false;
   }
+  return true;
 }
