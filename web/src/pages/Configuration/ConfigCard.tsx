@@ -92,8 +92,6 @@ function CardContents({
   const properties = schema?.properties ?? {};
   const keys = Object.keys(properties);
 
-  console.log("keys", keys);
-
   return (
     <>
       {description !== "" || null}

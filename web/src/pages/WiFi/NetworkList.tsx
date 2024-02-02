@@ -32,7 +32,6 @@ export function NetworkList({
       throw new Error(`HTTP Error ${response.status} ${response.statusText}`);
     }
     const data = await response.text();
-    console.log(data);
     setIsScanning(true);
     setTimeout(getScannedWiFiNetworks, 1000);
   }
@@ -48,7 +47,6 @@ export function NetworkList({
       throw new Error(`HTTP Error ${response.status} ${response.statusText}`);
     }
     const data = await response.json();
-    console.log(data);
     // Data is an array of objects with the following properties:
     // - ssid: string
     // - rssi: number

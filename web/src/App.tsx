@@ -58,7 +58,6 @@ export function App(): JSX.Element {
     void (async () => {
       const res = await fetch("/api/routes");
       const data = await res.json();
-      console.log("Got routes", data);
       setRoutes(data);
 
       let populatedRoutes: RouteInstruction[] = [];
@@ -112,8 +111,6 @@ export function App(): JSX.Element {
   async function handleRouteChange(e: RouterOnChangeArgs): Promise<void> {
     setNavPath(e.url);
   }
-
-  console.log("NavPath", navPath);
 
   if (routes.length === 0) {
     return (

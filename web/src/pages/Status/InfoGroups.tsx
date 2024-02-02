@@ -52,7 +52,9 @@ export function InfoGroups(): JSX.Element {
   }
 
   useEffect(() => {
-    console.log("Error: ", errorText);
+    if (errorText !== "") {
+      console.log("Error: ", errorText);
+    }
   }, [errorText]);
 
   useEffect(() => {
