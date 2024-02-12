@@ -35,8 +35,8 @@
       "name": "ESPAsyncTCP"
     },
     {
-      "owner": "me-no-dev",
-      "name": "ESP Async WebServer"
+      "name": "ESPAsyncWebServer",
+      "version": "https://github.com/arn0/ESPAsyncWebServer.git"
     },
     {
       "owner": "alanswx",
