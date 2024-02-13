@@ -26,44 +26,40 @@
   ],
   "dependencies": [
     {
-      "owner": "mairas",
       "name": "ReactESP",
-      "version": "^2.0.0"
+      "version": "git@github.com:arn0/ReactESP.git"
     },
     {
-      "owner": "me-no-dev",
-      "name": "ESPAsyncTCP"
+      "name": "AsyncTCP",
+      "version": "git@github.com:arn0/AsyncTCP.git"
     },
     {
       "name": "ESPAsyncWebServer",
-      "version": "https://github.com/arn0/ESPAsyncWebServer.git"
+      "version": "git@github.com:arn0/ESPAsyncWebServer.git"
     },
     {
-      "owner": "alanswx",
       "name": "ESPAsyncWiFiManager",
-      "version": "^0.31"
+      "version": "git@github.com:arn0/ESPAsyncWiFiManager.git"
     },
     {
-      "owner": "bblanchon",
       "name": "ArduinoJson",
-      "version": "^6.0.0"
+      "version": "git@github.com:arn0/ArduinoJson.git"
     },
     {
-      "owner": "links2004",
-      "name": "WebSockets"
+      "name": "WebSockets",
+      "version": "git@github.com:arn0/arduinoWebSockets.git"
     },
     {
-      "owner": "pfeerick",
-      "name": "elapsedMillis"
+      "name": "elapsedMillis",
+      "version": "git@github.com:arn0/elapsedMillis.git"
     },
     {
       "name": "RemoteDebug",
-      "version": "https://github.com/JoaoLopesF/RemoteDebug.git#0b5a9c1a49fd2ade0e3cadc3a3707781e819359a"
+      "version": "git@github.com:arn0/RemoteDebug.git"
     },
     {
-      "owner": "bxparks",
       "name": "AceButton",
-      "version": "^1.10.1"
+      "version": "git@github.com:arn0/AceButton.git"
     }
   ],
   "version": "2.7.2",
