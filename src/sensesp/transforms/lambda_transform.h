@@ -323,6 +323,14 @@ class LambdaTransform : public Transform<IN, OUT> {
   }
 
  private:
+  std::function<OUT(IN)> function0;
+  std::function<OUT(IN, P1)> function1;
+  std::function<OUT(IN, P1, P2)> function2;
+  std::function<OUT(IN, P1, P2, P3)> function3;
+  std::function<OUT(IN, P1, P2, P3, P4)> function4;
+  std::function<OUT(IN, P1, P2, P3, P4, P5)> function5;
+  std::function<OUT(IN, P1, P2, P3, P4, P5, P6)> function6;
+
   P1 param1;
   P2 param2;
   P3 param3;
@@ -331,14 +339,6 @@ class LambdaTransform : public Transform<IN, OUT> {
   P6 param6;
   int num_params;
   const ParamInfo* param_info;
-
-  std::function<OUT(IN)> function0;
-  std::function<OUT(IN, P1)> function1;
-  std::function<OUT(IN, P1, P2)> function2;
-  std::function<OUT(IN, P1, P2, P3)> function3;
-  std::function<OUT(IN, P1, P2, P3, P4)> function4;
-  std::function<OUT(IN, P1, P2, P3, P4, P5)> function5;
-  std::function<OUT(IN, P1, P2, P3, P4, P5, P6)> function6;
 
   static String format_schema_row(const char key[], const char title[],
                                   const char type[], const bool read_only) {
