@@ -35,7 +35,7 @@ class MinimalButtonHandler : public BaseButtonHandler {
         debugD("Press");
         break;
       case AceButton::kEventLongReleased:
-        debugD("Long release, duration: %d", time_since_press_event);
+        debugD("Long release, duration: %ld", (long int) time_since_press_event);
         if (time_since_press_event > 5000) {
           this->handle_very_long_press();
         } else if (time_since_press_event > 1000) {
@@ -57,7 +57,7 @@ class MinimalButtonHandler : public BaseButtonHandler {
    *
    */
   virtual void handle_button_press() {
-    debugD("Short release, duration: %d", time_since_press_event);
+    debugD("Short release, duration: %ld", (long int) time_since_press_event);
     debugD("Restarting");
     ESP.restart();
   }
