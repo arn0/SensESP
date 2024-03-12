@@ -23,8 +23,8 @@ namespace sensesp {
  */
 class SKMetadata {
  public:
-  String display_name_;
   String units_;
+  String display_name_;
   String description_;
   String short_name_;
   float timeout_;
