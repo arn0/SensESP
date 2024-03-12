@@ -117,7 +117,6 @@ class DigitalInputCounter : public DigitalInput, public SensorT<int> {
     load_configuration();
   }
 
-  unsigned int read_delay_;
   volatile unsigned int counter_ = 0;
 
  private:
@@ -126,6 +125,9 @@ class DigitalInputCounter : public DigitalInput, public SensorT<int> {
   virtual void get_configuration(JsonObject& doc) override;
   virtual bool set_configuration(const JsonObject& config) override;
   virtual String get_config_schema() override;
+
+ protected:
+  unsigned int read_delay_;
 };
 
 /**
