@@ -24,9 +24,9 @@ namespace sensesp {
 Networking::Networking(String config_path, String ssid, String password,
                        String hostname, const char* wifi_manager_password)
     : Configurable{config_path, "Basic WiFi Setup", 100},
-      wifi_manager_password_{wifi_manager_password},
       Startable(80),
-      Resettable(0) {
+      Resettable(0),
+      wifi_manager_password_{wifi_manager_password}  {
 
   // Get the WiFi state producer singleton and make it update this object output
   wifi_state_producer = WiFiStateProducer::get_singleton();
