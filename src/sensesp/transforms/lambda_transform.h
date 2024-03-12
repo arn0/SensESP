@@ -211,16 +211,22 @@ class LambdaTransform : public Transform<IN, OUT> {
     switch (num_params) {
       case 6:
         doc[param_info[5].key] = param6;
+        break;
       case 5:
         doc[param_info[4].key] = param5;
+        break;
       case 4:
         doc[param_info[3].key] = param4;
+        break;
       case 3:
         doc[param_info[2].key] = param3;
+        break;
       case 2:
         doc[param_info[1].key] = param2;
+        break;
       case 1:
         doc[param_info[0].key] = param1;
+        break;
       default:
         break;
     }
@@ -240,16 +246,22 @@ class LambdaTransform : public Transform<IN, OUT> {
     switch (num_params) {
       case 6:
         param6 = config[param_info[5].key];
+        break;
       case 5:
         param5 = config[param_info[4].key];
+        break;
       case 4:
         param4 = config[param_info[3].key];
+        break;
       case 3:
         param3 = config[param_info[2].key];
+        break;
       case 2:
         param2 = config[param_info[1].key];
+        break;
       case 1:
         param1 = config[param_info[0].key];
+        break;
       default:
         break;
     }
