@@ -44,8 +44,7 @@ int PWMOutput::assign_channel(int pin, int pwm_channel) {
 
   pinMode(pin, OUTPUT);
 #ifdef ESP32
-  ledcSetup(pwm_channel, CHANNEL_FREQUENCY, CHANNEL_RESOLUTION);
-  ledcAttachPin(pin, pwm_channel);
+  ledcAttachChannel( pin, CHANNEL_FREQUENCY, CHANNEL_RESOLUTION, pwm_channel);
 #endif
 
   return pwm_channel;
