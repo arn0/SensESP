@@ -44,7 +44,7 @@ class Sensor : virtual public Observable,
 template <typename T>
 class SensorT : public Sensor, public ValueProducer<T> {
  public:
-  SensorT<T>(String config_path = "")
+  (SensorT<T>)(String config_path = "")
       : Sensor(config_path), ValueProducer<T>() {}
 };
 
@@ -68,7 +68,7 @@ class RepeatSensor : public SensorT<T> {
    * produce.
    * @tparam T The type of the value returned by the callback function.
    */
-  RepeatSensor<T>(unsigned int repeat_interval_ms, std::function<T()> callback)
+  (RepeatSensor<T>)(unsigned int repeat_interval_ms, std::function<T()> callback)
       : SensorT<T>(""),
         repeat_interval_ms_(repeat_interval_ms),
         returning_callback_(callback) {}
@@ -86,7 +86,7 @@ class RepeatSensor : public SensorT<T> {
    *   to be called when output becomes available.
    * @tparam T The type of the value returned by the callback function.
    */
-  RepeatSensor<T>(unsigned int repeat_interval_ms,
+  (RepeatSensor<T>)(unsigned int repeat_interval_ms,
                   std::function<void(RepeatSensor<T>*)> callback)
       : SensorT<T>(""),
         repeat_interval_ms_(repeat_interval_ms),
