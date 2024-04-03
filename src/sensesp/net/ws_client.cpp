@@ -369,7 +369,7 @@ bool WSClient::get_mdns_service(String& server_address, uint16_t& server_port) {
     // no service found
     return false;
   } else {
-    server_address = MDNS.IP(0).toString();
+    server_address = MDNS.address(0).toString();
     server_port = MDNS.port(0);
     debugI("Found server %s (port %d)", server_address.c_str(), server_port);
     return true;
