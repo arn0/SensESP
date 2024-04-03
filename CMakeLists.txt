@@ -89,3 +89,7 @@ idf_component_register( INCLUDE_DIRS ${includedirs}
                         SRCS ${srcs}
                         REQUIRES ${requires}
                         )
+
+target_compile_options(${COMPONENT_TARGET} PUBLIC
+    -DLED_BUILTIN=8
+    )
