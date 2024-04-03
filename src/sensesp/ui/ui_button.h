@@ -19,7 +19,7 @@ class UIButton : public Observable {
   UIButton(String title, String name, bool must_confirm)
       : title_(title), name_(name), must_confirm_(must_confirm) {}
 
-  const bool get_must_confirm() { return must_confirm_; }
+  bool get_must_confirm() { return must_confirm_; }
   const String get_title() { return title_; }
   const String get_name() { return name_; }
 

@@ -40,7 +40,7 @@ class WSClient : public Configurable,
   virtual void start() override;
 
   const String get_server_address() const { return server_address_; }
-  const uint16_t get_server_port() const { return server_port_; }
+  uint16_t get_server_port() const { return server_port_; }
 
   virtual void get_configuration(JsonObject& doc) override final;
   virtual bool set_configuration(const JsonObject& config) override final;

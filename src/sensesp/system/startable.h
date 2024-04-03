@@ -27,7 +27,7 @@ class Startable {
    */
   virtual void start() {}
 
-  const int get_start_priority() { return priority_; }
+  int get_start_priority() { return priority_; }
 
   void set_start_priority(int priority) { this->priority_ = priority; }
 

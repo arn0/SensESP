@@ -23,7 +23,7 @@ class Resettable {
 
   virtual void reset() {}
 
-  const int get_reset_priority() const { return priority; }
+  int get_reset_priority() const { return priority; }
 
   void set_reset_priority(int priority) { this->priority = priority; }
 
