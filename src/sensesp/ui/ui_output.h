@@ -51,7 +51,10 @@ class UILambdaOutput : public UIOutputBase {
   T get() { return value_function_(); }
 
   void set_json(const JsonObject& obj) override {
-    JsonObject output = obj.createNestedObject(name_);
+//    JsonObject output = obj.createNestedObject(name_);
+
+    JsonObject output = obj[name_].to<JsonObject>();
+
     output["Value"] = get();
     output["Group"] = group_;
     output["Order"] = order_;
@@ -75,7 +78,7 @@ class UIOutput : public UIOutputBase,
   }
 
   void set_json(const JsonObject& obj) override {
-    JsonObject output = obj.createNestedObject(name_);
+    JsonObject output = obj[name_].to<JsonObject>();
     output["Value"] = ObservableValue<T>::get();
     output["Group"] = group_;
     output["Order"] = order_;
