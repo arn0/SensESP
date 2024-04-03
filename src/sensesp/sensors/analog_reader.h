@@ -4,7 +4,9 @@
 #include "Arduino.h"
 #include "sensesp.h"
 #if defined(ESP32)
-#include "esp_adc_cal.h"
+//#include "esp_adc_cal.h"
+#include "esp_adc/adc_cali.h"
+#include "esp_adc/adc_cali_scheme.h"
 #endif
 
 namespace sensesp {
@@ -24,13 +26,13 @@ class BaseAnalogReader {
 class ESP32AnalogReader : public BaseAnalogReader {
  private:
   int pin_;
-  adc_atten_t attenuation_ = ADC_ATTEN_DB_11;
+  adc_atten_t attenuation_ = ADC_ATTEN_DB_12;
    // This should work with ESP32 and newer variants, ADCs are different
-  adc_bits_width_t  bit_width_ = (adc_bits_width_t)  ADC_WIDTH_BIT_DEFAULT;
+  adc_bitwidth_t  bit_width_ = ADC_BITWIDTH_DEFAULT;
   // maximum voltage readout for 3.3V VDDA when attenuation_ is set to 11 dB
   const float kVmax_ = 3300;
   int8_t adc_channel_;
-  esp_adc_cal_characteristics_t adc_characteristics_;
+  //esp_adc_cal_characteristics_t adc_characteristics_;
   const int kVref_ = 1100;  // voltage reference, in mV
 
  public:
@@ -47,17 +49,17 @@ class ESP32AnalogReader : public BaseAnalogReader {
     if (adc_channel_ == -1) {
       return false;
     }
-    adc1_config_width(bit_width_);
-    adc1_config_channel_atten((adc1_channel_t)adc_channel_, attenuation_);
-    esp_adc_cal_characterize(ADC_UNIT_1, attenuation_, bit_width_, kVref_,
-                             &adc_characteristics_);
+    //adc1_config_width(bit_width_);
+    //adc1_config_channel_atten((adc1_channel_t)adc_channel_, attenuation_);
+    //esp_adc_cal_characterize(ADC_UNIT_1, attenuation_, bit_width_, kVref_,
+                             //&adc_characteristics_);
     return true;
   }
 
   float read() {
-    uint32_t voltage;
-    esp_adc_cal_get_voltage((adc_channel_t)adc_channel_, &adc_characteristics_,
-                            &voltage);
+    uint32_t voltage = 0;
+    //esp_adc_cal_get_voltage((adc_channel_t)adc_channel_, &adc_characteristics_,
+                            //&voltage);
     return voltage / kVmax_;
   }
 };
