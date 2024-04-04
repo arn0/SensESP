@@ -90,6 +90,6 @@ idf_component_register( INCLUDE_DIRS ${includedirs}
                         REQUIRES ${requires}
                         )
 
-target_compile_options(${COMPONENT_TARGET} PUBLIC
-    -DLED_BUILTIN=8
-    )
+#target_compile_options(${COMPONENT_TARGET} PUBLIC
+#    -DLED_BUILTIN=8
+#    )
